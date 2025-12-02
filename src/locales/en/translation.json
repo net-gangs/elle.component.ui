@@ -1,0 +1,53 @@
+{
+  "app": {
+    "name": "ELLA AI"
+  },
+  "sidebar": {
+    "groups": {
+      "preparation": "Preparation",
+      "tools": "Tools"
+    },
+    "items": {
+      "myClass": "My Class",
+      "lessonPlanning": "Lesson Planning",
+      "scanYourFile": "Scan Your File",
+      "tipsAndTricks": "Tips and Tricks",
+      "rewards": "Rewards",
+      "interestingArticles": "Interesting Articles",
+      "filesLibrary": "Files & Library"
+    }
+  },
+  "team": {
+    "plan": {
+      "enterprise": "Enterprise"
+    }
+  },
+  "userMenu": {
+    "upgrade": "Upgrade to Pro",
+    "account": "Account",
+    "billing": "Billing",
+    "notifications": "Notifications",
+    "logout": "Log out"
+  },
+  "breadcrumb": {
+    "application": "Building Your Application",
+    "section": "Data Fetching"
+  },
+  "login": {
+    "title": "Login to Ella AI",
+    "submit": "Log In"
+  },
+  "dashboard": {
+    "placeholder": "Dashboard content coming soon."
+  },
+  "languageSwitcher": {
+    "tooltip": "Change language",
+    "menuLabel": "Language",
+    "languages": {
+      "en": "English",
+      "vi": "Vietnamese",
+      "ja": "Japanese",
+      "th": "Thai"
+    }
+  }
+}

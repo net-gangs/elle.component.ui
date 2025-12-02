@@ -1,0 +1,53 @@
+{
+  "app": {
+    "name": "ELLA AI"
+  },
+  "sidebar": {
+    "groups": {
+      "preparation": "Chuẩn bị",
+      "tools": "Công cụ"
+    },
+    "items": {
+      "myClass": "Lớp học của tôi",
+      "lessonPlanning": "Lập kế hoạch bài học",
+      "scanYourFile": "Quét tệp của bạn",
+      "tipsAndTricks": "Mẹo và thủ thuật",
+      "rewards": "Phần thưởng",
+      "interestingArticles": "Bài viết hấp dẫn",
+      "filesLibrary": "Tệp & Thư viện"
+    }
+  },
+  "team": {
+    "plan": {
+      "enterprise": "Gói Doanh nghiệp"
+    }
+  },
+  "userMenu": {
+    "upgrade": "Nâng cấp lên Pro",
+    "account": "Tài khoản",
+    "billing": "Thanh toán",
+    "notifications": "Thông báo",
+    "logout": "Đăng xuất"
+  },
+  "breadcrumb": {
+    "application": "Xây dựng ứng dụng của bạn",
+    "section": "Lấy dữ liệu"
+  },
+  "login": {
+    "title": "Đăng nhập vào Ella AI",
+    "submit": "Đăng nhập"
+  },
+  "dashboard": {
+    "placeholder": "Nội dung bảng điều khiển sẽ sớm có mặt."
+  },
+  "languageSwitcher": {
+    "tooltip": "Thay đổi ngôn ngữ",
+    "menuLabel": "Ngôn ngữ",
+    "languages": {
+      "en": "Tiếng Anh",
+      "vi": "Tiếng Việt",
+      "ja": "Tiếng Nhật",
+      "th": "Tiếng Thái"
+    }
+  }
+}

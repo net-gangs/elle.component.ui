@@ -1,4 +1,5 @@
 import { type LucideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { Collapsible } from "@/components/ui/collapsible";
 import {
@@ -15,31 +16,33 @@ export function NavMain({
 }: {
   groupLabel: string;
   items: {
-    title: string;
+    titleKey: string;
     url: string;
     icon?: LucideIcon;
     isActive?: boolean;
     items?: {
-      title: string;
+      titleKey: string;
       url: string;
     }[];
   }[];
 }) {
+  const { t } = useTranslation();
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>{groupLabel}</SidebarGroupLabel>
+      <SidebarGroupLabel>{t(groupLabel)}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
-            key={item.title}
+            key={item.titleKey}
             asChild
             defaultOpen={item.isActive}
             className="group/collapsible"
           >
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip={item.title}>
+              <SidebarMenuButton tooltip={t(item.titleKey)}>
                 {item.icon && <item.icon />}
-                <span>{item.title}</span>
+                <span>{t(item.titleKey)}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </Collapsible>

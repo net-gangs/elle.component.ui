@@ -15,6 +15,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { useTranslation } from "react-i18next";
 
 interface MainLayoutProps {
   showRightPanel?: boolean;
@@ -22,6 +23,8 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({}: MainLayoutProps) {
+  const { t } = useTranslation();
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -37,12 +40,14 @@ export function MainLayout({}: MainLayoutProps) {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="#">
-                    <Link to="/">Building Your Application</Link>
+                  <Link to="/">{t("breadcrumb.application")}</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>
+                    {t("breadcrumb.section")}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

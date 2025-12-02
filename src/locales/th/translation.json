@@ -1,0 +1,53 @@
+{
+  "app": {
+    "name": "ELLA AI"
+  },
+  "sidebar": {
+    "groups": {
+      "preparation": "การเตรียมความพร้อม",
+      "tools": "เครื่องมือ"
+    },
+    "items": {
+      "myClass": "ชั้นเรียนของฉัน",
+      "lessonPlanning": "การวางแผนบทเรียน",
+      "scanYourFile": "สแกนไฟล์ของคุณ",
+      "tipsAndTricks": "เคล็ดลับและเทคนิค",
+      "rewards": "รางวัล",
+      "interestingArticles": "บทความที่น่าสนใจ",
+      "filesLibrary": "ไฟล์และคลังข้อมูล"
+    }
+  },
+  "team": {
+    "plan": {
+      "enterprise": "องค์กร"
+    }
+  },
+  "userMenu": {
+    "upgrade": "อัปเกรดเป็น Pro",
+    "account": "บัญชี",
+    "billing": "การเรียกเก็บเงิน",
+    "notifications": "การแจ้งเตือน",
+    "logout": "ออกจากระบบ"
+  },
+  "breadcrumb": {
+    "application": "สร้างแอปพลิเคชันของคุณ",
+    "section": "การดึงข้อมูล"
+  },
+  "login": {
+    "title": "เข้าสู่ระบบ Ella AI",
+    "submit": "เข้าสู่ระบบ"
+  },
+  "dashboard": {
+    "placeholder": "เนื้อหาแดชบอร์ดจะพร้อมใช้งานเร็วๆ นี้"
+  },
+  "languageSwitcher": {
+    "tooltip": "เปลี่ยนภาษา",
+    "menuLabel": "ภาษา",
+    "languages": {
+      "en": "อังกฤษ",
+      "vi": "เวียดนาม",
+      "ja": "ญี่ปุ่น",
+      "th": "ไทย"
+    }
+  }
+}

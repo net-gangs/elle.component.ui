@@ -1,0 +1,53 @@
+{
+  "app": {
+    "name": "ELLA AI"
+  },
+  "sidebar": {
+    "groups": {
+      "preparation": "準備",
+      "tools": "ツール"
+    },
+    "items": {
+      "myClass": "マイクラス",
+      "lessonPlanning": "授業計画",
+      "scanYourFile": "ファイルをスキャン",
+      "tipsAndTricks": "ヒントとコツ",
+      "rewards": "報酬",
+      "interestingArticles": "興味深い記事",
+      "filesLibrary": "ファイルとライブラリ"
+    }
+  },
+  "team": {
+    "plan": {
+      "enterprise": "エンタープライズ"
+    }
+  },
+  "userMenu": {
+    "upgrade": "プロ版にアップグレード",
+    "account": "アカウント",
+    "billing": "請求",
+    "notifications": "通知",
+    "logout": "ログアウト"
+  },
+  "breadcrumb": {
+    "application": "アプリケーションの構築",
+    "section": "データ取得"
+  },
+  "login": {
+    "title": "Ella AI にログイン",
+    "submit": "ログイン"
+  },
+  "dashboard": {
+    "placeholder": "ダッシュボードのコンテンツは近日公開予定です。"
+  },
+  "languageSwitcher": {
+    "tooltip": "言語を変更",
+    "menuLabel": "言語",
+    "languages": {
+      "en": "英語",
+      "vi": "ベトナム語",
+      "ja": "日本語",
+      "th": "タイ語"
+    }
+  }
+}

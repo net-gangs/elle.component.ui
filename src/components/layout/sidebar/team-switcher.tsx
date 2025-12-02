@@ -1,5 +1,6 @@
 import * as React from "react";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
+import { useTranslation } from "react-i18next";
 
 export function TeamSwitcher({
   teams,
@@ -7,10 +8,11 @@ export function TeamSwitcher({
   teams: {
     name: string;
     logo: React.ElementType;
-    plan: string;
+    planKey: string;
   }[];
 }) {
   const [activeTeam, _] = React.useState(teams[0]);
+  const { t } = useTranslation();
 
   if (!activeTeam) {
     return null;
@@ -25,7 +27,7 @@ export function TeamSwitcher({
 
         <div className="grid flex-1 text-left text-sm leading-tight">
           <span className="truncate font-medium">{activeTeam.name}</span>
-          <span className="truncate text-xs">{activeTeam.plan}</span>
+          <span className="truncate text-xs">{t(activeTeam.planKey)}</span>
         </div>
       </SidebarMenuItem>
     </SidebarMenu>
