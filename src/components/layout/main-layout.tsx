@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "@tanstack/react-router";
 import { AppSidebar } from "./sidebar/app-sidebar";
 import {
   Breadcrumb,
@@ -37,7 +37,7 @@ export function MainLayout({}: MainLayoutProps) {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="#">
-                    Building Your Application
+                    <Link to="/">Building Your Application</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
