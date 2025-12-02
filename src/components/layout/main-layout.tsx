@@ -14,6 +14,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 interface MainLayoutProps {
   showRightPanel?: boolean;
@@ -50,15 +51,14 @@ export function MainLayout({}: MainLayoutProps) {
         {/* Main content */}
         <main>
           <div className="flex gap-6">
-            {/* Center content - Render nested routes with Outlet */}
             <div className="flex-1 min-w-0">
               <Outlet />
             </div>
-
-            {/* Right panel */}
           </div>
         </main>
       </SidebarInset>
+
+      <Toaster />
     </SidebarProvider>
   );
 }
