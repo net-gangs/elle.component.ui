@@ -5,6 +5,7 @@ import {
   RouterProvider,
   Outlet,
 } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MainLayout } from "./components/layout/main-layout";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
@@ -38,8 +39,14 @@ const routeTree = rootRoute.addChildren([
 
 const router = createRouter({ routeTree });
 
+const queryClient = new QueryClient();
+
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }
 
 export default App;
