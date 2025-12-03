@@ -15,15 +15,37 @@ export default function Dashboard() {
     },
   });
 
+  const updateClassMutation = useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: { name: string; grade: string };
+    }) => {
+      return classService.update(id, data);
+    },
+    onSuccess: () => {
+      toast.success("Class updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["classrooms"] });
+    },
+  });
+
   return (
     <div className="space-y-6 m-5">
-      <ClassForm
+      {/* <ClassForm Create Class Form
         onSubmit={(data) => createClassMutation.mutate(data)}
         isSubmitting={createClassMutation.isPending}
-      />
-      {/* <ClassForm
-        initialData={{ name: "test", grade: "test" }}
-        onSubmit={() => console.log("It works")}
+      /> */}
+      {/* <ClassForm Update class Form
+        initialData={{ name: "test 1", grade: "test" }}
+        onSubmit={(data) => {
+          updateClassMutation.mutate({
+            id: "1dc4fbfd-b406-45ec-a85d-572d53dea3f8",
+            data: data,
+          });
+        }}
+        isSubmitting={updateClassMutation.isPending}
       /> */}
     </div>
   );
