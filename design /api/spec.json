@@ -1,0 +1,4167 @@
+{
+"openapi": "3.0.0",
+"paths": {
+"/api/v1/users": {
+"post": {
+"operationId": "UsersController_create_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreateUserDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/User"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Users"
+]
+},
+"get": {
+"operationId": "UsersController_findAll_v1",
+"parameters": [
+{
+"name": "page",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "limit",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "filters",
+"required": false,
+"in": "query",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "sort",
+"required": false,
+"in": "query",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/InfinityPaginationUserResponseDto"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Users"
+]
+}
+},
+"/api/v1/users/{id}": {
+"get": {
+"operationId": "UsersController_findOne_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/User"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Users"
+]
+},
+"patch": {
+"operationId": "UsersController_update_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UpdateUserDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/User"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Users"
+]
+},
+"delete": {
+"operationId": "UsersController_remove_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"204": {
+"description": ""
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Users"
+]
+}
+},
+"/api/v1/files/upload": {
+"post": {
+"operationId": "FilesLocalController_uploadFile_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"multipart/form-data": {
+"schema": {
+"type": "object",
+"properties": {
+"file": {
+"type": "string",
+"format": "binary"
+}
+}
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/FileResponseDto"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Files"
+]
+}
+},
+"/api/v1/auth/email/login": {
+"post": {
+"operationId": "AuthController_login_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthEmailLoginDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/LoginResponseDto"
+}
+}
+}
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/email/register": {
+"post": {
+"operationId": "AuthController_register_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthRegisterLoginDto"
+}
+}
+}
+},
+"responses": {
+"204": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/email/confirm": {
+"post": {
+"operationId": "AuthController_confirmEmail_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthConfirmEmailDto"
+}
+}
+}
+},
+"responses": {
+"204": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/email/confirm/new": {
+"post": {
+"operationId": "AuthController_confirmNewEmail_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthConfirmEmailDto"
+}
+}
+}
+},
+"responses": {
+"204": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/forgot/password": {
+"post": {
+"operationId": "AuthController_forgotPassword_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthForgotPasswordDto"
+}
+}
+}
+},
+"responses": {
+"204": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/reset/password": {
+"post": {
+"operationId": "AuthController_resetPassword_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthResetPasswordDto"
+}
+}
+}
+},
+"responses": {
+"204": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/me": {
+"get": {
+"operationId": "AuthController_me_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/User"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Auth"
+]
+},
+"patch": {
+"operationId": "AuthController_update_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthUpdateDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/User"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Auth"
+]
+},
+"delete": {
+"operationId": "AuthController_delete_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"204": {
+"description": ""
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/refresh": {
+"post": {
+"operationId": "AuthController_refresh_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/RefreshResponseDto"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/logout": {
+"post": {
+"operationId": "AuthController_logout_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"204": {
+"description": ""
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/facebook/login": {
+"post": {
+"operationId": "AuthFacebookController_login_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthFacebookLoginDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/LoginResponseDto"
+}
+}
+}
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/google/login": {
+"post": {
+"operationId": "AuthGoogleController_login_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthGoogleLoginDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/LoginResponseDto"
+}
+}
+}
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/v1/auth/apple/login": {
+"post": {
+"operationId": "AuthAppleController_login_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthAppleLoginDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/LoginResponseDto"
+}
+}
+}
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/": {
+"get": {
+"operationId": "HomeController_appInfo",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Home"
+]
+}
+},
+"/api/v1/classrooms": {
+"post": {
+"operationId": "ClassroomsController_create_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreateClassroomDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Classroom"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Create a new classroom",
+"tags": [
+"Classrooms"
+]
+},
+"get": {
+"operationId": "ClassroomsController_findAll_v1",
+"parameters": [
+{
+"name": "page",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "limit",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "search",
+"required": false,
+"in": "query",
+"description": "Search across name, code, and grade fields",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "orderBy",
+"required": false,
+"in": "query",
+"schema": {
+"example": "createdAt",
+"type": "string"
+}
+},
+{
+"name": "order",
+"required": false,
+"in": "query",
+"schema": {
+"example": "DESC",
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PageClassroomResponseDto"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get all classrooms for the current user",
+"tags": [
+"Classrooms"
+]
+}
+},
+"/api/v1/classrooms/{id}": {
+"get": {
+"operationId": "ClassroomsController_findOne_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Classroom"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get a classroom by ID",
+"tags": [
+"Classrooms"
+]
+},
+"patch": {
+"operationId": "ClassroomsController_update_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UpdateClassroomDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Classroom"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Update a classroom",
+"tags": [
+"Classrooms"
+]
+},
+"delete": {
+"operationId": "ClassroomsController_remove_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"204": {
+"description": ""
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Soft delete a classroom",
+"tags": [
+"Classrooms"
+]
+}
+},
+"/api/v1/classrooms/{classroomId}/students": {
+"post": {
+"operationId": "StudentsController_create_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreateStudentDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Student"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Create a new student in a classroom",
+"tags": [
+"Students"
+]
+},
+"get": {
+"operationId": "StudentsController_findAll_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "page",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "limit",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "search",
+"required": false,
+"in": "query",
+"description": "Search across fullName and notes fields",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "orderBy",
+"required": false,
+"in": "query",
+"schema": {
+"example": "createdAt",
+"type": "string"
+}
+},
+{
+"name": "order",
+"required": false,
+"in": "query",
+"schema": {
+"example": "DESC",
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PageStudentResponseDto"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get all students in a classroom",
+"tags": [
+"Students"
+]
+}
+},
+"/api/v1/classrooms/{classroomId}/students/{id}": {
+"get": {
+"operationId": "StudentsController_findOne_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Student"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get a student by ID",
+"tags": [
+"Students"
+]
+},
+"patch": {
+"operationId": "StudentsController_update_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UpdateStudentDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Student"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Update a student",
+"tags": [
+"Students"
+]
+},
+"delete": {
+"operationId": "StudentsController_remove_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"204": {
+"description": ""
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Soft delete a student",
+"tags": [
+"Students"
+]
+}
+},
+"/api/v1/classrooms/{classroomId}/lessons": {
+"post": {
+"operationId": "LessonsController_create_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreateLessonDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Lesson"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Create a new lesson in a classroom",
+"tags": [
+"Lessons"
+]
+},
+"get": {
+"operationId": "LessonsController_findAll_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "page",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "limit",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "search",
+"required": false,
+"in": "query",
+"description": "Search across title and topic fields",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "status",
+"required": false,
+"in": "query",
+"description": "Filter by lesson status",
+"schema": {
+"type": "string",
+"enum": [
+"draft",
+"scheduled",
+"in_progress",
+"completed",
+"cancelled"
+]
+}
+},
+{
+"name": "orderBy",
+"required": false,
+"in": "query",
+"schema": {
+"example": "createdAt",
+"type": "string"
+}
+},
+{
+"name": "order",
+"required": false,
+"in": "query",
+"schema": {
+"example": "DESC",
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PageLessonResponseDto"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get all lessons in a classroom",
+"tags": [
+"Lessons"
+]
+}
+},
+"/api/v1/classrooms/{classroomId}/lessons/{id}": {
+"get": {
+"operationId": "LessonsController_findOne_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Lesson"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get a lesson by ID",
+"tags": [
+"Lessons"
+]
+},
+"patch": {
+"operationId": "LessonsController_update_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UpdateLessonDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Lesson"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Update a lesson",
+"tags": [
+"Lessons"
+]
+},
+"delete": {
+"operationId": "LessonsController_remove_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"204": {
+"description": ""
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Soft delete a lesson",
+"tags": [
+"Lessons"
+]
+}
+},
+"/api/v1/classrooms/{classroomId}/students/{studentId}/assessments": {
+"post": {
+"operationId": "AssessmentsController_create_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "studentId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreateAssessmentDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Assessment"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Create a new assessment for a student",
+"tags": [
+"Assessments"
+]
+},
+"get": {
+"operationId": "AssessmentsController_findAll_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "studentId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "page",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "limit",
+"required": false,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"name": "search",
+"required": false,
+"in": "query",
+"description": "Search across remark field",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "kind",
+"required": false,
+"in": "query",
+"description": "Filter by assessment kind",
+"schema": {
+"type": "string",
+"enum": [
+"quiz",
+"homework",
+"exam",
+"project"
+]
+}
+},
+{
+"name": "status",
+"required": false,
+"in": "query",
+"description": "Filter by assessment status",
+"schema": {
+"type": "string",
+"enum": [
+"pending",
+"submitted",
+"graded"
+]
+}
+},
+{
+"name": "orderBy",
+"required": false,
+"in": "query",
+"schema": {
+"example": "createdAt",
+"type": "string"
+}
+},
+{
+"name": "order",
+"required": false,
+"in": "query",
+"schema": {
+"example": "DESC",
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PageAssessmentResponseDto"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get all assessments for a student",
+"tags": [
+"Assessments"
+]
+}
+},
+"/api/v1/classrooms/{classroomId}/students/{studentId}/assessments/{id}": {
+"get": {
+"operationId": "AssessmentsController_findOne_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "studentId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Assessment"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get an assessment by ID",
+"tags": [
+"Assessments"
+]
+},
+"patch": {
+"operationId": "AssessmentsController_update_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "studentId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UpdateAssessmentDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Assessment"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Update an assessment",
+"tags": [
+"Assessments"
+]
+},
+"delete": {
+"operationId": "AssessmentsController_remove_v1",
+"parameters": [
+{
+"name": "classroomId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "studentId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"204": {
+"description": ""
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Soft delete an assessment",
+"tags": [
+"Assessments"
+]
+}
+},
+"/api/v1/event-logs": {
+"get": {
+"operationId": "EventLogsController_findAll_v1",
+"parameters": [
+{
+"name": "entityType",
+"required": false,
+"in": "query",
+"schema": {
+"type": "string",
+"enum": [
+"TEACHER",
+"CLASS",
+"STUDENT",
+"LESSON",
+"ASSESSMENT",
+"FILE"
+]
+}
+},
+{
+"name": "entityId",
+"required": false,
+"in": "query",
+"schema": {
+"format": "uuid",
+"type": "string"
+}
+},
+{
+"name": "action",
+"required": false,
+"in": "query",
+"schema": {
+"type": "string",
+"enum": [
+"CREATED",
+"UPDATED",
+"DELETED",
+"UPLOADED",
+"GRADED"
+]
+}
+},
+{
+"name": "actorUserId",
+"required": false,
+"in": "query",
+"schema": {
+"format": "uuid",
+"type": "string"
+}
+},
+{
+"name": "source",
+"required": false,
+"in": "query",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "correlationId",
+"required": false,
+"in": "query",
+"schema": {
+"format": "uuid",
+"type": "string"
+}
+},
+{
+"name": "fromDate",
+"required": false,
+"in": "query",
+"schema": {
+"format": "date-time",
+"type": "string"
+}
+},
+{
+"name": "toDate",
+"required": false,
+"in": "query",
+"schema": {
+"format": "date-time",
+"type": "string"
+}
+},
+{
+"name": "orderBy",
+"required": false,
+"in": "query",
+"schema": {
+"type": "string",
+"enum": [
+"occurredAt",
+"entityType",
+"action"
+]
+}
+},
+{
+"name": "order",
+"required": false,
+"in": "query",
+"schema": {
+"default": "DESC",
+"type": "string",
+"enum": [
+"ASC",
+"DESC"
+]
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "List of event logs",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PageEventLogResponseDto"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get event logs with filtering and pagination",
+"tags": [
+"Event Logs"
+]
+}
+},
+"/api/v1/event-logs/{id}": {
+"get": {
+"operationId": "EventLogsController_findById_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"format": "uuid",
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Event log details",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/EventLog"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get event log by ID",
+"tags": [
+"Event Logs"
+]
+}
+},
+"/api/v1/event-logs/entity/{entityType}/{entityId}": {
+"get": {
+"operationId": "EventLogsController_getEntityHistory_v1",
+"parameters": [
+{
+"name": "entityType",
+"required": true,
+"in": "path",
+"schema": {
+"enum": [
+"TEACHER",
+"CLASS",
+"STUDENT",
+"LESSON",
+"ASSESSMENT",
+"FILE"
+],
+"type": "string"
+}
+},
+{
+"name": "entityId",
+"required": true,
+"in": "path",
+"schema": {
+"format": "uuid",
+"type": "string"
+}
+},
+{
+"name": "limit",
+"required": true,
+"in": "query",
+"schema": {
+"type": "number"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Entity changelog",
+"content": {
+"application/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/EventLog"
+}
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get changelog for a specific entity",
+"tags": [
+"Event Logs"
+]
+}
+},
+"/api/v1/event-logs/correlation/{correlationId}": {
+"get": {
+"operationId": "EventLogsController_getCorrelatedEvents_v1",
+"parameters": [
+{
+"name": "correlationId",
+"required": true,
+"in": "path",
+"schema": {
+"format": "uuid",
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Correlated events",
+"content": {
+"application/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/EventLog"
+}
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get all events in a correlation group",
+"tags": [
+"Event Logs"
+]
+}
+},
+"/api/v1/notifications": {
+"get": {
+"operationId": "NotificationsController_findAll_v1",
+"parameters": [
+{
+"name": "nType",
+"required": false,
+"in": "query",
+"schema": {
+"type": "string",
+"enum": [
+"CLASS_ADDED",
+"STUDENT_UPDATED",
+"LESSON_ADDED",
+"ASSESSMENT_GRADED",
+"USER_REGISTERED",
+"FILE_UPLOADED"
+]
+}
+},
+{
+"name": "isRead",
+"required": false,
+"in": "query",
+"schema": {
+"type": "boolean"
+}
+},
+{
+"name": "orderBy",
+"required": false,
+"in": "query",
+"schema": {
+"default": "createdAt",
+"type": "string",
+"enum": [
+"createdAt"
+]
+}
+},
+{
+"name": "order",
+"required": false,
+"in": "query",
+"schema": {
+"default": "DESC",
+"type": "string",
+"enum": [
+"ASC",
+"DESC"
+]
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "List of notifications",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PageNotificationResponseDto"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get notifications for the current user",
+"tags": [
+"Notifications"
+]
+}
+},
+"/api/v1/notifications/unread-count": {
+"get": {
+"operationId": "NotificationsController_getUnreadCount_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Unread notification count",
+"content": {
+"application/json": {
+"schema": {
+"type": "object",
+"properties": {
+"count": {
+"type": "number"
+}
+}
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get unread notification count",
+"tags": [
+"Notifications"
+]
+}
+},
+"/api/v1/notifications/{id}": {
+"get": {
+"operationId": "NotificationsController_findById_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"format": "uuid",
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Notification details",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Notification"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Get notification by ID",
+"tags": [
+"Notifications"
+]
+},
+"delete": {
+"operationId": "NotificationsController_remove_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"format": "uuid",
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Notification deleted"
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Delete notification",
+"tags": [
+"Notifications"
+]
+}
+},
+"/api/v1/notifications/{id}/read": {
+"post": {
+"operationId": "NotificationsController_markAsRead_v1",
+"parameters": [
+{
+"name": "id",
+"required": true,
+"in": "path",
+"schema": {
+"format": "uuid",
+"type": "string"
+}
+},
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Notification marked as read",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Notification"
+}
+}
+}
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Mark notification as read",
+"tags": [
+"Notifications"
+]
+}
+},
+"/api/v1/notifications/read-all": {
+"post": {
+"operationId": "NotificationsController_markAllAsRead_v1",
+"parameters": [
+{
+"in": "header",
+"required": false,
+"name": "x-custom-lang",
+"schema": {
+"example": "en"
+}
+}
+],
+"responses": {
+"200": {
+"description": "All notifications marked as read"
+}
+},
+"security": [
+{
+"bearer": []
+}
+],
+"summary": "Mark all notifications as read",
+"tags": [
+"Notifications"
+]
+}
+}
+},
+"info": {
+"title": "API",
+"description": "API docs",
+"version": "1.0",
+"contact": {}
+},
+"tags": [],
+"servers": [],
+"components": {
+"securitySchemes": {
+"bearer": {
+"scheme": "bearer",
+"bearerFormat": "JWT",
+"type": "http"
+}
+},
+"schemas": {
+"FileDto": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string"
+}
+},
+"required": [
+"id"
+]
+},
+"RoleDto": {
+"type": "object",
+"properties": {
+"id": {
+"type": "object"
+}
+},
+"required": [
+"id"
+]
+},
+"StatusDto": {
+"type": "object",
+"properties": {
+"id": {
+"type": "object"
+}
+},
+"required": [
+"id"
+]
+},
+"CreateUserDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string",
+"example": "test1@example.com"
+},
+"password": {
+"type": "string"
+},
+"firstName": {
+"type": "string",
+"example": "John"
+},
+"lastName": {
+"type": "string",
+"example": "Doe"
+},
+"photo": {
+"$ref": "#/components/schemas/FileDto"
+},
+"role": {
+"$ref": "#/components/schemas/RoleDto"
+},
+"status": {
+"$ref": "#/components/schemas/StatusDto"
+}
+},
+"required": [
+"email",
+"password",
+"firstName",
+"lastName"
+]
+},
+"FileType": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string",
+"example": "cbcfa8b8-3a25-4adb-a9c6-e325f0d0f3ae"
+},
+"path": {
+"type": "string",
+"example": "https://example.com/path/to/file.jpg"
+}
+},
+"required": [
+"id",
+"path"
+]
+},
+"Role": {
+"type": "object",
+"properties": {
+"id": {
+"type": "number"
+},
+"name": {
+"type": "string",
+"example": "admin"
+}
+},
+"required": [
+"id",
+"name"
+]
+},
+"Status": {
+"type": "object",
+"properties": {
+"id": {
+"type": "number"
+},
+"name": {
+"type": "string",
+"example": "active"
+}
+},
+"required": [
+"id",
+"name"
+]
+},
+"User": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string",
+"format": "uuid"
+},
+"email": {
+"type": "string",
+"example": "john.doe@example.com"
+},
+"provider": {
+"type": "string",
+"example": "email"
+},
+"socialId": {
+"type": "string",
+"example": "1234567890"
+},
+"firstName": {
+"type": "string",
+"example": "John"
+},
+"lastName": {
+"type": "string",
+"example": "Doe"
+},
+"photo": {
+"$ref": "#/components/schemas/FileType"
+},
+"role": {
+"$ref": "#/components/schemas/Role"
+},
+"status": {
+"$ref": "#/components/schemas/Status"
+},
+"createdAt": {
+"format": "date-time",
+"type": "string"
+},
+"updatedAt": {
+"format": "date-time",
+"type": "string"
+},
+"deletedAt": {
+"format": "date-time",
+"type": "string"
+}
+},
+"required": [
+"id",
+"email",
+"provider",
+"socialId",
+"firstName",
+"lastName",
+"photo",
+"role",
+"status",
+"createdAt",
+"updatedAt",
+"deletedAt"
+]
+},
+"InfinityPaginationUserResponseDto": {
+"type": "object",
+"properties": {
+"data": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/User"
+}
+},
+"hasNextPage": {
+"type": "boolean",
+"example": true
+}
+},
+"required": [
+"data",
+"hasNextPage"
+]
+},
+"UpdateUserDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string",
+"example": "test1@example.com"
+},
+"password": {
+"type": "string"
+},
+"firstName": {
+"type": "string",
+"example": "John"
+},
+"lastName": {
+"type": "string",
+"example": "Doe"
+},
+"photo": {
+"$ref": "#/components/schemas/FileDto"
+},
+"role": {
+"$ref": "#/components/schemas/RoleDto"
+},
+"status": {
+"$ref": "#/components/schemas/StatusDto"
+}
+}
+},
+"FileResponseDto": {
+"type": "object",
+"properties": {
+"file": {
+"$ref": "#/components/schemas/FileType"
+}
+},
+"required": [
+"file"
+]
+},
+"AuthEmailLoginDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string",
+"example": "test1@example.com"
+},
+"password": {
+"type": "string"
+}
+},
+"required": [
+"email",
+"password"
+]
+},
+"LoginResponseDto": {
+"type": "object",
+"properties": {
+"token": {
+"type": "string"
+},
+"refreshToken": {
+"type": "string"
+},
+"tokenExpires": {
+"type": "number"
+},
+"user": {
+"$ref": "#/components/schemas/User"
+}
+},
+"required": [
+"token",
+"refreshToken",
+"tokenExpires",
+"user"
+]
+},
+"AuthRegisterLoginDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string",
+"example": "test1@example.com"
+},
+"password": {
+"type": "string"
+},
+"firstName": {
+"type": "string",
+"example": "John"
+},
+"lastName": {
+"type": "string",
+"example": "Doe"
+}
+},
+"required": [
+"email",
+"password",
+"firstName",
+"lastName"
+]
+},
+"AuthConfirmEmailDto": {
+"type": "object",
+"properties": {
+"hash": {
+"type": "string"
+}
+},
+"required": [
+"hash"
+]
+},
+"AuthForgotPasswordDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string",
+"example": "test1@example.com"
+}
+},
+"required": [
+"email"
+]
+},
+"AuthResetPasswordDto": {
+"type": "object",
+"properties": {
+"password": {
+"type": "string"
+},
+"hash": {
+"type": "string"
+}
+},
+"required": [
+"password",
+"hash"
+]
+},
+"RefreshResponseDto": {
+"type": "object",
+"properties": {
+"token": {
+"type": "string"
+},
+"refreshToken": {
+"type": "string"
+},
+"tokenExpires": {
+"type": "number"
+}
+},
+"required": [
+"token",
+"refreshToken",
+"tokenExpires"
+]
+},
+"AuthUpdateDto": {
+"type": "object",
+"properties": {
+"photo": {
+"$ref": "#/components/schemas/FileDto"
+},
+"firstName": {
+"type": "string",
+"example": "John"
+},
+"lastName": {
+"type": "string",
+"example": "Doe"
+},
+"email": {
+"type": "string",
+"example": "new.email@example.com"
+},
+"password": {
+"type": "string"
+},
+"oldPassword": {
+"type": "string"
+}
+}
+},
+"AuthFacebookLoginDto": {
+"type": "object",
+"properties": {
+"accessToken": {
+"type": "string",
+"example": "abc"
+}
+},
+"required": [
+"accessToken"
+]
+},
+"AuthGoogleLoginDto": {
+"type": "object",
+"properties": {
+"idToken": {
+"type": "string",
+"example": "abc"
+}
+},
+"required": [
+"idToken"
+]
+},
+"AuthAppleLoginDto": {
+"type": "object",
+"properties": {
+"idToken": {
+"type": "string",
+"example": "abc"
+},
+"firstName": {
+"type": "string"
+},
+"lastName": {
+"type": "string"
+}
+},
+"required": [
+"idToken"
+]
+},
+"CreateClassroomDto": {
+"type": "object",
+"properties": {
+"name": {
+"type": "string",
+"example": "English Class A"
+},
+"grade": {
+"type": "string",
+"example": "Grade 5"
+}
+},
+"required": [
+"name"
+]
+},
+"Classroom": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string",
+"example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+},
+"name": {
+"type": "string",
+"example": "English Class A"
+},
+"grade": {
+"type": "string",
+"example": "Grade 5"
+},
+"userId": {
+"type": "string",
+"format": "uuid",
+"description": "The ID of the teacher (user) who owns this classroom"
+},
+"createdAt": {
+"format": "date-time",
+"type": "string"
+},
+"updatedAt": {
+"format": "date-time",
+"type": "string"
+},
+"deletedAt": {
+"type": "object"
+}
+},
+"required": [
+"id",
+"name",
+"userId",
+"createdAt",
+"updatedAt"
+]
+},
+"PageMetaDto": {
+"type": "object",
+"properties": {
+"page": {
+"type": "number",
+"example": 1,
+"description": "Current page number"
+},
+"limit": {
+"type": "number",
+"example": 10,
+"description": "Number of items per page"
+},
+"itemCount": {
+"type": "number",
+"example": 100,
+"description": "Total number of items in database"
+},
+"pageCount": {
+"type": "number",
+"example": 10,
+"description": "Total number of pages"
+},
+"hasPreviousPage": {
+"type": "boolean",
+"example": false,
+"description": "Whether there is a previous page"
+},
+"hasNextPage": {
+"type": "boolean",
+"example": true,
+"description": "Whether there is a next page"
+}
+},
+"required": [
+"page",
+"limit",
+"itemCount",
+"pageCount",
+"hasPreviousPage",
+"hasNextPage"
+]
+},
+"PageClassroomResponseDto": {
+"type": "object",
+"properties": {
+"data": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/Classroom"
+}
+},
+"meta": {
+"$ref": "#/components/schemas/PageMetaDto"
+}
+},
+"required": [
+"data",
+"meta"
+]
+},
+"UpdateClassroomDto": {
+"type": "object",
+"properties": {
+"name": {
+"type": "string",
+"example": "English Class A"
+},
+"grade": {
+"type": "string",
+"example": "Grade 5"
+},
+"code": {
+"type": "string",
+"example": "ABC123"
+}
+}
+},
+"CreateStudentDto": {
+"type": "object",
+"properties": {
+"fullName": {
+"type": "string",
+"example": "John Doe"
+},
+"grade": {
+"type": "string",
+"example": "Grade 5"
+},
+"hobby": {
+"type": "string",
+"example": "Reading, sports"
+},
+"notes": {
+"type": "string",
+"example": "Needs extra help with pronunciation"
+},
+"currentLevel": {
+"type": "string",
+"example": "A2",
+"description": "Current CEFR level"
+},
+"avatarUrl": {
+"type": "string",
+"example": "https://example.com/avatar.jpg"
+},
+"specialNeeds": {
+"example": [
+"ADHD",
+"Dyslexia"
+],
+"description": "Special needs or conditions. Valid values: ADHD, ODD, ASD, Depression, ACEs, Dysgraphia, Dyslexia, Anxiety Disorders",
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"cefrLevels": {
+"type": "object",
+"example": {
+"reading": "C1",
+"writing": "B2",
+"speaking": "B1",
+"listening": "A2"
+},
+"description": "CEFR proficiency levels for each skill (A1, A2, B1, B2, C1, C2)"
+}
+},
+"required": [
+"fullName"
+]
+},
+"Student": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string",
+"example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+},
+"classroomId": {
+"type": "string",
+"description": "The ID of the classroom this student belongs to"
+},
+"fullName": {
+"type": "string",
+"example": "John Doe"
+},
+"grade": {
+"type": "string",
+"example": "Grade 5"
+},
+"hobby": {
+"type": "string",
+"example": "Reading, sports"
+},
+"notes": {
+"type": "string",
+"example": "Needs extra help with pronunciation"
+},
+"currentLevel": {
+"type": "string",
+"example": "A2",
+"description": "Current CEFR level"
+},
+"avatarUrl": {
+"type": "string",
+"example": "https://example.com/avatar.jpg"
+},
+"specialNeeds": {
+"example": [
+"ADHD",
+"Dyslexia"
+],
+"description": "Special needs or conditions. Valid values: ADHD, ODD, ASD, Depression, ACEs, Dysgraphia, Dyslexia, Anxiety Disorders",
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"cefrLevels": {
+"type": "object",
+"example": {
+"reading": "C1",
+"writing": "B2",
+"speaking": "B1",
+"listening": "A2"
+},
+"description": "CEFR proficiency levels for each skill (A1, A2, B1, B2, C1, C2)"
+},
+"createdAt": {
+"format": "date-time",
+"type": "string"
+},
+"updatedAt": {
+"format": "date-time",
+"type": "string"
+},
+"deletedAt": {
+"type": "object"
+}
+},
+"required": [
+"id",
+"classroomId",
+"fullName",
+"createdAt",
+"updatedAt"
+]
+},
+"PageStudentResponseDto": {
+"type": "object",
+"properties": {
+"data": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/Student"
+}
+},
+"meta": {
+"$ref": "#/components/schemas/PageMetaDto"
+}
+},
+"required": [
+"data",
+"meta"
+]
+},
+"UpdateStudentDto": {
+"type": "object",
+"properties": {
+"fullName": {
+"type": "string",
+"example": "John Doe"
+},
+"grade": {
+"type": "string",
+"example": "Grade 5"
+},
+"hobby": {
+"type": "string",
+"example": "Reading, sports"
+},
+"notes": {
+"type": "string",
+"example": "Needs extra help with pronunciation"
+},
+"currentLevel": {
+"type": "string",
+"example": "A2",
+"description": "Current CEFR level"
+},
+"avatarUrl": {
+"type": "string",
+"example": "https://example.com/avatar.jpg"
+},
+"specialNeeds": {
+"example": [
+"ADHD",
+"Dyslexia"
+],
+"description": "Special needs or conditions. Valid values: ADHD, ODD, ASD, Depression, ACEs, Dysgraphia, Dyslexia, Anxiety Disorders",
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"cefrLevels": {
+"type": "object",
+"example": {
+"reading": "C1",
+"writing": "B2",
+"speaking": "B1",
+"listening": "A2"
+},
+"description": "CEFR proficiency levels for each skill (A1, A2, B1, B2, C1, C2)"
+}
+}
+},
+"CreateLessonDto": {
+"type": "object",
+"properties": {
+"title": {
+"type": "string",
+"example": "Introduction to Present Tense"
+},
+"topic": {
+"type": "string",
+"example": "Grammar"
+},
+"targetLanguage": {
+"type": "string",
+"example": "English",
+"description": "Target language for the lesson"
+},
+"scheduledOn": {
+"type": "string",
+"format": "date",
+"example": "2025-12-15"
+},
+"status": {
+"type": "string",
+"enum": [
+"draft",
+"scheduled",
+"in_progress",
+"completed",
+"cancelled"
+],
+"example": "draft"
+},
+"durationMinutes": {
+"type": "number",
+"example": 45,
+"description": "Duration in minutes"
+},
+"gradeYear": {
+"type": "string",
+"example": "Year 5"
+},
+"cefrReading": {
+"type": "string",
+"example": "A2",
+"description": "CEFR reading level"
+},
+"cefrWriting": {
+"type": "string",
+"example": "A2",
+"description": "CEFR writing level"
+},
+"cefrSpeaking": {
+"type": "string",
+"example": "A2",
+"description": "CEFR speaking level"
+},
+"cefrListening": {
+"type": "string",
+"example": "A2",
+"description": "CEFR listening level"
+},
+"learningObjectives": {
+"type": "string",
+"example": "Students will be able to use present tense correctly"
+},
+"teachingActivities": {
+"type": "string",
+"example": "Group discussion, worksheets, role-play"
+},
+"contentMd": {
+"type": "string",
+"description": "Lesson content in markdown format"
+},
+"structuredContent": {
+"type": "object",
+"description": "Structured JSON content. Use this to export to specific table formats (Excel/Word tables).",
+"example": {
+"sections": [
+{
+"title": "Warm up",
+"duration": 5,
+"activity": "Game"
+},
+{
+"title": "Main",
+"duration": 30,
+"activity": "Lecture"
+}
+]
+}
+},
+"generated": {
+"type": "boolean",
+"example": false,
+"description": "Whether the content was AI-generated"
+},
+"prompt": {
+"type": "string",
+"description": "Prompt used for content generation"
+}
+},
+"required": [
+"title"
+]
+},
+"Lesson": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string",
+"example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+},
+"classroomId": {
+"type": "string",
+"description": "The ID of the classroom this lesson belongs to"
+},
+"title": {
+"type": "string",
+"example": "Introduction to Present Tense"
+},
+"topic": {
+"type": "string",
+"example": "Grammar"
+},
+"targetLanguage": {
+"type": "string",
+"example": "English",
+"description": "Target language for the lesson"
+},
+"scheduledOn": {
+"type": "string",
+"format": "date",
+"example": "2025-12-15"
+},
+"status": {
+"type": "string",
+"enum": [
+"draft",
+"scheduled",
+"in_progress",
+"completed",
+"cancelled"
+],
+"example": "draft"
+},
+"durationMinutes": {
+"type": "number",
+"example": 45,
+"description": "Duration in minutes"
+},
+"gradeYear": {
+"type": "string",
+"example": "Year 5"
+},
+"cefrReading": {
+"type": "string",
+"example": "A2",
+"description": "CEFR reading level"
+},
+"cefrWriting": {
+"type": "string",
+"example": "A2",
+"description": "CEFR writing level"
+},
+"cefrSpeaking": {
+"type": "string",
+"example": "A2",
+"description": "CEFR speaking level"
+},
+"cefrListening": {
+"type": "string",
+"example": "A2",
+"description": "CEFR listening level"
+},
+"learningObjectives": {
+"type": "string",
+"example": "Students will be able to use present tense correctly"
+},
+"teachingActivities": {
+"type": "string",
+"example": "Group discussion, worksheets, role-play"
+},
+"contentMd": {
+"type": "string",
+"description": "Lesson content in markdown format"
+},
+"structuredContent": {
+"type": "object",
+"description": "Structured JSON content. Use this to export to specific table formats (Excel/Word tables).",
+"example": {
+"sections": [
+{
+"title": "Warm up",
+"duration": 5,
+"activity": "Game"
+},
+{
+"title": "Main",
+"duration": 30,
+"activity": "Lecture"
+}
+]
+}
+},
+"generated": {
+"type": "boolean",
+"example": false,
+"description": "Whether the content was AI-generated"
+},
+"generatedAt": {
+"format": "date-time",
+"type": "string",
+"description": "When the content was generated"
+},
+"prompt": {
+"type": "string",
+"description": "Prompt used for content generation"
+},
+"createdAt": {
+"format": "date-time",
+"type": "string"
+},
+"updatedAt": {
+"format": "date-time",
+"type": "string"
+},
+"deletedAt": {
+"type": "object"
+}
+},
+"required": [
+"id",
+"classroomId",
+"title",
+"status",
+"createdAt",
+"updatedAt"
+]
+},
+"PageLessonResponseDto": {
+"type": "object",
+"properties": {
+"data": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/Lesson"
+}
+},
+"meta": {
+"$ref": "#/components/schemas/PageMetaDto"
+}
+},
+"required": [
+"data",
+"meta"
+]
+},
+"UpdateLessonDto": {
+"type": "object",
+"properties": {
+"title": {
+"type": "string",
+"example": "Introduction to Present Tense"
+},
+"topic": {
+"type": "string",
+"example": "Grammar"
+},
+"targetLanguage": {
+"type": "string",
+"example": "English",
+"description": "Target language for the lesson"
+},
+"scheduledOn": {
+"type": "string",
+"format": "date",
+"example": "2025-12-15"
+},
+"status": {
+"type": "string",
+"enum": [
+"draft",
+"scheduled",
+"in_progress",
+"completed",
+"cancelled"
+],
+"example": "draft"
+},
+"durationMinutes": {
+"type": "number",
+"example": 45,
+"description": "Duration in minutes"
+},
+"gradeYear": {
+"type": "string",
+"example": "Year 5"
+},
+"cefrReading": {
+"type": "string",
+"example": "A2",
+"description": "CEFR reading level"
+},
+"cefrWriting": {
+"type": "string",
+"example": "A2",
+"description": "CEFR writing level"
+},
+"cefrSpeaking": {
+"type": "string",
+"example": "A2",
+"description": "CEFR speaking level"
+},
+"cefrListening": {
+"type": "string",
+"example": "A2",
+"description": "CEFR listening level"
+},
+"learningObjectives": {
+"type": "string",
+"example": "Students will be able to use present tense correctly"
+},
+"teachingActivities": {
+"type": "string",
+"example": "Group discussion, worksheets, role-play"
+},
+"contentMd": {
+"type": "string",
+"description": "Lesson content in markdown format"
+},
+"structuredContent": {
+"type": "object",
+"description": "Structured JSON content. Use this to export to specific table formats (Excel/Word tables).",
+"example": {
+"sections": [
+{
+"title": "Warm up",
+"duration": 5,
+"activity": "Game"
+},
+{
+"title": "Main",
+"duration": 30,
+"activity": "Lecture"
+}
+]
+}
+},
+"generated": {
+"type": "boolean",
+"example": false,
+"description": "Whether the content was AI-generated"
+},
+"prompt": {
+"type": "string",
+"description": "Prompt used for content generation"
+}
+}
+},
+"CreateAssessmentDto": {
+"type": "object",
+"properties": {
+"lessonId": {
+"type": "string",
+"description": "The ID of the lesson this assessment is linked to (optional)"
+},
+"kind": {
+"type": "string",
+"enum": [
+"quiz",
+"homework",
+"exam",
+"project"
+],
+"example": "quiz"
+},
+"status": {
+"type": "string",
+"enum": [
+"pending",
+"submitted",
+"graded"
+],
+"example": "pending"
+},
+"score": {
+"type": "number",
+"example": 85
+},
+"maxScore": {
+"type": "number",
+"example": 100
+},
+"remark": {
+"type": "string",
+"example": "Good progress, needs improvement in grammar"
+},
+"filePath": {
+"type": "string",
+"example": "/uploads/assessments/file.pdf"
+},
+"fileName": {
+"type": "string",
+"example": "homework_week1.pdf"
+},
+"fileSizeBytes": {
+"type": "number",
+"example": 1024000,
+"description": "File size in bytes"
+}
+},
+"required": [
+"kind"
+]
+},
+"Assessment": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string",
+"example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+},
+"studentId": {
+"type": "string",
+"description": "The ID of the student this assessment belongs to"
+},
+"lessonId": {
+"type": "string",
+"description": "The ID of the lesson this assessment is linked to (optional)"
+},
+"kind": {
+"type": "string",
+"enum": [
+"quiz",
+"homework",
+"exam",
+"project"
+],
+"example": "quiz"
+},
+"status": {
+"type": "string",
+"enum": [
+"pending",
+"submitted",
+"graded"
+],
+"example": "pending"
+},
+"score": {
+"type": "number",
+"example": 85
+},
+"maxScore": {
+"type": "number",
+"example": 100
+},
+"remark": {
+"type": "string",
+"example": "Good progress, needs improvement in grammar"
+},
+"filePath": {
+"type": "string",
+"example": "/uploads/assessments/file.pdf"
+},
+"fileName": {
+"type": "string",
+"example": "homework_week1.pdf"
+},
+"fileSizeBytes": {
+"type": "number",
+"example": 1024000,
+"description": "File size in bytes"
+},
+"uploadedAt": {
+"format": "date-time",
+"type": "string",
+"description": "When the file was uploaded"
+},
+"gradedAt": {
+"format": "date-time",
+"type": "string",
+"description": "When the assessment was graded"
+},
+"createdAt": {
+"format": "date-time",
+"type": "string"
+},
+"updatedAt": {
+"format": "date-time",
+"type": "string"
+},
+"deletedAt": {
+"type": "object"
+}
+},
+"required": [
+"id",
+"studentId",
+"kind",
+"status",
+"createdAt",
+"updatedAt"
+]
+},
+"PageAssessmentResponseDto": {
+"type": "object",
+"properties": {
+"data": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/Assessment"
+}
+},
+"meta": {
+"$ref": "#/components/schemas/PageMetaDto"
+}
+},
+"required": [
+"data",
+"meta"
+]
+},
+"UpdateAssessmentDto": {
+"type": "object",
+"properties": {
+"lessonId": {
+"type": "string",
+"description": "The ID of the lesson this assessment is linked to (optional)"
+},
+"kind": {
+"type": "string",
+"enum": [
+"quiz",
+"homework",
+"exam",
+"project"
+],
+"example": "quiz"
+},
+"status": {
+"type": "string",
+"enum": [
+"pending",
+"submitted",
+"graded"
+],
+"example": "pending"
+},
+"score": {
+"type": "number",
+"example": 85
+},
+"maxScore": {
+"type": "number",
+"example": 100
+},
+"remark": {
+"type": "string",
+"example": "Good progress, needs improvement in grammar"
+},
+"filePath": {
+"type": "string",
+"example": "/uploads/assessments/file.pdf"
+},
+"fileName": {
+"type": "string",
+"example": "homework_week1.pdf"
+},
+"fileSizeBytes": {
+"type": "number",
+"example": 1024000,
+"description": "File size in bytes"
+}
+}
+},
+"EventLog": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string",
+"format": "uuid",
+"example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+},
+"entityType": {
+"type": "string",
+"enum": [
+"TEACHER",
+"CLASS",
+"STUDENT",
+"LESSON",
+"ASSESSMENT",
+"FILE"
+],
+"example": "STUDENT"
+},
+"entityId": {
+"type": "string",
+"format": "uuid",
+"description": "The ID of the entity that was affected"
+},
+"action": {
+"type": "string",
+"enum": [
+"CREATED",
+"UPDATED",
+"DELETED",
+"UPLOADED",
+"GRADED"
+],
+"example": "UPDATED"
+},
+"actorUserId": {
+"type": "string",
+"format": "uuid",
+"description": "The ID of the user who performed the action"
+},
+"changes": {
+"type": "object",
+"description": "The changes made to the entity (field: {old, new})",
+"example": {
+"name": {
+"old": "John",
+"new": "Johnny"
+}
+}
+},
+"source": {
+"type": "string",
+"description": "Source of the action (ui, import, ocr, etc.)",
+"example": "ui"
+},
+"occurredAt": {
+"format": "date-time",
+"type": "string",
+"description": "When the action occurred"
+},
+"correlationId": {
+"type": "string",
+"format": "uuid",
+"description": "Correlation ID for grouping related events"
+}
+},
+"required": [
+"id",
+"entityType",
+"entityId",
+"action",
+"occurredAt"
+]
+},
+"PageEventLogResponseDto": {
+"type": "object",
+"properties": {
+"data": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/EventLog"
+}
+},
+"meta": {
+"$ref": "#/components/schemas/PageMetaDto"
+}
+},
+"required": [
+"data",
+"meta"
+]
+},
+"Notification": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string",
+"format": "uuid",
+"example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+},
+"userId": {
+"type": "string",
+"format": "uuid",
+"description": "The ID of the user who receives this notification"
+},
+"nType": {
+"type": "string",
+"enum": [
+"CLASS_ADDED",
+"STUDENT_UPDATED",
+"LESSON_ADDED",
+"ASSESSMENT_GRADED",
+"USER_REGISTERED",
+"FILE_UPLOADED"
+],
+"example": "STUDENT_UPDATED"
+},
+"title": {
+"type": "string",
+"example": "Student updated"
+},
+"body": {
+"type": "string",
+"example": "John Doe profile changed"
+},
+"entityType": {
+"type": "string",
+"enum": [
+"TEACHER",
+"CLASS",
+"STUDENT",
+"LESSON",
+"ASSESSMENT",
+"FILE"
+]
+},
+"entityId": {
+"type": "string",
+"format": "uuid"
+},
+"eventId": {
+"type": "string",
+"format": "uuid",
+"description": "Reference to the event log that triggered this notification"
+},
+"isRead": {
+"type": "boolean",
+"default": false
+},
+"createdAt": {
+"format": "date-time",
+"type": "string"
+},
+"readAt": {
+"format": "date-time",
+"type": "string"
+}
+},
+"required": [
+"id",
+"userId",
+"nType",
+"title",
+"isRead",
+"createdAt"
+]
+},
+"PageNotificationResponseDto": {
+"type": "object",
+"properties": {
+"data": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/Notification"
+}
+},
+"meta": {
+"$ref": "#/components/schemas/PageMetaDto"
+}
+},
+"required": [
+"data",
+"meta"
+]
+}
+}
+}
+}

@@ -5,10 +5,11 @@ import {
   RouterProvider,
   Outlet,
 } from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MainLayout } from "./components/layout/main-layout";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
+import MyClassPage from "./pages/class/MyClassPage";
+import NoPermissionPage from "./lib/route/NoPermissionPage";
 
 const rootRoute = createRootRoute({
   component: () => <Outlet />,
@@ -18,6 +19,12 @@ const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/login",
   component: Login,
+});
+
+const noPermissionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/no-permission",
+  component: NoPermissionPage,
 });
 
 const layoutRoute = createRoute({
@@ -32,20 +39,27 @@ const dashboardRoute = createRoute({
   component: Dashboard,
 });
 
+const myClassRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "/my-class",
+  component: MyClassPage,
+});
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
-  layoutRoute.addChildren([dashboardRoute]),
+  noPermissionRoute,
+  layoutRoute.addChildren([dashboardRoute, myClassRoute]),
 ]);
 
 const router = createRouter({ routeTree });
 
-const queryClient = new QueryClient();
+
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+
       <RouterProvider router={router} />
-    </QueryClientProvider>
+
   );
 }
 

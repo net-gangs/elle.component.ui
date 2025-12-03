@@ -8,6 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useNavigate } from "@tanstack/react-router";
 
 export function NavMain({
   groupLabel,
@@ -25,6 +26,7 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const nav = useNavigate();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>{groupLabel}</SidebarGroupLabel>
@@ -37,7 +39,9 @@ export function NavMain({
             className="group/collapsible"
           >
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip={item.title}>
+              <SidebarMenuButton onClick={()=>{
+                nav({ to: item.url });
+              }} tooltip={item.title}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>

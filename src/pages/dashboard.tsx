@@ -1,35 +1,34 @@
-import { ClassForm } from "@/components/forms/class-form";
-import { classService } from "@/services/class-service";
+import { classroomService } from "@/services/class-service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export default function Dashboard() {
   const queryClient = useQueryClient();
 
-  const createClassMutation = useMutation({
-    mutationFn: classService.create,
+  // const createClassMutation = useMutation({
+  //   mutationFn: classroomService.create,
 
-    onSuccess: () => {
-      toast.success("Class created successfully");
-      queryClient.invalidateQueries({ queryKey: ["classrooms"] });
-    },
-  });
+  //   onSuccess: () => {
+  //     toast.success("Class created successfully");
+  //     queryClient.invalidateQueries({ queryKey: ["classrooms"] });
+  //   },
+  // });
 
-  const updateClassMutation = useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: { name: string; grade: string };
-    }) => {
-      return classService.update(id, data);
-    },
-    onSuccess: () => {
-      toast.success("Class updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["classrooms"] });
-    },
-  });
+  // const updateClassMutation = useMutation({
+  //   mutationFn: ({
+  //     id,
+  //     data,
+  //   }: {
+  //     id: string;
+  //     data: { name: string; grade: string };
+  //   }) => {
+  //     return classroomService.update(id, data);
+  //   },
+  //   onSuccess: () => {
+  //     toast.success("Class updated successfully");
+  //     queryClient.invalidateQueries({ queryKey: ["classrooms"] });
+  //   },
+  // });
 
   return (
     <div className="space-y-6 m-5">

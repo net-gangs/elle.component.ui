@@ -23,11 +23,6 @@ import { NavMain } from "./nav-main";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "test-user",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "ELLA AI",
@@ -38,7 +33,7 @@ const data = {
   navMain: [
     {
       title: "My Class",
-      url: "#",
+      url: "my-class",
       icon: GraduationCap,
       isActive: true,
     },
@@ -89,7 +84,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain groupLabel={"Tools"} items={data.tools} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

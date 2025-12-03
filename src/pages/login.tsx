@@ -4,7 +4,9 @@ import { useNavigate } from "@tanstack/react-router";
 import * as z from "zod";
 import { Loader2 } from "lucide-react";
 
-import { apiClient } from "@/lib/api-client";
+import { authService } from "@/services/auth-service";
+import { authActions } from "@/stores/auth-store";
+import type { LoginResponseDto } from "@/types/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,16 +31,10 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginPayload) => {
-      return await apiClient.post("/auth/email/login", data);
+      return await authService.login(data);
     },
-    onSuccess: (response: any) => {
-      const token = response.data.token;
-
-      if (!token) {
-        return;
-      }
-
-      document.cookie = `token=${token}; path=/; max-age=86400; SameSite=Strict`;
+    onSuccess: (response: LoginResponseDto) => {
+      authActions.login(response);
 
       navigate({ to: "/" });
     },

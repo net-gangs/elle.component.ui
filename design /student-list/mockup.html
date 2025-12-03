@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Management</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Source+Serif+4:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+                        serif: ['Source Serif 4', 'serif'],
+                        mono: ['IBM Plex Mono', 'monospace'],
+                    },
+                    colors: {
+                        border: "var(--border)",
+                        input: "var(--input)",
+                        ring: "var(--ring)",
+                        background: "var(--background)",
+                        foreground: "var(--foreground)",
+                        primary: {
+                            DEFAULT: "var(--primary)",
+                            foreground: "var(--primary-foreground)",
+                        },
+                        secondary: {
+                            DEFAULT: "var(--secondary)",
+                            foreground: "var(--secondary-foreground)",
+                        },
+                        muted: {
+                            DEFAULT: "var(--muted)",
+                            foreground: "var(--muted-foreground)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent)",
+                            foreground: "var(--accent-foreground)",
+                        },
+                        card: {
+                            DEFAULT: "var(--card)",
+                            foreground: "var(--card-foreground)",
+                        },
+                        destructive: {
+                            DEFAULT: "var(--destructive)",
+                        },
+                    },
+                    borderRadius: {
+                        lg: "var(--radius)",
+                        md: "calc(var(--radius) - 2px)",
+                        sm: "calc(var(--radius) - 4px)",
+                    },
+                    boxShadow: {
+                        xs: "var(--shadow-xs)",
+                        sm: "var(--shadow-sm)",
+                        DEFAULT: "var(--shadow)",
+                        md: "var(--shadow-md)",
+                        lg: "var(--shadow-lg)",
+                        xl: "var(--shadow-xl)",
+                        '2xl': "var(--shadow-2xl)",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* YOUR THEME VARIABLES */
+        :root {
+            --background: oklch(0.97 0.01 316.68);
+            --foreground: oklch(0.37 0.03 259.73);
+            --card: oklch(1 0 0);
+            --card-foreground: oklch(0.37 0.03 259.73);
+            --popover: oklch(1 0 0);
+            --popover-foreground: oklch(0.37 0.03 259.73);
+            --primary: oklch(0.71 0.16 293.4);
+            --primary-foreground: oklch(1 0 0);
+            --secondary: oklch(0.91 0.05 306.07);
+            --secondary-foreground: oklch(0.45 0.03 257.68);
+            --muted: oklch(0.95 0.03 307.19);
+            --muted-foreground: oklch(0.55 0.02 264.41);
+            --accent: oklch(0.94 0.03 322.47);
+            --accent-foreground: oklch(0.37 0.03 259.73);
+            --destructive: oklch(0.81 0.1 19.47);
+            --border: oklch(0.91 0.05 306.07);
+            --input: oklch(0.91 0.05 306.07);
+            --ring: oklch(0.71 0.16 293.4);
+            
+            --radius: 1.5rem; /* Large rounded look */
+
+            --shadow-xs: 0px 8px 16px -4px oklch(0 0 0 / 0.04);
+            --shadow-sm: 0px 8px 16px -4px oklch(0 0 0 / 0.08), 0px 1px 2px -5px oklch(0 0 0 / 0.08);
+            --shadow: 0px 8px 16px -4px oklch(0 0 0 / 0.08), 0px 1px 2px -5px oklch(0 0 0 / 0.08);
+            --shadow-md: 0px 8px 16px -4px oklch(0 0 0 / 0.08), 0px 2px 4px -5px oklch(0 0 0 / 0.08);
+        }
+
+        /* Dark Mode Variables */
+        .dark {
+            --background: oklch(0.22 0.01 52.96);
+            --foreground: oklch(0.93 0.03 273.66);
+            --card: oklch(0.28 0.03 307.25);
+            --card-foreground: oklch(0.93 0.03 273.66);
+            --primary: oklch(0.79 0.12 295.97);
+            --primary-foreground: oklch(0.22 0.01 52.96);
+            --secondary: oklch(0.34 0.04 309.13);
+            --secondary-foreground: oklch(0.87 0.01 261.81);
+            --muted: oklch(0.28 0.03 307.25);
+            --muted-foreground: oklch(0.71 0.02 261.33);
+            --border: oklch(0.34 0.04 309.13);
+            --input: oklch(0.34 0.04 309.13);
+        }
+
+        /* Base Resets */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-enter {
+            animation: fadeInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0; /* Start hidden */
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground min-h-screen p-4 md:p-8 font-sans">
+
+    <header class="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-enter" style="animation-delay: 0ms;">
+        <div>
+            <div class="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                <i class="ph ph-house"></i>
+                <span>/</span>
+                <span>Classes</span>
+            </div>
+            <h1 class="text-3xl font-bold text-foreground tracking-tight">Class 12A-C1</h1>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <button class="h-10 px-4 rounded-full bg-card border border-border text-sm font-medium hover:bg-muted transition-colors shadow-sm">
+                Edit Class
+            </button>
+            <button class="h-10 px-4 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity shadow-md flex items-center gap-2">
+                <i class="ph-bold ph-gear"></i> Settings
+            </button>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <section class="animate-enter" style="animation-delay: 100ms;">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl font-bold">Students</h2>
+                    <span class="px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground text-xs font-bold border border-border">24</span>
+                </div>
+                
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <div class="relative flex-1 md:w-64">
+                        <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+                        <input type="text" placeholder="Search..." class="w-full pl-9 pr-4 h-10 rounded-full bg-card border border-input text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-shadow shadow-sm">
+                    </div>
+                    
+                    <button class="h-10 w-10 flex items-center justify-center rounded-full bg-card border border-input text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shadow-sm">
+                        <i class="ph ph-funnel text-lg"></i>
+                    </button>
+                    
+                    <button class="h-10 w-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:scale-105 transition-transform shadow-md">
+                        <i class="ph-bold ph-plus text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                
+                <div class="group relative bg-card rounded-lg border-2 border-primary shadow-md p-4 flex flex-col items-center text-center cursor-pointer transition-transform hover:-translate-y-1">
+                    <div class="absolute top-3 right-3 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center">
+                        <i class="ph-bold ph-check text-xs"></i>
+                    </div>
+                    
+                    <div class="relative mb-3">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Wilbur&backgroundColor=a855f7" class="w-16 h-16 rounded-full bg-secondary p-1 border border-border group-hover:scale-105 transition-transform">
+                        <div class="absolute -bottom-1 -right-1 bg-foreground text-background text-[10px] font-bold px-2 py-0.5 rounded-full border border-background">A2</div>
+                    </div>
+                    
+                    <h3 class="font-bold text-sm truncate w-full">Wilbur</h3>
+                    <p class="text-xs text-muted-foreground mt-1 font-mono">ID: 8821</p>
+                </div>
+
+                <div class="group relative bg-card rounded-lg border border-border shadow-sm p-4 flex flex-col items-center text-center cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md hover:border-primary/30">
+                    <div class="relative mb-3">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Willie&backgroundColor=e9d5ff" class="w-16 h-16 rounded-full bg-secondary p-1 border border-border group-hover:scale-105 transition-transform">
+                        <div class="absolute -bottom-1 -right-1 bg-secondary text-secondary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full border border-card">A1</div>
+                    </div>
+                    <h3 class="font-semibold text-sm truncate w-full">Willie</h3>
+                    <p class="text-xs text-muted-foreground mt-1 font-mono">ID: 9931</p>
+                </div>
+
+                <div class="group relative bg-card rounded-lg border border-border shadow-sm p-4 flex flex-col items-center text-center cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md hover:border-primary/30">
+                    <div class="relative mb-3">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Miguel&backgroundColor=fbcfe8" class="w-16 h-16 rounded-full bg-secondary p-1 border border-border group-hover:scale-105 transition-transform">
+                        <div class="absolute -bottom-1 -right-1 bg-secondary text-secondary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full border border-card">B1</div>
+                    </div>
+                    <h3 class="font-semibold text-sm truncate w-full">Miguel</h3>
+                    <p class="text-xs text-muted-foreground mt-1 font-mono">ID: 2131</p>
+                </div>
+
+                <div class="group relative bg-card rounded-lg border border-border shadow-sm p-4 flex flex-col items-center text-center cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md hover:border-primary/30">
+                    <div class="relative mb-3">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Aaron&backgroundColor=c4b5fd" class="w-16 h-16 rounded-full bg-secondary p-1 border border-border group-hover:scale-105 transition-transform">
+                        <div class="absolute -bottom-1 -right-1 bg-secondary text-secondary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full border border-card">A2</div>
+                    </div>
+                    <h3 class="font-semibold text-sm truncate w-full">Aaron</h3>
+                    <p class="text-xs text-muted-foreground mt-1 font-mono">ID: 0012</p>
+                </div>
+
+                <div class="group relative bg-card rounded-lg border border-border shadow-sm p-4 flex flex-col items-center text-center cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md hover:border-primary/30">
+                    <div class="relative mb-3">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ian&backgroundColor=bae6fd" class="w-16 h-16 rounded-full bg-secondary p-1 border border-border group-hover:scale-105 transition-transform">
+                        <div class="absolute -bottom-1 -right-1 bg-secondary text-secondary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full border border-card">C1</div>
+                    </div>
+                    <h3 class="font-semibold text-sm truncate w-full">Ian</h3>
+                    <p class="text-xs text-muted-foreground mt-1 font-mono">ID: 5512</p>
+                </div>
+                
+                 <div class="group relative bg-card rounded-lg border border-border shadow-sm p-4 flex flex-col items-center text-center cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md hover:border-primary/30">
+                    <div class="relative mb-3">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Zoe&backgroundColor=ddd6fe" class="w-16 h-16 rounded-full bg-secondary p-1 border border-border group-hover:scale-105 transition-transform">
+                        <div class="absolute -bottom-1 -right-1 bg-secondary text-secondary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full border border-card">B2</div>
+                    </div>
+                    <h3 class="font-semibold text-sm truncate w-full">Zoe</h3>
+                    <p class="text-xs text-muted-foreground mt-1 font-mono">ID: 7721</p>
+                </div>
+
+            </div>
+            
+            <div class="mt-4 flex items-center justify-center gap-2">
+                <button class="w-8 h-8 rounded-full border border-border bg-card hover:bg-muted flex items-center justify-center text-muted-foreground transition-colors"><i class="ph ph-caret-left"></i></button>
+                <span class="text-xs font-medium text-muted-foreground">Page 1 of 4</span>
+                <button class="w-8 h-8 rounded-full border border-border bg-card hover:bg-muted flex items-center justify-center text-foreground transition-colors"><i class="ph ph-caret-right"></i></button>
+            </div>
+        </section>
+
+        <section class="animate-enter" style="animation-delay: 200ms;">
+             <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 pt-6 border-t border-border/50">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl font-bold">Lessons</h2>
+                    <span class="px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground text-xs font-bold border border-border">Upcoming</span>
+                </div>
+                
+                <button class="h-9 px-4 rounded-full bg-card border border-input text-sm font-medium hover:bg-muted transition-colors shadow-sm flex items-center gap-2">
+                    <i class="ph ph-calendar-blank"></i> View Calendar
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                
+                <div class="group flex flex-col md:flex-row md:items-center justify-between p-4 bg-card border border-border rounded-lg shadow-sm hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex flex-col items-center justify-center border border-border text-center leading-none">
+                            <span class="text-[10px] uppercase font-bold text-muted-foreground">Dec</span>
+                            <span class="text-lg font-bold text-foreground">12</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-foreground group-hover:text-primary transition-colors">Grammar Review: Past Tense</h3>
+                            <div class="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+                                <span class="flex items-center gap-1"><i class="ph-fill ph-clock"></i> 14:00 - 15:30</span>
+                                <span>•</span>
+                                <span>Room 304</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 md:mt-0 flex items-center gap-3">
+                         <div class="flex -space-x-2">
+                            <img class="w-6 h-6 rounded-full border-2 border-card" src="https://api.dicebear.com/7.x/bottts/svg?seed=Wilbur" alt=""/>
+                            <img class="w-6 h-6 rounded-full border-2 border-card" src="https://api.dicebear.com/7.x/bottts/svg?seed=Willie" alt=""/>
+                            <div class="w-6 h-6 rounded-full border-2 border-card bg-muted flex items-center justify-center text-[8px] font-bold">+20</div>
+                         </div>
+                         <button class="h-8 w-8 rounded-full border border-border flex items-center justify-center hover:bg-muted hover:text-primary transition-colors">
+                            <i class="ph ph-caret-right"></i>
+                         </button>
+                    </div>
+                </div>
+
+                <div class="group flex flex-col md:flex-row md:items-center justify-between p-4 bg-card border border-border rounded-lg shadow-sm hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex flex-col items-center justify-center border border-border text-center leading-none">
+                            <span class="text-[10px] uppercase font-bold text-muted-foreground">Dec</span>
+                            <span class="text-lg font-bold text-foreground">14</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-foreground group-hover:text-primary transition-colors">Vocabulary: Technology</h3>
+                            <div class="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+                                <span class="flex items-center gap-1"><i class="ph-fill ph-clock"></i> 09:00 - 10:30</span>
+                                <span>•</span>
+                                <span>Lab 2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 md:mt-0 flex items-center gap-3">
+                         <button class="h-8 w-8 rounded-full border border-border flex items-center justify-center hover:bg-muted hover:text-primary transition-colors">
+                            <i class="ph ph-caret-right"></i>
+                         </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</body>
+</html>
