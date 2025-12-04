@@ -1,39 +1,69 @@
 import { apiClient } from "@/lib/api-client";
-
-export type CefrLevels = {
-  reading?: string;
-  writing?: string;
-  speaking?: string;
-  listening?: string;
-};
-
-export type CreateStudentDto = {
-  fullName: string;
-  grade?: string;
-  hobby?: string;
-  notes?: string;
-  currentLevel?: string;
-  avatarUrl?: string;
-  specialNeeds?: string[];
-  cefrLevels?: CefrLevels | null;
-};
-
-export type UpdateStudentDto = Partial<CreateStudentDto>;
+import type {
+  Student,
+  CreateStudentDto,
+  UpdateStudentDto,
+} from "@/types/classroom";
+import type { ApiResponse, PageResponseDto, PaginationParams } from "@/types/api";
 
 export const studentService = {
-  getByClass: (classId: string) => {
-    return apiClient.get(`/classrooms/${classId}/students`);
+  /**
+   * Get all students for a classroom with pagination
+   */
+  getAll: async (
+    classroomId: string,
+    params?: PaginationParams
+  ): Promise<PageResponseDto<Student>> => {
+    const response = await apiClient.get<
+      never,
+      ApiResponse<PageResponseDto<Student>>
+    >(`/classrooms/${classroomId}/students`, { params });
+    return response.data;
   },
 
-  create: (classId: string, data: CreateStudentDto) => {
-    return apiClient.post(`/classrooms/${classId}/students`, data);
+  /**
+   * Get a student by ID
+   */
+  getById: async (classroomId: string, id: string): Promise<Student> => {
+    const response = await apiClient.get<never, ApiResponse<Student>>(
+      `/classrooms/${classroomId}/students/${id}`
+    );
+    return response.data;
   },
 
-  update: (classId: string, studentId: string, data: UpdateStudentDto) => {
-    return apiClient.patch(`/classrooms/${classId}/students/${studentId}`, data);
+  /**
+   * Create a new student in a classroom
+   */
+  create: async (
+    classroomId: string,
+    data: CreateStudentDto
+  ): Promise<Student> => {
+    const response = await apiClient.post<never, ApiResponse<Student>>(
+      `/classrooms/${classroomId}/students`,
+      data
+    );
+    return response.data;
   },
 
-  delete: (classId: string, studentId: string) => {
-    return apiClient.delete(`/classrooms/${classId}/students/${studentId}`);
+  /**
+   * Update a student
+   */
+  update: async (
+    classroomId: string,
+    id: string,
+    data: UpdateStudentDto
+  ): Promise<Student> => {
+    const response = await apiClient.patch<never, ApiResponse<Student>>(
+      `/classrooms/${classroomId}/students/${id}`,
+      data
+    );
+    return response.data;
+  },
+
+  /**
+   * Delete a student (soft delete)
+   */
+  delete: async (classroomId: string, id: string): Promise<void> => {
+    await apiClient.delete(`/classrooms/${classroomId}/students/${id}`);
   },
 };

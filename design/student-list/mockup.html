@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Management</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Source+Serif+4:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+                        serif: ['Source Serif 4', 'serif'],
+                        mono: ['IBM Plex Mono', 'monospace'],
+                    },
+                    colors: {
+                        border: "var(--border)",
+                        input: "var(--input)",
+                        ring: "var(--ring)",
+                        background: "var(--background)",
+                        foreground: "var(--foreground)",
+                        primary: {
+                            DEFAULT: "var(--primary)",
+                            foreground: "var(--primary-foreground)",
+                        },
+                        secondary: {
+                            DEFAULT: "var(--secondary)",
+                            foreground: "var(--secondary-foreground)",
+                        },
+                        muted: {
+                            DEFAULT: "var(--muted)",
+                            foreground: "var(--muted-foreground)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent)",
+                            foreground: "var(--accent-foreground)",
+                        },
+                        card: {
+                            DEFAULT: "var(--card)",
+                            foreground: "var(--card-foreground)",
+                        },
+                    },
+                    borderRadius: {
+                        lg: "var(--radius)",
+                        md: "calc(var(--radius) - 2px)",
+                        sm: "calc(var(--radius) - 4px)",
+                    },
+                    boxShadow: {
+                        xs: "var(--shadow-xs)",
+                        sm: "var(--shadow-sm)",
+                        DEFAULT: "var(--shadow)",
+                        md: "var(--shadow-md)",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* YOUR THEME VARIABLES */
+        :root {
+            --background: oklch(0.97 0.01 316.68);
+            --foreground: oklch(0.37 0.03 259.73);
+            --card: oklch(1 0 0);
+            --card-foreground: oklch(0.37 0.03 259.73);
+            --popover: oklch(1 0 0);
+            --popover-foreground: oklch(0.37 0.03 259.73);
+            --primary: oklch(0.71 0.16 293.4);
+            --primary-foreground: oklch(1 0 0);
+            --secondary: oklch(0.91 0.05 306.07);
+            --secondary-foreground: oklch(0.45 0.03 257.68);
+            --muted: oklch(0.95 0.03 307.19);
+            --muted-foreground: oklch(0.55 0.02 264.41);
+            --accent: oklch(0.94 0.03 322.47);
+            --accent-foreground: oklch(0.37 0.03 259.73);
+            --destructive: oklch(0.81 0.1 19.47);
+            --border: oklch(0.91 0.05 306.07);
+            --input: oklch(0.91 0.05 306.07);
+            --ring: oklch(0.71 0.16 293.4);
+            
+            --radius: 1.5rem;
+
+            --shadow-xs: 0px 8px 16px -4px oklch(0 0 0 / 0.04);
+            --shadow-sm: 0px 8px 16px -4px oklch(0 0 0 / 0.08), 0px 1px 2px -5px oklch(0 0 0 / 0.08);
+            --shadow: 0px 8px 16px -4px oklch(0 0 0 / 0.08), 0px 1px 2px -5px oklch(0 0 0 / 0.08);
+            --shadow-md: 0px 8px 16px -4px oklch(0 0 0 / 0.08), 0px 2px 4px -5px oklch(0 0 0 / 0.08);
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOutDown {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(10px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); }
+        }
+        
+        .animate-enter {
+            animation: fadeInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0; 
+        }
+
+        .content-exit {
+            animation: fadeOutDown 0.3s ease-in forwards;
+        }
+        
+        .content-enter {
+            animation: fadeInUp 0.4s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .ai-loading {
+            animation: pulse-glow 1.5s infinite;
+        }
+
+        /* Hide scrollbar for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* DRAWER & BACKDROP STYLES */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(4px);
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 100%;
+            max-width: 480px;
+            background: var(--card); /* Fallback */
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 50;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+        }
+        .drawer.open {
+            transform: translateX(0);
+        }
+
+        /* Modal Styles */
+        .modal-container {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-container.open {
+            pointer-events: auto;
+            opacity: 1;
+        }
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: var(--radius);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-container.open .modal-content {
+            transform: scale(1);
+        }
+
+        /* Custom Radio Inputs for Proficiency */
+        .radio-pill input:checked + span {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
+        }
+        
+        /* Drag and Drop Active State */
+        .drag-active {
+            border-color: var(--primary) !important;
+            background-color: rgba(168, 85, 247, 0.1) !important;
+        }
+        
+        /* Markdown-like styling for AI output */
+        .ai-output h1, .ai-output h2, .ai-output h3 { font-weight: 700; margin-bottom: 0.5rem; margin-top: 1rem; color: var(--foreground); }
+        .ai-output p { margin-bottom: 0.5rem; line-height: 1.5; color: var(--muted-foreground); }
+        .ai-output ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.5rem; }
+        .ai-output li { margin-bottom: 0.25rem; }
+        .ai-output strong { color: var(--primary); }
+    </style>
+</head>
+<body class="bg-background text-foreground min-h-screen p-4 md:p-8 font-sans">
+
+    <!-- HEADER -->
+    <header class="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-enter" style="animation-delay: 0ms;">
+        <div>
+            <div class="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                <i class="ph ph-house"></i>
+                <span>/</span>
+                <span>Dashboard</span>
+            </div>
+            <h1 class="text-3xl font-bold text-foreground tracking-tight">Class Management</h1>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <button class="h-10 px-4 rounded-full bg-card border border-border text-sm font-medium hover:bg-muted transition-colors shadow-sm">
+                Edit View
+            </button>
+            <button class="h-10 px-4 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity shadow-md flex items-center gap-2">
+                <i class="ph-bold ph-gear"></i> Settings
+            </button>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <!-- === CLASS LIST & SWITCHER (UPDATED STYLE) === -->
+        <section class="animate-enter" style="animation-delay: 50ms;">
+            <div class="flex items-center justify-between mb-4">
+                 <h2 class="text-xl font-bold">Your Classes</h2>
+                 <!-- Simplified controls -->
+                 <div class="flex gap-2 text-muted-foreground">
+                    <span class="text-xs font-medium self-center mr-2">3 Active</span>
+                 </div>
+            </div>
+
+            <!-- Changed to a simpler row container -->
+            <div class="flex flex-wrap gap-3" id="class-container">
+                <!-- Classes injected by JS -->
+            </div>
+        </section>
+
+
+        <!-- DYNAMIC CONTENT AREA -->
+        <div id="dynamic-wrapper" class="space-y-8 transition-opacity duration-300">
+            
+            <!-- Students Section -->
+            <section class="animate-enter" style="animation-delay: 100ms;">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 pt-6 border-t border-border/50">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold">Students</h2>
+                        <span class="px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground text-xs font-bold border border-border" id="student-count">24</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <div class="relative flex-1 md:w-64">
+                            <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+                            <input type="text" placeholder="Search..." class="w-full pl-9 pr-4 h-10 rounded-full bg-card border border-input text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-shadow shadow-sm">
+                        </div>
+                        <button class="h-10 w-10 flex items-center justify-center rounded-full bg-card border border-input text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shadow-sm">
+                            <i class="ph ph-funnel text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4" id="student-grid">
+                    <!-- Students injected by JS -->
+                </div>
+                
+                <div class="mt-4 flex items-center justify-center gap-2">
+                    <button class="w-8 h-8 rounded-full border border-border bg-card hover:bg-muted flex items-center justify-center text-muted-foreground transition-colors"><i class="ph ph-caret-left"></i></button>
+                    <span class="text-xs font-medium text-muted-foreground">Page 1 of 4</span>
+                    <button class="w-8 h-8 rounded-full border border-border bg-card hover:bg-muted flex items-center justify-center text-foreground transition-colors"><i class="ph ph-caret-right"></i></button>
+                </div>
+            </section>
+
+            <!-- Lessons Section -->
+            <section class="animate-enter" style="animation-delay: 200ms;">
+                 <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 pt-6 border-t border-border/50">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold">Lessons</h2>
+                        <span class="px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground text-xs font-bold border border-border">Upcoming</span>
+                    </div>
+                    
+                    <button class="h-9 px-4 rounded-full bg-card border border-input text-sm font-medium hover:bg-muted transition-colors shadow-sm flex items-center gap-2">
+                        <i class="ph ph-calendar-blank"></i> View Calendar
+                    </button>
+                </div>
+
+                <div class="space-y-3" id="lesson-list">
+                   <!-- Lessons injected by JS -->
+                </div>
+            </section>
+
+        </div> <!-- End Dynamic Wrapper -->
+    </div>
+
+    <!-- === RIGHT DRAWER (Hidden by default) === -->
+    <div id="backdrop" class="backdrop" onclick="closeDrawer()"></div>
+    <div id="drawer" class="drawer flex flex-col h-full">
+        <!-- Drawer Header -->
+        <div class="p-6 border-b border-border flex items-center justify-between bg-white/50 backdrop-blur-sm sticky top-0 z-10">
+            <div class="flex items-center gap-4">
+                <!-- UPDATED AVATAR CONTAINER -->
+                <div class="relative group">
+                    <div id="drawer-avatar-container" 
+                         class="w-16 h-16 rounded-full bg-secondary p-1 border-2 border-dashed border-border group-hover:border-primary transition-colors cursor-pointer relative overflow-hidden" 
+                         onclick="triggerAvatarUpload()" 
+                         ondrop="handleAvatarDrop(event)" 
+                         ondragover="allowDrop(event)" 
+                         ondragleave="handleDragLeave(event)">
+                        
+                        <img id="drawer-avatar" src="" class="w-full h-full rounded-full object-cover pointer-events-none">
+                        
+                        <!-- Overlay for Drag/Click -->
+                        <div id="avatar-overlay" class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <i class="ph-bold ph-camera text-xl"></i>
+                            <span class="text-[8px] font-bold uppercase mt-1">Upload</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden Input -->
+                    <input type="file" id="avatar-input" hidden accept="image/*" onchange="handleAvatarSelect(event)">
+                    
+                    <!-- Randomize Button (Floating) -->
+                    <button onclick="randomizeAvatar(event)" class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary text-white shadow-md flex items-center justify-center hover:scale-110 transition-transform z-10" title="Randomize">
+                        <i class="ph-bold ph-dice-five"></i>
+                    </button>
+                </div>
+
+                <div>
+                    <h3 id="drawer-title" class="text-lg font-bold text-foreground">Edit Student</h3>
+                    <p class="text-xs text-muted-foreground">Update profile details</p>
+                </div>
+            </div>
+            <button onclick="closeDrawer()" class="w-8 h-8 rounded-full bg-secondary hover:bg-destructive hover:text-white transition-colors flex items-center justify-center">
+                <i class="ph-bold ph-x"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Content (Form) -->
+        <div class="flex-1 p-6 overflow-y-auto space-y-6">
+            
+            <!-- Basic Info -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-foreground mb-1.5 uppercase tracking-wide">Full Name <span class="text-destructive">*</span></label>
+                    <input type="text" id="drawer-name" class="w-full h-11 px-4 rounded-xl border border-input bg-card focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" value="Wilbur">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-foreground mb-1.5 uppercase tracking-wide">Grade <span class="text-destructive">*</span></label>
+                    <input type="text" id="drawer-grade" class="w-full h-11 px-4 rounded-xl border border-input bg-card focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" value="7A">
+                </div>
+            </div>
+
+            <!-- AI Insight Generator -->
+            <div class="p-5 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-50 border border-violet-100 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-sm font-bold text-violet-800 flex items-center gap-2">
+                        <i class="ph-fill ph-sparkle text-violet-500"></i> AI Insights
+                    </h4>
+                    <span class="text-[10px] uppercase font-bold text-violet-400 bg-white/50 px-2 py-0.5 rounded-full border border-violet-100">Gemini</span>
+                </div>
+                <p class="text-xs text-muted-foreground mb-3">Generate a progress report and teaching tips based on this student's profile.</p>
+                <button onclick="generateStudentReport()" id="btn-generate-report" class="w-full h-10 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-bold text-xs shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-magic-wand"></i> Generate Report
+                </button>
+                
+                <!-- AI Output Area -->
+                <div id="ai-report-output" class="hidden mt-4 bg-white/80 rounded-xl p-3 border border-violet-100 text-xs text-foreground ai-output max-h-60 overflow-y-auto">
+                    <!-- Report will appear here -->
+                </div>
+            </div>
+
+            <!-- Proficiency Levels -->
+            <div class="space-y-5 p-5 rounded-2xl bg-secondary/30 border border-border">
+                <h4 class="text-sm font-bold text-primary flex items-center gap-2">
+                    <i class="ph-fill ph-translate"></i> Proficiency Levels
+                </h4>
+                <div id="proficiency-container" class="space-y-4">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-foreground mb-1.5 uppercase tracking-wide">Notes</label>
+                    <textarea id="drawer-notes" class="w-full h-24 p-4 rounded-xl border border-input bg-card focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none" placeholder="Add private notes..."></textarea>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Drawer Footer -->
+        <div class="p-6 border-t border-border bg-white/50 backdrop-blur-sm sticky bottom-0 flex gap-3">
+             <button onclick="closeDrawer()" class="flex-1 h-12 rounded-xl border border-border bg-card text-foreground font-bold hover:bg-muted transition-colors">
+                Cancel
+            </button>
+            <button class="flex-[2] h-12 rounded-xl bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+                <i class="ph-bold ph-floppy-disk"></i> Save Changes
+            </button>
+        </div>
+    </div>
+    
+    <!-- === MODAL (For Lesson Plan) === -->
+    <div id="lesson-modal" class="modal-container">
+        <div class="backdrop absolute inset-0 bg-black/30 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="modal-content relative flex flex-col max-h-[85vh]">
+            <div class="p-6 border-b border-border flex items-center justify-between">
+                <h3 class="text-lg font-bold flex items-center gap-2">
+                    <i class="ph-fill ph-chalkboard-teacher text-primary"></i> Lesson Assistant
+                </h3>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full hover:bg-muted flex items-center justify-center"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto ai-output" id="lesson-plan-content">
+                <!-- Content injected here -->
+                <div class="flex flex-col items-center justify-center py-10 text-center">
+                    <div class="w-12 h-12 border-4 border-muted border-t-primary rounded-full animate-spin mb-4"></div>
+                    <p class="text-muted-foreground font-medium">Planning lesson with Gemini...</p>
+                </div>
+            </div>
+            <div class="p-4 border-t border-border bg-muted/20 flex justify-end gap-2">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-lg bg-card border border-border text-sm font-medium hover:bg-muted">Close</button>
+                <button class="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium shadow-sm flex items-center gap-2">
+                    <i class="ph-bold ph-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const apiKey = ""; // API Key injected by environment
+
+        // --- GEMINI API HELPER ---
+        async function callGemini(prompt) {
+            if (!apiKey) {
+                return "Error: API Key is missing. Please check configuration.";
+            }
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                return "Sorry, I couldn't generate the content at this time. Please try again.";
+            }
+        }
+
+        // --- AI FEATURES LOGIC ---
+        
+        async function generateStudentReport() {
+            const btn = document.getElementById('btn-generate-report');
+            const output = document.getElementById('ai-report-output');
+            const name = document.getElementById('drawer-name').value;
+            const grade = document.getElementById('drawer-grade').value;
+            const notes = document.getElementById('drawer-notes').value;
+            
+            // UI Loading State
+            btn.disabled = true;
+            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i> Generating...`;
+            output.classList.remove('hidden');
+            output.innerHTML = `<div class="flex items-center gap-2 text-muted-foreground"><i class="ph-bold ph-sparkle text-violet-400"></i> Gemini is analyzing student profile...</div>`;
+
+            // Prompt Construction
+            const prompt = `Generate a concise progress report summary and 3 specific teaching tips for a student named ${name} in Grade ${grade}. 
+            Teacher Notes: "${notes || 'No specific notes provided.'}". 
+            Format as Markdown with bold headings. Keep it friendly and professional.`;
+
+            // Call API
+            const result = await callGemini(prompt);
+            
+            // Render Result (Simple Markdown to HTML conversion)
+            const formattedResult = result
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+                .replace(/\* (.*)/gim, '<li>$1</li>')
+                .replace(/\n/gim, '<br>');
+
+            output.innerHTML = formattedResult;
+            
+            // Reset Button
+            btn.disabled = false;
+            btn.innerHTML = `<i class="ph-bold ph-magic-wand"></i> Regenerate Report`;
+        }
+
+        async function planLesson(title, level) {
+            const modal = document.getElementById('lesson-modal');
+            const content = document.getElementById('lesson-plan-content');
+            
+            modal.classList.add('open');
+            content.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-12 text-center">
+                    <div class="w-12 h-12 border-4 border-violet-100 border-t-violet-500 rounded-full animate-spin mb-4"></div>
+                    <p class="text-violet-800 font-bold">Designing Lesson...</p>
+                    <p class="text-muted-foreground text-sm">Gemini is brainstorming activities for "${title}"</p>
+                </div>`;
+
+            const prompt = `Create a short, engaging lesson plan outline for "${title}" for ${level} level students. 
+            Include: 1. Learning Objective, 2. A fun Warm-up Activity (5 min), 3. Main Activity (20 min). 
+            Keep it concise and formatted with bullet points.`;
+
+            const result = await callGemini(prompt);
+            
+            const formattedResult = result
+                .replace(/\*\*(.*)\*\*/gim, '<strong class="text-primary">$1</strong>')
+                .replace(/^\* (.*)/gim, '<li class="ml-4 mb-2">$1</li>')
+                .replace(/\n/gim, '<br>');
+
+            content.innerHTML = `
+                <div class="mb-4">
+                    <h2 class="text-xl font-bold text-foreground mb-1">${title}</h2>
+                    <span class="text-xs font-bold bg-secondary px-2 py-1 rounded text-muted-foreground">Generated by Gemini</span>
+                </div>
+                <div class="text-sm leading-relaxed">${formattedResult}</div>
+            `;
+        }
+
+        function closeModal() {
+            document.getElementById('lesson-modal').classList.remove('open');
+        }
+
+
+        // --- 1. DATA STORE ---
+        const db = {
+            classes: [
+                {
+                    id: 'c1',
+                    name: "12A-C1",
+                    desc: "Advanced English",
+                    color: "a855f7",
+                    students: [
+                        { name: "Wilbur", level: "A2", img: "Wilbur", selected: true, notes: "Needs extra time for reading. Enjoys sci-fi topics." },
+                        { name: "Willie", level: "A1", img: "Willie", notes: "Very shy in group speaking tasks." },
+                        { name: "Miguel", level: "B1", img: "Miguel" },
+                        { name: "Aaron", level: "A2", img: "Aaron" },
+                        { name: "Ian", level: "C1", img: "Ian" },
+                        { name: "Zoe", level: "B2", img: "Zoe" }
+                    ],
+                    lessons: [
+                        { d: "12", m: "DEC", title: "Grammar Review: Past Tense", time: "14:00", loc: "Room 304" },
+                        { d: "14", m: "DEC", title: "Vocabulary: Technology", time: "09:00", loc: "Lab 2" }
+                    ]
+                },
+                {
+                    id: 'c2',
+                    name: "10B-A2",
+                    desc: "Basic Grammar",
+                    color: "6366f1",
+                    students: [
+                        { name: "Sarah", level: "A2", img: "Sarah", selected: true },
+                        { name: "John", level: "A1", img: "John" },
+                        { name: "Mike", level: "A2", img: "Mike" },
+                        { name: "Emma", level: "A2", img: "Emma" },
+                        { name: "Luke", level: "A1", img: "Luke" }
+                    ],
+                    lessons: [
+                        { d: "13", m: "DEC", title: "Introduction to Nouns", time: "10:00", loc: "Room 101" }
+                    ]
+                },
+                {
+                    id: 'c3',
+                    name: "11A-B1",
+                    desc: "Literature Intro",
+                    color: "ec4899",
+                    students: [
+                        { name: "Felix", level: "B1", img: "Felix", selected: true },
+                        { name: "Alex", level: "B2", img: "Alex" },
+                        { name: "Sam", level: "B1", img: "Sam" },
+                        { name: "Kate", level: "B1", img: "Kate" }
+                    ],
+                    lessons: [
+                        { d: "15", m: "DEC", title: "Poetry Analysis", time: "13:00", loc: "Library" },
+                        { d: "18", m: "DEC", title: "Essay Writing", time: "09:00", loc: "Room 202" }
+                    ]
+                }
+            ]
+        };
+
+        let activeClassIndex = 0;
+
+        // --- 2. DRAWER & AVATAR LOGIC ---
+        function openDrawer(studentName = null) {
+            const drawer = document.getElementById('drawer');
+            const backdrop = document.getElementById('backdrop');
+            
+            const title = document.getElementById('drawer-title');
+            const avatar = document.getElementById('drawer-avatar');
+            const nameInput = document.getElementById('drawer-name');
+            const notesInput = document.getElementById('drawer-notes');
+            const output = document.getElementById('ai-report-output');
+            
+            output.classList.add('hidden');
+            output.innerHTML = '';
+            renderProficiencySection();
+
+            if (studentName) {
+                title.innerText = "Edit Student";
+                nameInput.value = studentName;
+                const currentClass = db.classes[activeClassIndex];
+                const student = currentClass.students.find(s => s.name === studentName) || { img: 'bottts' };
+                
+                // Check if it's a raw base64/URL or a seed name
+                if(student.img.startsWith('data:') || student.img.startsWith('http')) {
+                    avatar.src = student.img;
+                } else {
+                    avatar.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${student.img}&backgroundColor=${currentClass.color}`;
+                }
+                
+                notesInput.value = student.notes || "";
+            } else {
+                title.innerText = "Add New Student";
+                nameInput.value = "";
+                avatar.src = `https://api.dicebear.com/7.x/bottts/svg?seed=New&backgroundColor=e2e8f0`;
+                notesInput.value = "";
+            }
+
+            drawer.classList.add('open');
+            backdrop.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            const drawer = document.getElementById('drawer');
+            const backdrop = document.getElementById('backdrop');
+            
+            drawer.classList.remove('open');
+            backdrop.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // --- AVATAR INTERACTION ---
+        function triggerAvatarUpload() {
+            document.getElementById('avatar-input').click();
+        }
+
+        function handleAvatarSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('drawer-avatar').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+            document.getElementById('drawer-avatar-container').classList.add('drag-active');
+        }
+
+        function handleDragLeave(event) {
+            document.getElementById('drawer-avatar-container').classList.remove('drag-active');
+        }
+
+        function handleAvatarDrop(event) {
+            event.preventDefault();
+            document.getElementById('drawer-avatar-container').classList.remove('drag-active');
+            
+            const file = event.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('drawer-avatar').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function randomizeAvatar(event) {
+            event.stopPropagation(); // Prevent triggering upload
+            const randomSeed = Math.random().toString(36).substring(7);
+            const currentClass = db.classes[activeClassIndex];
+            const newUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${randomSeed}&backgroundColor=${currentClass.color}`;
+            document.getElementById('drawer-avatar').src = newUrl;
+        }
+
+
+        function renderProficiencySection() {
+            const container = document.getElementById('proficiency-container');
+            const skills = ['Reading', 'Writing', 'Listening', 'Speaking'];
+            const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+            
+            let html = '';
+            skills.forEach((skill, idx) => {
+                const randomLevel = Math.floor(Math.random() * 3); 
+                
+                html += `
+                <div>
+                    <label class="block text-[10px] font-bold text-muted-foreground uppercase mb-2">${skill}</label>
+                    <div class="flex flex-wrap gap-2">
+                        ${levels.map((lvl, lvlIdx) => `
+                            <label class="radio-pill cursor-pointer relative">
+                                <input type="radio" name="${skill}" class="peer sr-only" ${lvlIdx === randomLevel ? 'checked' : ''}>
+                                <span class="w-8 h-8 rounded-full border border-border bg-card flex items-center justify-center text-xs font-medium text-muted-foreground transition-all hover:border-primary hover:text-primary peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary peer-checked:shadow-md">
+                                    ${lvl}
+                                </span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // --- 3. RENDER FUNCTIONS ---
+        
+        function renderClassList() {
+            const container = document.getElementById('class-container');
+            let html = '';
+            
+            db.classes.forEach((cls, idx) => {
+                const isActive = idx === activeClassIndex;
+                const activeClasses = isActive 
+                    ? "bg-primary text-primary-foreground border-primary shadow-md scale-105"
+                    : "bg-white border-border text-muted-foreground hover:border-primary/50 hover:bg-primary/5";
+
+                html += `
+                <button onclick="switchClass(${idx})" class="${activeClasses} min-w-[140px] px-2 py-3 rounded-2xl flex items-center gap-3 transition-all cursor-pointer border group">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs ${isActive ? 'bg-white/20 text-white' : 'bg-secondary text-secondary-foreground'}">
+                         ${cls.students.length}
+                    </div>
+                    <div class="text-left">
+                        <h3 class="font-bold text-sm leading-tight">${cls.name}</h3>
+                        <p class="text-[10px] opacity-80">${cls.desc}</p>
+                    </div>
+                    ${isActive ? '<i class="ph-bold ph-check-circle ml-auto text-lg"></i>' : ''}
+                </button>
+                `;
+            });
+
+            // "Add Class" Button
+            html += `
+            <button class="w-12 h-12 rounded-2xl border-2 border-dashed border-input hover:border-primary hover:bg-primary/5 hover:text-primary text-muted-foreground flex items-center justify-center transition-all cursor-pointer flex-shrink-0" title="Add Class">
+                <i class="ph-bold ph-plus text-xl"></i>
+            </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function renderContent(index) {
+            const data = db.classes[index];
+            const studentGrid = document.getElementById('student-grid');
+            const lessonList = document.getElementById('lesson-list');
+            const studentCount = document.getElementById('student-count');
+
+            studentCount.innerText = data.students.length;
+
+            let studentsHtml = `
+                <button onclick="openDrawer()" class="group flex flex-col items-center justify-center h-48 rounded-lg border-2 border-dashed border-input bg-muted/30 hover:bg-primary/5 hover:border-primary hover:shadow-md transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center mb-3 group-hover:scale-110 group-hover:border-primary transition-transform">
+                        <i class="ph-bold ph-plus text-2xl text-primary"></i>
+                    </div>
+                    <span class="text-xs font-medium text-muted-foreground group-hover:text-primary">Add Student</span>
+                </button>
+            `;
+
+            data.students.forEach((s, i) => {
+                const activeStyle = s.selected ? "border-2 border-primary shadow-md" : "border border-border shadow-sm hover:border-primary/30 hover:shadow-md";
+                const checkmark = s.selected ? `<div class="absolute top-3 right-3 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center"><i class="ph-bold ph-check text-xs"></i></div>` : '';
+                
+                // Handle different image types
+                let imgSrc;
+                if(s.img.startsWith('data:') || s.img.startsWith('http')) {
+                    imgSrc = s.img;
+                } else {
+                    imgSrc = `https://api.dicebear.com/7.x/bottts/svg?seed=${s.img}&backgroundColor=${data.color}`;
+                }
+
+                studentsHtml += `
+                <button onclick="openDrawer('${s.name}')" class="group relative bg-card rounded-lg ${activeStyle} p-4 flex flex-col items-center text-center cursor-pointer transition-all hover:-translate-y-1 h-48 justify-center content-enter w-full" style="animation-delay: ${i * 50}ms">
+                    ${checkmark}
+                    <div class="relative mb-3">
+                        <img src="${imgSrc}" class="w-16 h-16 rounded-full bg-secondary p-1 border border-border group-hover:scale-105 transition-transform object-cover">
+                        <div class="absolute -bottom-1 -right-1 bg-foreground text-background text-[10px] font-bold px-2 py-0.5 rounded-full border border-background">${s.level}</div>
+                    </div>
+                    <h3 class="font-bold text-sm truncate w-full">${s.name}</h3>
+                    <p class="text-xs text-muted-foreground mt-1 font-mono">ID: 882${i}</p>
+                </button>
+                `;
+            });
+            studentGrid.innerHTML = studentsHtml;
+
+            // Render Lessons with "Plan" Button
+            let lessonsHtml = '';
+            data.lessons.forEach((l, i) => {
+                lessonsHtml += `
+                <div class="group flex flex-col md:flex-row md:items-center justify-between p-4 bg-card border border-border rounded-lg shadow-sm hover:border-primary/50 hover:shadow-md transition-all cursor-pointer content-enter" style="animation-delay: ${i * 100}ms">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary flex flex-col items-center justify-center border border-border text-center leading-none">
+                            <span class="text-[10px] uppercase font-bold text-muted-foreground">${l.m}</span>
+                            <span class="text-lg font-bold text-foreground">${l.d}</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-foreground group-hover:text-primary transition-colors">${l.title}</h3>
+                            <div class="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+                                <span class="flex items-center gap-1"><i class="ph-fill ph-clock"></i> ${l.time}</span>
+                                <span>•</span>
+                                <span>${l.loc}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 md:mt-0 flex items-center gap-3">
+                         <button onclick="planLesson('${l.title}', '${data.desc}')" class="h-8 px-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold shadow-sm flex items-center gap-1 hover:scale-105 transition-transform">
+                            <i class="ph-bold ph-sparkle"></i> Plan
+                         </button>
+                         <button class="h-8 w-8 rounded-full border border-border flex items-center justify-center hover:bg-muted hover:text-primary transition-colors">
+                            <i class="ph ph-caret-right"></i>
+                         </button>
+                    </div>
+                </div>
+                `;
+            });
+            lessonList.innerHTML = lessonsHtml;
+        }
+
+        function switchClass(index) {
+            if (index === activeClassIndex) return;
+            activeClassIndex = index;
+            renderClassList();
+            const wrapper = document.getElementById('dynamic-wrapper');
+            wrapper.classList.add('content-exit');
+            wrapper.classList.remove('content-enter'); 
+            setTimeout(() => {
+                renderContent(activeClassIndex);
+                wrapper.classList.remove('content-exit');
+                void wrapper.offsetWidth; 
+            }, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderClassList();
+            renderContent(0);
+        });
+
+    </script>
+</body>
+</html>

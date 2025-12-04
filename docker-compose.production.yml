@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # Elle UI Application
+  ui:
+    image: ghcr.io/xwyvernpx/elle-ui:${DOCKER_IMAGE_TAG:-latest}
+    container_name: elle-ui
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_APP_NAME=${VITE_APP_NAME}
+      - VITE_NODE_ENV=${VITE_NODE_ENV}
+    ports:
+      - "5173:80"
+    networks:
+      - elle-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  elle-network:
+    driver: bridge
