@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
+import { SidebarMenu, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useTranslation } from "react-i18next";
 
 export function TeamSwitcher({
@@ -13,17 +13,28 @@ export function TeamSwitcher({
 }) {
   const [activeTeam, _] = React.useState(teams[0]);
   const { t } = useTranslation();
+  const { state, toggleSidebar } = useSidebar();
 
   if (!activeTeam) {
     return null;
   }
 
+  const handleLogoClick = () => {
+    if (state === "collapsed") {
+      toggleSidebar();
+    }
+  };
+
   return (
     <SidebarMenu>
       <SidebarMenuItem className="flex items-center gap-2">
-        <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+        <button
+          type="button"
+          onClick={handleLogoClick}
+          className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+        >
           <activeTeam.logo className="size-4" />
-        </div>
+        </button>
 
         <div className="grid flex-1 text-left text-sm leading-tight">
           <span className="truncate font-medium">{activeTeam.name}</span>

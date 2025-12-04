@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { MainLayout } from "./components/layout/main-layout";
 import Dashboard from "./pages/dashboard";
+import LessonPlanning from "./pages/lesson-planning";
 import Login from "./pages/login";
 
 const rootRoute = createRootRoute({
@@ -31,9 +32,15 @@ const dashboardRoute = createRoute({
   component: Dashboard,
 });
 
+const lessonPlanningRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "/lesson-planning",
+  component: LessonPlanning,
+});
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
-  layoutRoute.addChildren([dashboardRoute]),
+  layoutRoute.addChildren([dashboardRoute, lessonPlanningRoute]),
 ]);
 
 const router = createRouter({ routeTree });

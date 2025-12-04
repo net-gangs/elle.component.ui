@@ -1,21 +1,11 @@
-import { Outlet, Link } from "@tanstack/react-router";
+import { Outlet, useRouterState } from "@tanstack/react-router";
 import { AppSidebar } from "./sidebar/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+import { LessonSidebar } from "./sidebar/lesson-sidebar";
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
-import { useTranslation } from "react-i18next";
 
 interface MainLayoutProps {
   showRightPanel?: boolean;
@@ -23,47 +13,37 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({}: MainLayoutProps) {
-  const { t } = useTranslation();
-
   return (
     <SidebarProvider>
+      <MainLayoutContent />
+    </SidebarProvider>
+  );
+}
+
+function MainLayoutContent() {
+  const router = useRouterState();
+  const isLessonPlanning = router.location.pathname.startsWith("/lesson-planning");
+
+  return (
+    <>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                  <Link to="/">{t("breadcrumb.application")}</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>
-                    {t("breadcrumb.section")}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+        <SidebarProvider className="min-h-[calc(100vh-theme(spacing.4))] h-full">
+          {isLessonPlanning && <LessonSidebar />}
+          <div className="flex flex-1 flex-col">
+            {/* Main content */}
+            <main className="flex-1 overflow-auto">
+              <div className="flex gap-6 h-full">
+                <div className="flex-1 min-w-0 h-full">
+                  <Outlet />
+                </div>
+              </div>
+            </main>
           </div>
-        </header>
-        {/* Main content */}
-        <main>
-          <div className="flex gap-6">
-            <div className="flex-1 min-w-0">
-              <Outlet />
-            </div>
-          </div>
-        </main>
+        </SidebarProvider>
       </SidebarInset>
 
       <Toaster />
-    </SidebarProvider>
+    </>
   );
 }

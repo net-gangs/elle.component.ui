@@ -18,6 +18,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import { LanguageSwitcher } from "./language-switcher";
@@ -40,13 +41,12 @@ const data = {
     preparation: [
       {
         titleKey: "sidebar.items.myClass",
-        url: "#",
+        url: "/",
         icon: GraduationCap,
-        isActive: true,
       },
       {
         titleKey: "sidebar.items.lessonPlanning",
-        url: "#",
+        url: "/lesson-planning",
         icon: NotebookPen,
       },
       {
@@ -84,8 +84,9 @@ const data = {
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="flex-row items-center justify-between">
         <TeamSwitcher teams={data.teams} />
+        <SidebarTrigger className="size-7" />
       </SidebarHeader>
       <SidebarContent>
         <NavMain
