@@ -13,7 +13,7 @@ function AddLessonCard({ onClick }: AddLessonCardProps) {
   return (
     <button
       onClick={handleClick}
-      className="group flex h-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-primary/30 bg-card/50 p-4 text-center backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-primary hover:bg-card hover:shadow-md"
+      className="group flex h-full cursor-pointer flex-col items-center justify-center rounded-[8px] border-2 border-dashed border-primary/30 bg-card/50 p-4 text-center backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-primary hover:bg-card hover:shadow-md"
     >
       <div className="relative mb-3">
         <div className="flex size-16 items-center justify-center rounded-full border border-border bg-primary/10 text-primary transition-all duration-300 group-hover:rotate-90 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">

@@ -1,21 +1,21 @@
-import { useId } from "react";
+import { useId, useRef, useCallback } from "react";
 import { useForm } from "@tanstack/react-form";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Check, ChevronsUpDown, Loader2, User } from "lucide-react";
+import {
+  Check,
+  ChevronsUpDown,
+  Loader2,
+  Camera,
+  Dices,
+  Heart,
+  Languages,
+  Save,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -30,7 +30,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
 
 const SPECIAL_NEEDS_OPTIONS = [
   "ADHD",
@@ -43,7 +42,7 @@ const SPECIAL_NEEDS_OPTIONS = [
   "Anxiety Disorders",
 ];
 
-const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
+const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 
 const studentSchema = z.object({
   fullName: z.string().min(2, "Name is required"),
@@ -68,6 +67,38 @@ interface StudentFormProps {
   isSubmitting?: boolean;
 }
 
+// Generate random dicebear avatar URL
+function generateRandomAvatar(): string {
+  const seed = Math.random().toString(36).substring(2, 10);
+  const colors = ["a855f7", "e9d5ff", "fbcfe8", "c4b5fd", "bae6fd", "ddd6fe", "6366f1", "ec4899"];
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  return `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}&backgroundColor=${color}`;
+}
+
+// Proficiency Pill Component (mockup style)
+interface ProficiencyPillProps {
+  level: string;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+function ProficiencyPill({ level, isSelected, onClick }: ProficiencyPillProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex size-9 items-center justify-center rounded-full border text-xs font-medium transition-all",
+        isSelected
+          ? "border-primary bg-primary text-primary-foreground shadow-md"
+          : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"
+      )}
+    >
+      {level}
+    </button>
+  );
+}
+
 export function StudentForm({
   initialData,
   onSubmit,
@@ -75,6 +106,7 @@ export function StudentForm({
 }: StudentFormProps) {
   const uniqueId = useId();
   const isEditMode = !!initialData;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm({
     defaultValues: initialData || {
@@ -99,281 +131,366 @@ export function StudentForm({
     },
   });
 
+  // Handle file upload and convert to base64/data URL
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          form.setFieldValue("avatarUrl", reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    [form]
+  );
+
+  // Handle drag and drop
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const file = e.dataTransfer.files?.[0];
+      if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          form.setFieldValue("avatarUrl", reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    [form]
+  );
+
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleRandomize = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      form.setFieldValue("avatarUrl", generateRandomAvatar());
+    },
+    [form]
+  );
+
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle>{isEditMode ? "Edit Student" : "Add Student"}</CardTitle>
-        <CardDescription>
-          {isEditMode
-            ? "Update student profile details."
-            : "Create a new student profile."}
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent>
-        <form
-          id={uniqueId}
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-          }}
-          className="space-y-6"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <form.Field
-              name="fullName"
-              children={(field) => (
-                <Field>
-                  <FieldLabel htmlFor={`${uniqueId}-name`}>
-                    Full Name
-                  </FieldLabel>
-                  <Input
-                    id={`${uniqueId}-name`}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="John Doe"
-                  />
-                  <FieldError errors={field.state.meta.errors} />
-                </Field>
-              )}
-            />
-
-            <form.Field
-              name="grade"
-              children={(field) => (
-                <Field>
-                  <FieldLabel htmlFor={`${uniqueId}-grade`}>Grade</FieldLabel>
-                  <Input
-                    id={`${uniqueId}-grade`}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="e.g. 5th Grade"
-                  />
-                </Field>
-              )}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <form.Field
-              name="hobby"
-              children={(field) => (
-                <Field>
-                  <FieldLabel htmlFor={`${uniqueId}-hobby`}>Hobby</FieldLabel>
-                  <Input
-                    id={`${uniqueId}-hobby`}
-                    name={field.name}
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Reading, Sports..."
-                  />
-                </Field>
-              )}
-            />
-
-            <form.Field
-              name="avatarUrl"
-              children={(field) => (
-                <Field>
-                  <FieldLabel htmlFor={`${uniqueId}-avatar`}>
-                    Avatar URL
-                  </FieldLabel>
-                  <div className="flex gap-3 items-center">
-                    {/* The Preview Circle */}
-                    <div className="shrink-0 size-10 rounded-full bg-secondary flex items-center justify-center overflow-hidden border">
-                      {field.state.value ? (
-                        <img
-                          src={field.state.value}
-                          alt="Avatar"
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            // Fallback if image fails to load
-                            e.currentTarget.src = "";
-                            // Optionally clear the value or just show icon
-                            e.currentTarget.style.display = "none";
-                          }}
-                        />
-                      ) : (
-                        <User className="size-5 text-muted-foreground" />
-                      )}
-                    </div>
-
-                    {/* The Input */}
-                    <Input
-                      id={`${uniqueId}-avatar`}
-                      name={field.name}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="https://..."
-                      className="flex-1"
+    <form
+      id={uniqueId}
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+      className="space-y-6"
+    >
+      {/* ===== SECTION 1: Personal Information ===== */}
+      <div className="space-y-4">
+        {/* Avatar Upload - Centered */}
+        <form.Field
+          name="avatarUrl"
+          children={(field) => (
+            <div className="flex flex-col items-center">
+              {/* Avatar Container with Upload/Randomize */}
+              <div className="group relative">
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  className="size-20 cursor-pointer overflow-hidden rounded-full border-2 border-dashed border-border bg-secondary p-1 transition-colors group-hover:border-primary"
+                >
+                  {field.state.value ? (
+                    <img
+                      src={field.state.value}
+                      alt="Avatar"
+                      className="size-full rounded-full object-cover"
+                      onError={() => {
+                        field.handleChange("");
+                      }}
                     />
+                  ) : (
+                    <div className="flex size-full items-center justify-center rounded-full bg-muted">
+                      <Camera className="size-6 text-muted-foreground" />
+                    </div>
+                  )}
+                  {/* Hover Overlay */}
+                  <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    <Camera className="size-5" />
+                    <span className="mt-0.5 text-[8px] font-bold uppercase">
+                      Upload
+                    </span>
                   </div>
-                </Field>
-              )}
-            />
-          </div>
+                </div>
 
-          <form.Field
-            name="specialNeeds"
-            children={(field) => (
-              <div className="space-y-3">
-                <FieldLabel>Special Needs / Conditions</FieldLabel>
+                {/* Hidden File Input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
 
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      type="button"
-                      className={cn(
-                        "w-full justify-between h-auto min-h-10 text-left font-normal",
-                        !field.state.value.length && "text-muted-foreground"
-                      )}
-                    >
-                      {field.state.value.length > 0 ? (
-                        <div className="flex flex-wrap gap-1">
-                          {field.state.value.map((val) => (
-                            <span
-                              key={val}
-                              className="bg-secondary text-secondary-foreground px-2 py-0.5 rounded-sm text-xs"
-                            >
-                              {val}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        "Select conditions..."
-                      )}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[400px] p-0" align="start">
-                    <Command>
-                      <CommandInput placeholder="Search conditions..." />
-                      <CommandList>
-                        <CommandEmpty>No condition found.</CommandEmpty>
-                        <CommandGroup>
-                          {SPECIAL_NEEDS_OPTIONS.map((option) => (
-                            <CommandItem
-                              key={option}
-                              value={option}
-                              onSelect={() => {
-                                const current = field.state.value;
-                                if (current.includes(option)) {
-                                  field.handleChange(
-                                    current.filter((v) => v !== option)
-                                  );
-                                } else {
-                                  field.handleChange([...current, option]);
-                                }
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  field.state.value.includes(option)
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {option}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                {/* Randomize Button */}
+                <button
+                  type="button"
+                  onClick={handleRandomize}
+                  className="absolute -bottom-1 -right-1 z-10 flex size-7 items-center justify-center rounded-full bg-primary text-white shadow-md transition-transform hover:scale-110"
+                  title="Randomize Avatar"
+                >
+                  <Dices className="size-4" />
+                </button>
               </div>
+            </div>
+          )}
+        />
+
+        {/* Name and Grade Fields */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <form.Field
+            name="fullName"
+            children={(nameField) => (
+              <Field>
+                <FieldLabel
+                  htmlFor={`${uniqueId}-name`}
+                  className="text-xs font-bold uppercase tracking-wide"
+                >
+                  Full Name <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Input
+                  id={`${uniqueId}-name`}
+                  name={nameField.name}
+                  value={nameField.state.value}
+                  onBlur={nameField.handleBlur}
+                  onChange={(e) => nameField.handleChange(e.target.value)}
+                  placeholder="Enter student name"
+                  className="h-11 rounded-xl"
+                />
+                <FieldError errors={nameField.state.meta.errors} />
+              </Field>
             )}
           />
 
-          <div className="space-y-6">
-            <FieldLabel>Detailed Proficiency</FieldLabel>
-
-            <div className="grid grid-cols-1 gap-6">
-              {["reading", "writing", "speaking", "listening"].map((skill) => (
-                <form.Field
-                  key={skill}
-                  name={`cefrLevels.${skill}` as any}
-                  children={(field) => (
-                    <RadioGroup
-                      onValueChange={field.handleChange}
-                      value={field.state.value}
-                      className="flex justify-between"
-                    >
-                      {CEFR_LEVELS.map((level) => (
-                        <div
-                          key={level}
-                          className="flex flex-col items-center gap-2"
-                        >
-                          <RadioGroupItem
-                            value={level}
-                            id={`${uniqueId}-${skill}-${level}`}
-                            className="data-[state=checked]:border-primary data-[state=checked]:text-primary"
-                          />
-
-                          <Label
-                            htmlFor={`${uniqueId}-${skill}-${level}`}
-                            className="text-xs font-normal cursor-pointer text-muted-foreground"
-                          >
-                            {level}
-                          </Label>
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  )}
-                />
-              ))}
-            </div>
-          </div>
-
           <form.Field
-            name="notes"
-            children={(field) => (
+            name="grade"
+            children={(gradeField) => (
               <Field>
-                <FieldLabel htmlFor={`${uniqueId}-notes`}>Notes</FieldLabel>
-                <Textarea
-                  id={`${uniqueId}-notes`}
-                  name={field.name}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Extra help with pronunciation..."
-                  className="min-h-20"
+                <FieldLabel
+                  htmlFor={`${uniqueId}-grade`}
+                  className="text-xs font-bold uppercase tracking-wide"
+                >
+                  Grade <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Input
+                  id={`${uniqueId}-grade`}
+                  name={gradeField.name}
+                  value={gradeField.state.value}
+                  onBlur={gradeField.handleBlur}
+                  onChange={(e) => gradeField.handleChange(e.target.value)}
+                  placeholder="e.g. 7A"
+                  className="h-11 rounded-xl"
                 />
               </Field>
             )}
           />
-        </form>
-      </CardContent>
-
-      <CardFooter>
-        <div className="grid w-full gap-2 grid-cols-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={() => form.reset()}
-            disabled={isSubmitting}
-          >
-            Reset
-          </Button>
-          <Button
-            type="submit"
-            className="w-full"
-            form={uniqueId}
-            disabled={isSubmitting}
-          >
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isEditMode ? "Save Changes" : "Create Student"}
-          </Button>
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+
+      {/* ===== SECTION 2: Proficiency Levels ===== */}
+      <div className="space-y-5 rounded-2xl border bg-secondary/30 p-5">
+        <h4 className="flex items-center gap-2 text-sm font-bold text-primary">
+          <Languages className="size-4" />
+          Proficiency Levels
+        </h4>
+
+        <div className="space-y-4">
+          {(["reading", "writing", "listening", "speaking"] as const).map(
+            (skill) => (
+              <form.Field
+                key={skill}
+                name={`cefrLevels.${skill}`}
+                children={(field) => (
+                  <div>
+                    <label className="mb-2 block text-[10px] font-bold uppercase text-muted-foreground">
+                      {skill}
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {CEFR_LEVELS.map((level) => (
+                        <ProficiencyPill
+                          key={level}
+                          level={level}
+                          isSelected={field.state.value === level}
+                          onClick={() => field.handleChange(level)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              />
+            )
+          )}
+        </div>
+      </div>
+
+      {/* ===== SECTION 3: Interests & Notes ===== */}
+      <div className="space-y-4">
+        <form.Field
+          name="hobby"
+          children={(field) => (
+            <Field>
+              <FieldLabel
+                htmlFor={`${uniqueId}-hobby`}
+                className="text-xs font-bold uppercase tracking-wide"
+              >
+                Interests
+              </FieldLabel>
+              <div className="relative">
+                <Heart className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id={`${uniqueId}-hobby`}
+                  name={field.name}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Robotics, Chess..."
+                  className="h-11 rounded-xl pl-10"
+                />
+              </div>
+            </Field>
+          )}
+        />
+
+        <form.Field
+          name="notes"
+          children={(field) => (
+            <Field>
+              <FieldLabel
+                htmlFor={`${uniqueId}-notes`}
+                className="text-xs font-bold uppercase tracking-wide"
+              >
+                Notes
+              </FieldLabel>
+              <Textarea
+                id={`${uniqueId}-notes`}
+                name={field.name}
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                placeholder="Add private notes..."
+                className="min-h-24 resize-none rounded-xl"
+              />
+            </Field>
+          )}
+        />
+      </div>
+
+      {/* ===== SECTION 4: Accommodations ===== */}
+      <form.Field
+        name="specialNeeds"
+        children={(field) => (
+          <Field>
+            <FieldLabel className="text-xs font-bold uppercase tracking-wide">
+              Accommodations
+            </FieldLabel>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  type="button"
+                  className={cn(
+                    "h-auto min-h-11 w-full justify-between rounded-xl text-left font-normal",
+                    !field.state.value.length && "text-muted-foreground"
+                  )}
+                >
+                  {field.state.value.length > 0 ? (
+                    <div className="flex flex-wrap gap-1">
+                      {field.state.value.map((val) => (
+                        <span
+                          key={val}
+                          className="rounded-sm bg-secondary px-2 py-0.5 text-xs text-secondary-foreground"
+                        >
+                          {val}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    "Select accommodations..."
+                  )}
+                  <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-[--radix-popover-trigger-width] p-0"
+                align="start"
+              >
+                <Command>
+                  <CommandInput placeholder="Search conditions..." />
+                  <CommandList>
+                    <CommandEmpty>No condition found.</CommandEmpty>
+                    <CommandGroup>
+                      {SPECIAL_NEEDS_OPTIONS.map((option) => (
+                        <CommandItem
+                          key={option}
+                          value={option}
+                          onSelect={() => {
+                            const current = field.state.value;
+                            if (current.includes(option)) {
+                              field.handleChange(
+                                current.filter((v) => v !== option)
+                              );
+                            } else {
+                              field.handleChange([...current, option]);
+                            }
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 size-4",
+                              field.state.value.includes(option)
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          {option}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </Field>
+        )}
+      />
+
+      {/* ===== Footer Buttons ===== */}
+      <div className="flex gap-3 pt-2">
+        <Button
+          type="button"
+          variant="outline"
+          className="h-12 flex-1 rounded-xl font-bold"
+          onClick={() => form.reset()}
+          disabled={isSubmitting}
+        >
+          Reset
+        </Button>
+        <Button
+          type="submit"
+          className="h-12 flex-2 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] active:scale-95"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <Loader2 className="mr-2 size-4 animate-spin" />
+          ) : (
+            <Save className="mr-2 size-4" />
+          )}
+          {isEditMode ? "Save Changes" : "Create Student"}
+        </Button>
+      </div>
+    </form>
   );
 }
+
+export type { StudentFormData };

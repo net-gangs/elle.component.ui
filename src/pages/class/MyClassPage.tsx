@@ -1,15 +1,11 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Settings,
   Pencil,
   Search,
   Filter,
-  Calendar,
   LayoutGrid,
   List,
-  ChevronLeft,
-  ChevronRight,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,9 +19,12 @@ import { AddStudentCard } from "./components/add-student-card";
 import { AddLessonCard } from "./components/add-lesson-card";
 import { ClassCard } from "./components/class-card";
 import { AddClassCard } from "./components/add-class-card";
-import { useClassrooms } from "@/hooks/use-classrooms";
-import { useStudents } from "@/hooks/use-students";
+import { StudentDrawer, type StudentFormData } from "./components/student-drawer";
+import { ClassDialog, type ClassFormData } from "./components/class-dialog";
+import { useClassrooms, useCreateClassroom, useUpdateClassroom } from "@/hooks/use-classrooms";
+import { useStudents, useCreateStudent, useUpdateStudent } from "@/hooks/use-students";
 import { useLessons } from "@/hooks/use-lessons";
+import { toast } from "sonner";
 import { useDebounce } from "@/hooks/use-debounce";
 import type { Classroom, Student, Lesson } from "@/types/classroom";
 
@@ -52,7 +51,7 @@ const itemVariants = {
   },
 };
 
-const STUDENTS_PER_PAGE = 12;
+const STUDENTS_PER_PAGE = 11; // 11 students + 1 AddStudentCard = 12 items in grid
 const SEARCH_DEBOUNCE_MS = 300;
 
 // TODO : WIP LTPHO: split into smaller components
@@ -62,11 +61,15 @@ const MyClassPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [classesPage] = useState(1);
   const [studentsPage, setStudentsPage] = useState(1);
-  const [lessonsPage] = useState(1);
+  const [lessonsPage, setLessonsPage] = useState(1);
   const [lessonViewMode, setLessonViewMode] = useState<"grid" | "list">("list");
-  const classContainerRef = useRef<HTMLDivElement>(null);
 
-  // Debounce search query to avoid API calls on every keystroke
+  const [isStudentDrawerOpen, setIsStudentDrawerOpen] = useState(false);
+  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+
+  const [isClassDialogOpen, setIsClassDialogOpen] = useState(false);
+  const [editingClassroom, setEditingClassroom] = useState<Classroom | null>(null);
+
   const debouncedSearchQuery = useDebounce(searchQuery, SEARCH_DEBOUNCE_MS);
 
   const {
@@ -103,10 +106,20 @@ const MyClassPage = () => {
     isLoading: isLoadingLessons,
   } = useLessons(selectedClassroom?.id, {
     page: lessonsPage,
-    limit: 20,
+    limit: 10,
   });
 
   const lessons = lessonsData?.data ?? [];
+  const lessonsMeta = lessonsData?.meta;
+  const totalLessonPages = lessonsMeta?.pageCount ?? 1;
+
+  // Student mutations
+  const createStudentMutation = useCreateStudent(selectedClassroom?.id ?? "");
+  const updateStudentMutation = useUpdateStudent(selectedClassroom?.id ?? "");
+
+  // Classroom mutations
+  const createClassroomMutation = useCreateClassroom();
+  const updateClassroomMutation = useUpdateClassroom();
 
   const handleClassChange = (classroom: Classroom) => {
     setSelectedClassId(classroom.id);
@@ -114,18 +127,10 @@ const MyClassPage = () => {
     setStudentsPage(1);
   };
 
-  const handleScrollClasses = (direction: "left" | "right") => {
-    if (classContainerRef.current) {
-      const scrollAmount = 220; // Card width + gap
-      classContainerRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
   const handleStudentClick = (student: Student) => {
     setSelectedStudent(student);
+    setEditingStudent(student);
+    setIsStudentDrawerOpen(true);
   };
 
   const handleLessonClick = (lesson: Lesson) => {
@@ -133,13 +138,106 @@ const MyClassPage = () => {
   };
 
   const handleAddClass = () => {
-    console.log("Add class clicked");
-    // TODO: Open add class form/modal
+    setEditingClassroom(null);
+    setIsClassDialogOpen(true);
+  };
+
+  const handleEditClass = () => {
+    if (selectedClassroom) {
+      setEditingClassroom(selectedClassroom);
+      setIsClassDialogOpen(true);
+    }
+  };
+
+  const handleEditClassFromCard = (classroom: Classroom) => {
+    setEditingClassroom(classroom);
+    setIsClassDialogOpen(true);
+  };
+
+  const handleClassDialogClose = (open: boolean) => {
+    setIsClassDialogOpen(open);
+    if (!open) {
+      setEditingClassroom(null);
+    }
+  };
+
+  const handleClassSubmit = async (data: ClassFormData) => {
+    try {
+      if (editingClassroom) {
+        // Update existing classroom
+        await updateClassroomMutation.mutateAsync({
+          id: editingClassroom.id,
+          data: {
+            name: data.name,
+            grade: data.grade || undefined,
+          },
+        });
+        toast.success("Class updated successfully");
+      } else {
+        await createClassroomMutation.mutateAsync({
+          name: data.name,
+          grade: data.grade || undefined,
+        });
+        toast.success("Class created successfully");
+      }
+      setIsClassDialogOpen(false);
+      setEditingClassroom(null);
+    } catch (error) {
+      console.error("Failed to save classroom:", error);
+      toast.error(editingClassroom ? "Failed to update class" : "Failed to create class");
+    }
   };
 
   const handleAddStudent = () => {
-    console.log("Add student clicked");
-    // TODO: Open add student form/modal
+    setEditingStudent(null);
+    setIsStudentDrawerOpen(true);
+  };
+
+  const handleStudentDrawerClose = (open: boolean) => {
+    setIsStudentDrawerOpen(open);
+    if (!open) {
+      setEditingStudent(null);
+    }
+  };
+
+  const handleStudentSubmit = async (data: StudentFormData) => {
+    if (!selectedClassroom) return;
+
+    try {
+      if (editingStudent) {
+        // Update existing student
+        await updateStudentMutation.mutateAsync({
+          id: editingStudent.id,
+          data: {
+            fullName: data.fullName,
+            grade: data.grade || undefined,
+            hobby: data.hobby || undefined,
+            notes: data.notes || undefined,
+            avatarUrl: data.avatarUrl || undefined,
+            specialNeeds: data.specialNeeds as any,
+            cefrLevels: data.cefrLevels as any,
+          },
+        });
+        toast.success("Student updated successfully");
+      } else {
+        // Create new student
+        await createStudentMutation.mutateAsync({
+          fullName: data.fullName,
+          grade: data.grade || undefined,
+          hobby: data.hobby || undefined,
+          notes: data.notes || undefined,
+          avatarUrl: data.avatarUrl || undefined,
+          specialNeeds: data.specialNeeds as any,
+          cefrLevels: data.cefrLevels as any,
+        });
+        toast.success("Student created successfully");
+      }
+      setIsStudentDrawerOpen(false);
+      setEditingStudent(null);
+    } catch (error) {
+      console.error("Failed to save student:", error);
+      toast.error(editingStudent ? "Failed to update student" : "Failed to create student");
+    }
   };
 
   const handleAddLesson = () => {
@@ -156,98 +254,52 @@ const MyClassPage = () => {
         animate="visible"
         className="mx-auto mb-8 flex max-w-7xl flex-col justify-between gap-4 md:flex-row md:items-center"
       >
-        <div>
+        <div className="flex flex-wrap items-center gap-3">
           {isLoadingClassrooms ? (
-            <Skeleton className="h-9 w-48" />
+            <>
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-9 w-32 rounded-[8px]" />
+              ))}
+            </>
+          ) : classroomsError ? (
+            <div className="flex items-center gap-2 text-destructive">
+              <span>Failed to load</span>
+            </div>
           ) : (
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">
-              {selectedClassroom?.name ?? "No Class Selected"}
-            </h1>
+            <>
+              {classrooms.map((classroom) => (
+                <ClassCard
+                  key={classroom.id}
+                  classroom={classroom}
+                  studentCount={classroom.totalStudents ?? 0}
+                  isSelected={selectedClassroom?.id === classroom.id}
+                  onClick={handleClassChange}
+                  onEdit={handleEditClassFromCard}
+                />
+              ))}
+              <AddClassCard onClick={handleAddClass} />
+            </>
           )}
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="rounded-full shadow-sm">
+          <Button
+            variant="outline"
+            className="rounded-full shadow-sm"
+            onClick={handleEditClass}
+            disabled={!selectedClassroom}
+          >
             <Pencil className="mr-2 size-4" />
             Edit Class
           </Button>
-          <Button className="rounded-full shadow-md">
+          {/* <Button className="rounded-full shadow-md">
             <Settings className="mr-2 size-4" />
             Settings
-          </Button>
+          </Button> */}
         </div>
       </motion.header>
 
       <div className="mx-auto max-w-7xl space-y-8">
-        <motion.section
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div
-            variants={itemVariants}
-            className="mb-4 flex items-center justify-between"
-          >
-            <h2 className="text-xl font-bold">Your Classes</h2>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8 rounded-full"
-                onClick={() => handleScrollClasses("left")}
-              >
-                <ChevronLeft className="size-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8 rounded-full"
-                onClick={() => handleScrollClasses("right")}
-              >
-                <ChevronRight className="size-4" />
-              </Button>
-            </div>
-          </motion.div>
-
-          <div
-            ref={classContainerRef}
-            className="flex gap-4 overflow-x-auto pb-2 scrollbar-none"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {isLoadingClassrooms ? (
-              <>
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={i} className="h-24 w-52 shrink-0 rounded-xl" />
-                ))}
-              </>
-            ) : classroomsError ? (
-              <div className="flex items-center gap-2 text-destructive">
-                <span>Failed to load classes</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => window.location.reload()}
-                >
-                  Retry
-                </Button>
-              </div>
-            ) : (
-              <>
-                {classrooms.map((classroom) => (
-                  <ClassCard
-                    key={classroom.id}
-                    classroom={classroom}
-                    studentCount={classroom.totalStudents ?? 0}
-                    isSelected={selectedClassroom?.id === classroom.id}
-                    onClick={handleClassChange}
-                  />
-                ))}
-                <AddClassCard onClick={handleAddClass} />
-              </>
-            )}
-          </div>
-        </motion.section>
-
         <motion.section
           variants={containerVariants}
           initial="hidden"
@@ -310,7 +362,7 @@ const MyClassPage = () => {
           
               <>
                 {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <Skeleton key={i} className="aspect-square rounded-xl" />
+                  <Skeleton key={i} className="aspect-square rounded-[8px]" />
                 ))}
               </>
             ) : (
@@ -372,10 +424,10 @@ const MyClassPage = () => {
                 </Button>
               </div>
 
-              <Button variant="outline" className="rounded-full shadow-sm">
+              {/* <Button variant="outline" className="rounded-full shadow-sm">
                 <Calendar className="mr-2 size-4" />
                 View Calendar
-              </Button>
+              </Button> */}
             </div>
           </motion.div>
 
@@ -397,7 +449,7 @@ const MyClassPage = () => {
 
                   <>
                     {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="aspect-square rounded-xl" />
+                      <Skeleton key={i} className="aspect-square rounded-[8px]" />
                     ))}
                   </>
                 ) : (
@@ -423,7 +475,7 @@ const MyClassPage = () => {
                 {isLoadingLessons ? (
                   <>
                     {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="h-24 w-full rounded-xl" />
+                      <Skeleton key={i} className="h-24 w-full rounded-[8px]" />
                     ))}
                   </>
                 ) : (
@@ -439,8 +491,35 @@ const MyClassPage = () => {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Lessons Pagination */}
+          <motion.div variants={itemVariants} className="mt-4">
+            <Pagination
+              currentPage={lessonsPage}
+              totalPages={totalLessonPages}
+              onPageChange={setLessonsPage}
+            />
+          </motion.div>
         </motion.section>
       </div>
+
+      {/* Student Drawer */}
+      <StudentDrawer
+        open={isStudentDrawerOpen}
+        onOpenChange={handleStudentDrawerClose}
+        student={editingStudent}
+        onSubmit={handleStudentSubmit}
+        isSubmitting={createStudentMutation.isPending || updateStudentMutation.isPending}
+      />
+
+      {/* Class Dialog */}
+      <ClassDialog
+        open={isClassDialogOpen}
+        onOpenChange={handleClassDialogClose}
+        classroom={editingClassroom}
+        onSubmit={handleClassSubmit}
+        isSubmitting={createClassroomMutation.isPending || updateClassroomMutation.isPending}
+      />
     </div>
   );
 };

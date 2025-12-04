@@ -82,7 +82,7 @@ function StudentCard({ student, isSelected = false, onClick }: StudentCardProps)
     <div
       onClick={() => onClick?.(student)}
       className={cn(
-        "group relative flex cursor-pointer flex-col items-center rounded-md border bg-card p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-md",
+        "group relative flex cursor-pointer flex-col items-center rounded-[8px] border bg-card p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-md",
         isSelected && "border-2 border-primary shadow-md"
       )}
     >
@@ -121,6 +121,12 @@ function StudentCard({ student, isSelected = false, onClick }: StudentCardProps)
       >
         {student.fullName}
       </h3>
+
+      {student.hobby && (
+        <p className="w-full truncate text-xs italic text-muted-foreground/80 font-serif">
+          "{student.hobby}"
+        </p>
+      )}
 
       {hasCefrLevels && (
         <div className="mt-2 grid grid-cols-2 gap-1">

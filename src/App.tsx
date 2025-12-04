@@ -5,7 +5,6 @@ import {
   RouterProvider,
   Outlet,
 } from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MainLayout } from "./components/layout/main-layout";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";

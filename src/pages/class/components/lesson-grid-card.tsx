@@ -22,7 +22,7 @@ function LessonGridCard({
     <div
       onClick={() => onClick?.(lesson)}
       className={cn(
-        "group relative flex cursor-pointer flex-col items-center rounded-md border bg-card p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-md",
+        "group relative flex cursor-pointer flex-col items-center rounded-[8px] border bg-card p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-md",
         isSelected && "border-2 border-primary shadow-md"
       )}
     >

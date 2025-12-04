@@ -20,7 +20,7 @@ function LessonCard({ lesson, participants = [], onClick }: LessonCardProps) {
     <div
       onClick={() => onClick?.(lesson)}
       className={cn(
-        "group flex cursor-pointer flex-col justify-between gap-4 rounded-md border border-border bg-card p-4 shadow-sm transition-all hover:border-primary/50 hover:shadow-md md:flex-row md:items-center"
+        "group flex cursor-pointer flex-col justify-between gap-4 rounded-[8px] border border-border bg-card p-4 shadow-sm transition-all hover:border-primary/50 hover:shadow-md md:flex-row md:items-center"
       )}
     >
       <div className="flex items-center gap-4">
