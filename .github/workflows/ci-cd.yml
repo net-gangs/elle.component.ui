@@ -145,21 +145,69 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Deployment is temporarily disabled as requested (skip deploy for now)
-#  deploy:
-#    name: Deploy to Kubernetes (disabled)
-#    needs: build
-#    runs-on: ubuntu-latest
-#    if: false
-#    steps:
-#      - name: Skip deployment
-#        run: echo "Deployment is currently disabled in this pipeline."
+  deploy:
+    name: Deploy to Homelab
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    environment:
+      name: production
+      url: http://${{ secrets.HOMELAB_HOST }}:5173
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  # notify:
-  #   name: Send Notifications
-  #   needs: [test, build]
-  #   runs-on: ubuntu-latest
-  #   if: always()
+      - name: Extract Docker image tag
+        id: extract-tag
+        run: |
+          echo "tag=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.HOMELAB_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy deployment files to server
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            docker-compose.production.yml \
+            deploy.sh \
+            ${{ secrets.SSH_USER }}@${{ secrets.HOMELAB_HOST }}:/home/admin/apps/netgang/ella/ui/
+
+      - name: Copy .env file to server
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.HOMELAB_HOST }} \
+            "if [ ! -f /home/admin/apps/netgang/ella/ui/.env ]; then echo 'DOCKER_IMAGE_TAG=${{ steps.extract-tag.outputs.tag }}' > /home/admin/apps/netgang/ella/ui/.env; fi"
+
+      - name: Deploy to homelab server
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.HOMELAB_HOST }} << 'ENDSSH'
+          cd /home/admin/apps/netgang/ella/ui
+          export DOCKER_IMAGE_TAG=${{ steps.extract-tag.outputs.tag }}
+          chmod +x deploy.sh
+          ./deploy.sh
+          ENDSSH
+
+      - name: Verify deployment
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.HOMELAB_HOST }} \
+            "cd /home/admin/apps/netgang/ella/ui && docker-compose -f docker-compose.production.yml ps"
+
+      - name: Cleanup SSH
+        if: always()
+        run: |
+          rm -f ~/.ssh/deploy_key
+
+  notify:
+    name: Send Notifications
+    needs: [test, build, deploy]
+    runs-on: ubuntu-latest
+    if: always()
   #   steps:
   #     - name: Checkout code
   #       uses: actions/checkout@v4

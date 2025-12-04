@@ -25,11 +25,6 @@ import { LanguageSwitcher } from "./language-switcher";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "test-user",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "ELLA AI",
@@ -41,7 +36,7 @@ const data = {
     preparation: [
       {
         titleKey: "sidebar.items.myClass",
-        url: "/",
+        url: "/my-class",
         icon: GraduationCap,
       },
       {

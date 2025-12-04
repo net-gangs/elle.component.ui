@@ -9,6 +9,8 @@ import { MainLayout } from "./components/layout/main-layout";
 import Dashboard from "./pages/dashboard";
 import LessonPlanning from "./pages/lesson-planning";
 import Login from "./pages/login";
+import MyClassPage from "./pages/class/MyClassPage";
+import NoPermissionPage from "./lib/route/NoPermissionPage";
 
 const rootRoute = createRootRoute({
   component: () => <Outlet />,
@@ -18,6 +20,12 @@ const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/login",
   component: Login,
+});
+
+const noPermissionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/no-permission",
+  component: NoPermissionPage,
 });
 
 const layoutRoute = createRoute({
@@ -38,15 +46,28 @@ const lessonPlanningRoute = createRoute({
   component: LessonPlanning,
 });
 
+const myClassRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "/my-class",
+  component: MyClassPage,
+});
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
-  layoutRoute.addChildren([dashboardRoute, lessonPlanningRoute]),
+  noPermissionRoute,
+  layoutRoute.addChildren([dashboardRoute, lessonPlanningRoute, myClassRoute]),
 ]);
 
 const router = createRouter({ routeTree });
 
+
+
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+
+      <RouterProvider router={router} />
+
+  );
 }
 
 export default App;
