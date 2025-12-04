@@ -8,6 +8,7 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -27,9 +28,18 @@ import {
 } from "@/components/ui/sidebar";
 import { authStore, authActions, selectUser } from "@/stores/auth-store";
 
-export function NavUser() {
+type NavUserProps = {
+  user?: {
+    name: string;
+    email: string;
+    avatar?: string;
+  };
+};
+
+export function NavUser({ user: fallbackUser }: NavUserProps) {
   const { isMobile } = useSidebar();
-  const user = useStore(authStore, selectUser);
+  const storeUser = useStore(authStore, selectUser);
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -37,13 +47,25 @@ export function NavUser() {
     navigate({ to: "/login" });
   };
 
-  if (!user) {
+  if (!storeUser && !fallbackUser) {
     return null;
   }
 
-  const displayName = `${user.firstName} ${user.lastName}`.trim() || "User";
-  const initials = `${user.firstName?.[0] || ""}${user.lastName?.[0] || ""}`.toUpperCase() || "U";
-  const avatarUrl = user.photo?.path || "";
+  const fallbackDisplayName = fallbackUser?.name ?? fallbackUser?.email ?? "User";
+  const fallbackInitials = fallbackUser?.name
+    ? fallbackUser.name.match(/\b\w/g)?.join("")?.slice(0, 2)?.toUpperCase() || "U"
+    : fallbackDisplayName.slice(0, 2).toUpperCase() || "U";
+  const fallbackAvatarUrl = fallbackUser?.avatar ?? "";
+  const fallbackEmail = fallbackUser?.email ?? "";
+
+  const displayName = storeUser
+    ? `${storeUser.firstName} ${storeUser.lastName}`.trim() || storeUser.email
+    : fallbackDisplayName;
+  const initials = storeUser
+    ? `${storeUser.firstName?.[0] || ""}${storeUser.lastName?.[0] || ""}`.toUpperCase() || "U"
+    : fallbackInitials;
+  const avatarUrl = storeUser ? storeUser.photo?.path || "" : fallbackAvatarUrl;
+  const email = storeUser ? storeUser.email : fallbackEmail;
 
   return (
     <SidebarMenu>
@@ -60,7 +82,7 @@ export function NavUser() {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{displayName}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate text-xs">{email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -79,7 +101,7 @@ export function NavUser() {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{displayName}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate text-xs">{email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -87,28 +109,28 @@ export function NavUser() {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Sparkles />
-                Upgrade to Pro
+                {t("userMenu.upgrade")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                Account
+                {t("userMenu.account")}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
-                Billing
+                {t("userMenu.billing")}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />
-                Notifications
+                {t("userMenu.notifications")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
-              Log out
+              {t("userMenu.logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

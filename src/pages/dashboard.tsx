@@ -1,7 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 export default function Dashboard() {
-  return (
-    <div className="space-y-6 m-5">
-      {/* Dashboard content placeholder */}
-    </div>
-  );
+  const { t } = useTranslation();
+
+  return <div className="space-y-6 m-5">{t("dashboard.placeholder")}</div>;
 }

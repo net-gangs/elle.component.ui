@@ -1,0 +1,101 @@
+{
+  "app": {
+    "name": "ELLA AI"
+  },
+  "sidebar": {
+    "groups": {
+      "preparation": "Chuẩn bị",
+      "tools": "Công cụ"
+    },
+    "items": {
+      "myClass": "Lớp học của tôi",
+      "lessonPlanning": "Lập kế hoạch bài học",
+      "scanYourFile": "Quét tệp của bạn",
+      "tipsAndTricks": "Mẹo và thủ thuật",
+      "rewards": "Phần thưởng",
+      "interestingArticles": "Bài viết hấp dẫn",
+      "filesLibrary": "Tệp & Thư viện"
+    }
+  },
+  "team": {
+    "plan": {
+      "enterprise": "Gói Doanh nghiệp"
+    }
+  },
+  "userMenu": {
+    "upgrade": "Nâng cấp lên Pro",
+    "account": "Tài khoản",
+    "billing": "Thanh toán",
+    "notifications": "Thông báo",
+    "logout": "Đăng xuất"
+  },
+  "breadcrumb": {
+    "application": "Xây dựng ứng dụng của bạn",
+    "section": "Lấy dữ liệu"
+  },
+  "login": {
+    "title": "Đăng nhập vào Ella AI",
+    "submit": "Đăng nhập"
+  },
+  "dashboard": {
+    "placeholder": "Nội dung bảng điều khiển sẽ sớm có mặt."
+  },
+  "lessonPlanning": {
+    "title": "Lesson Planning Workspace",
+    "subtitle": "Keep project chats tidy so every class starts with a clear plan.",
+    "actions": {
+      "newProject": "New project",
+      "editContext": "Edit context"
+    },
+    "projects": {
+      "title": "Projects",
+      "description": "Pick a project to review its chat history and context.",
+      "searchPlaceholder": "Search projects or units",
+      "statusDraft": "Draft",
+      "statusReady": "Ready",
+      "classesLabel": "classes",
+      "chatsLabel": "chats",
+      "toggle": "Toggle projects list"
+    },
+    "chats": {
+      "title": "Chats inside this project",
+      "description": "Each chat captures a different idea or draft.",
+      "empty": "Select a project to see available chats.",
+      "newChat": "Start new chat",
+      "pinnedLabel": "Pinned",
+      "focusLabel": "Focus",
+      "toneLabel": "Tone",
+      "toggle": "Toggle chats list"
+    },
+    "snapshot": {
+      "title": "Project snapshot",
+      "objectives": "Objectives",
+      "standards": "Standards",
+      "students": "Classes",
+      "empty": "Add context to personalize Ella's ideas.",
+      "toggle": "Toggle project snapshot"
+    },
+    "conversation": {
+      "title": "Idea board",
+      "subtitle": "Draft objectives, centers, or exit tickets with Ella.",
+      "waiting": "Choose a chat to keep planning with Ella.",
+      "placeholder": "Type a request for Ella to plan, remix, or extend your lesson...",
+      "send": "Send",
+      "promptGenerateHook": "Draft a culturally responsive hook",
+      "promptRemix": "Differentiate for emerging readers",
+      "promptChecklist": "Create success criteria checklist",
+      "teacherLabel": "You",
+      "assistantLabel": "Ella"
+    }
+  },
+  "languageSwitcher": {
+    "tooltip": "Thay đổi ngôn ngữ",
+    "menuLabel": "Ngôn ngữ",
+    "languages": {
+      "en": "Tiếng Anh",
+      "vi": "Tiếng Việt",
+      "ja": "Tiếng Nhật",
+      "th": "Tiếng Thái"
+    }
+  }
+}

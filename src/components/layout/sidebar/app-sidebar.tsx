@@ -1,4 +1,4 @@
-import * as React from "react";
+import type { ComponentProps } from "react";
 import {
   GalleryVerticalEnd,
   GraduationCap,
@@ -18,8 +18,10 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
+import { LanguageSwitcher } from "./language-switcher";
 
 // This is sample data.
 const data = {
@@ -27,64 +29,73 @@ const data = {
     {
       name: "ELLA AI",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      planKey: "team.plan.enterprise",
     },
   ],
-  navMain: [
-    {
-      title: "My Class",
-      url: "my-class",
-      icon: GraduationCap,
-      isActive: true,
-    },
-    {
-      title: "Lesson Planning",
-      url: "#",
-      icon: NotebookPen,
-    },
-    {
-      title: "Scan Your File",
-      url: "#",
-      icon: ScanLine,
-    },
-  ],
-  tools: [
-    {
-      title: "Tips and Tricks",
-      url: "#",
-      icon: Lightbulb,
-      isActive: true,
-    },
-    {
-      title: "Rewards",
-      url: "#",
-      icon: Trophy,
-    },
-    {
-      title: "Interesting Articles",
-      url: "#",
-      icon: Newspaper,
-    },
-    {
-      title: "Files & Library",
-      url: "#",
-      icon: Folder,
-    },
-  ],
+  navigation: {
+    preparation: [
+      {
+        titleKey: "sidebar.items.myClass",
+        url: "/my-class",
+        icon: GraduationCap,
+      },
+      {
+        titleKey: "sidebar.items.lessonPlanning",
+        url: "/lesson-planning",
+        icon: NotebookPen,
+      },
+      {
+        titleKey: "sidebar.items.scanYourFile",
+        url: "#",
+        icon: ScanLine,
+      },
+    ],
+    tools: [
+      {
+        titleKey: "sidebar.items.tipsAndTricks",
+        url: "#",
+        icon: Lightbulb,
+        isActive: true,
+      },
+      {
+        titleKey: "sidebar.items.rewards",
+        url: "#",
+        icon: Trophy,
+      },
+      {
+        titleKey: "sidebar.items.interestingArticles",
+        url: "#",
+        icon: Newspaper,
+      },
+      {
+        titleKey: "sidebar.items.filesLibrary",
+        url: "#",
+        icon: Folder,
+      },
+    ],
+  },
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="flex-row items-center justify-between">
         <TeamSwitcher teams={data.teams} />
+        <SidebarTrigger className="size-7" />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain groupLabel={"Preparation"} items={data.navMain} />
-        <NavMain groupLabel={"Tools"} items={data.tools} />
+        <NavMain
+          groupLabel="sidebar.groups.preparation"
+          items={data.navigation.preparation}
+        />
+        <NavMain
+          groupLabel="sidebar.groups.tools"
+          items={data.navigation.tools}
+        />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <LanguageSwitcher />
+        <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
