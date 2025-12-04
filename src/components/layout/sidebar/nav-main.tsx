@@ -1,6 +1,6 @@
+import { Link, useRouterState } from "@tanstack/react-router";
 import { type LucideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link, useRouterState } from "@tanstack/react-router";
 
 import { Collapsible } from "@/components/ui/collapsible";
 import {
@@ -10,7 +10,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useNavigate } from "@tanstack/react-router";
 
 export function NavMain({
   groupLabel,

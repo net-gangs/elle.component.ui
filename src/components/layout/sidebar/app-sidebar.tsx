@@ -24,7 +24,7 @@ import { NavMain } from "./nav-main";
 import { LanguageSwitcher } from "./language-switcher";
 
 // This is sample data.
-const data = {
+const data : any = {
   teams: [
     {
       name: "ELLA AI",
