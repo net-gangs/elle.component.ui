@@ -1,3 +1,4 @@
+import { StudentForm } from "@/components/forms/student-form";
 import { classroomService } from "@/services/class-service";
 import {
   studentService
@@ -110,7 +111,7 @@ export default function Dashboard() {
         onSubmit={(data) => createStudentMutation.mutate(data)}
         isSubmitting={createStudentMutation.isPending}
       /> */}
-      {/* <StudentForm
+      <StudentForm
         initialData={student}
         onSubmit={(formData) => {
           updateStudentMutation.mutate({
@@ -120,7 +121,7 @@ export default function Dashboard() {
           });
         }}
         isSubmitting={createStudentMutation.isPending}
-      /> */}
+      />
     </div>
   );
 }

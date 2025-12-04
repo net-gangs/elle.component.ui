@@ -5,6 +5,7 @@ export interface Classroom {
   name: string;
   grade?: string;
   userId: string;
+  totalStudents?: number;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;

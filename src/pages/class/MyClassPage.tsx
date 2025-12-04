@@ -10,6 +10,7 @@ import {
   List,
   ChevronLeft,
   ChevronRight,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +26,7 @@ import { AddClassCard } from "./components/add-class-card";
 import { useClassrooms } from "@/hooks/use-classrooms";
 import { useStudents } from "@/hooks/use-students";
 import { useLessons } from "@/hooks/use-lessons";
+import { useDebounce } from "@/hooks/use-debounce";
 import type { Classroom, Student, Lesson } from "@/types/classroom";
 
 // Animation variants
@@ -51,6 +53,8 @@ const itemVariants = {
 };
 
 const STUDENTS_PER_PAGE = 12;
+const SEARCH_DEBOUNCE_MS = 300;
+
 // TODO : WIP LTPHO: split into smaller components
 const MyClassPage = () => {
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
@@ -61,6 +65,9 @@ const MyClassPage = () => {
   const [lessonsPage] = useState(1);
   const [lessonViewMode, setLessonViewMode] = useState<"grid" | "list">("list");
   const classContainerRef = useRef<HTMLDivElement>(null);
+
+  // Debounce search query to avoid API calls on every keystroke
+  const debouncedSearchQuery = useDebounce(searchQuery, SEARCH_DEBOUNCE_MS);
 
   const {
     data: classroomsData,
@@ -84,7 +91,7 @@ const MyClassPage = () => {
   } = useStudents(selectedClassroom?.id, {
     page: studentsPage,
     limit: STUDENTS_PER_PAGE,
-    search: searchQuery || undefined,
+    search: debouncedSearchQuery || undefined,
   });
 
   const students = studentsData?.data ?? [];
@@ -230,7 +237,7 @@ const MyClassPage = () => {
                   <ClassCard
                     key={classroom.id}
                     classroom={classroom}
-                    studentCount={0} // TODO: Get from API when available
+                    studentCount={classroom.totalStudents ?? 0}
                     isSelected={selectedClassroom?.id === classroom.id}
                     onClick={handleClassChange}
                   />
@@ -262,11 +269,26 @@ const MyClassPage = () => {
                 <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search students..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="rounded-full pl-9 shadow-sm"
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setStudentsPage(1); // Reset to first page on search
+                  }}
+                  className="rounded-full pl-9 pr-9 shadow-sm"
                 />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setStudentsPage(1);
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="size-4" />
+                  </button>
+                )}
               </div>
 
               <Button
