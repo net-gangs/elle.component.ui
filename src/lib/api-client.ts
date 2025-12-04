@@ -5,6 +5,11 @@ import { authActions } from "@/stores/auth-store";
 import type { RefreshResponseDto } from "@/types/auth";
 import type { ApiResponse } from "@/types/api";
 
+function getTokenFromCookie() {
+  const match = document.cookie.match(new RegExp('(^| )token=([^;]+)'));
+  return match ? match[2] : null;
+}
+
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1",
   headers: {
