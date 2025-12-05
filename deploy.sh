@@ -1,40 +1,53 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Deploying Elle UI to Homelab..."
+# ------------------------------------------------------------------
+# CONFIGURATION
+# ------------------------------------------------------------------
+TARGET_DIR="${DEPLOY_PATH:-/home/admin/apps/netgang/ella/ui}"
+COMPOSE_FILENAME="${COMPOSE_FILE:-docker-compose.production.yml}"
 
-# Variables
-APP_DIR="/home/admin/apps/netgang/ella/ui"
-DOCKER_TAG=${DOCKER_IMAGE_TAG:+sha-$DOCKER_IMAGE_TAG}
-DOCKER_IMAGE="ghcr.io/xwyvernpx/elle-ui:${DOCKER_TAG:-latest}"
+if [ -z "$DOCKER_IMAGE_TAG" ]; then
+  DOCKER_TAG="latest"
+else
+  if [[ "$DOCKER_IMAGE_TAG" == sha-* ]]; then
+    DOCKER_TAG="$DOCKER_IMAGE_TAG"
+  else
+    DOCKER_TAG="sha-$DOCKER_IMAGE_TAG"
+  fi
+fi
 
-# Create app directory if it doesn't exist
-echo "📁 Creating application directory..."
-mkdir -p "$APP_DIR"
-cd "$APP_DIR"
+DOCKER_IMAGE="ghcr.io/xwyvernpx/elle-ui:$DOCKER_TAG"
 
-# Pull the latest Docker image
-echo "📥 Pulling Docker image: $DOCKER_IMAGE"
+echo "🚀 Deploying Elle UI..."
+echo "📍 Target: $TARGET_DIR"
+echo "📄 Config: $COMPOSE_FILENAME"
+echo "📦 Image:  $DOCKER_IMAGE"
+
+# ------------------------------------------------------------------
+# DEPLOYMENT
+# ------------------------------------------------------------------
+
+echo "📁 Ensuring directory exists..."
+mkdir -p "$TARGET_DIR"
+cd "$TARGET_DIR"
+
+echo "📥 Pulling Docker image..."
 docker pull "$DOCKER_IMAGE"
 
-# Stop and remove old containers
 echo "🛑 Stopping existing containers..."
-docker-compose -f docker-compose.production.yml down || true
+docker-compose -f "$COMPOSE_FILENAME" down || true
 
-# Start services
 echo "▶️  Starting services..."
-docker-compose -f docker-compose.production.yml up -d
+DOCKER_IMAGE_TAG="$DOCKER_TAG" docker-compose -f "$COMPOSE_FILENAME" up -d
 
-# Wait for services to be healthy
-echo "⏳ Waiting for services to be healthy..."
+echo "⏳ Waiting for services to initialize..."
 sleep 5
 
-# Check service status
 echo "✅ Checking service status..."
-docker-compose -f docker-compose.production.yml ps
+docker-compose -f "$COMPOSE_FILENAME" ps
 
-# Clean up old images
-echo "🧹 Cleaning up old images..."
+echo "🧹 Cleaning up old resources..."
 docker image prune -f
 
 echo "✨ Deployment completed successfully!"

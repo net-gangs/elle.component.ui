@@ -145,6 +145,67 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  deploy-dev:
+    name: Deploy to Dev
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    environment:
+      name: development
+      url: http://${{ secrets.HOMELAB_HOST }}:5174
+    env:
+      DEPLOY_PATH: /home/admin/apps/netgang/ella/ui-dev
+      COMPOSE_FILE: docker-compose.develop.yml
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract Docker image tag
+        id: extract-tag
+        run: echo "tag=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.HOMELAB_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create Remote Directory
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.HOMELAB_HOST }} \
+            "mkdir -p ${{ env.DEPLOY_PATH }}"
+
+      - name: Copy deployment files to server
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ env.COMPOSE_FILE }} \
+            deploy.sh \
+            ${{ secrets.SSH_USER }}@${{ secrets.HOMELAB_HOST }}:${{ env.DEPLOY_PATH }}/
+
+      - name: Copy .env file to server
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.HOMELAB_HOST }} \
+            "echo 'DOCKER_IMAGE_TAG=${{ steps.extract-tag.outputs.tag }}' > ${{ env.DEPLOY_PATH }}/.env"
+
+      - name: Deploy to Dev Environment
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.HOMELAB_HOST }} << 'ENDSSH'
+          cd ${{ env.DEPLOY_PATH }}
+          export DOCKER_IMAGE_TAG=${{ steps.extract-tag.outputs.tag }}
+          chmod +x deploy.sh
+          # Here we assume deploy.sh handles the file logic or we run compose directly:
+          docker-compose -f ${{ env.COMPOSE_FILE }} down
+          docker-compose -f ${{ env.COMPOSE_FILE }} up -d
+          ENDSSH
+
+      - name: Cleanup SSH
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
+
   deploy:
     name: Deploy to Homelab
     needs: build
