@@ -15,7 +15,7 @@ const STORAGE_KEYS = {
 
 const loadStoredAuth = (): AuthState => {
   try {
-  
+
     const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
     const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
     const tokenExpiresStr = localStorage.getItem(STORAGE_KEYS.TOKEN_EXPIRES);
@@ -23,9 +23,9 @@ const loadStoredAuth = (): AuthState => {
 
     const tokenExpires = tokenExpiresStr ? parseInt(tokenExpiresStr, 10) : null;
     const user = userStr ? JSON.parse(userStr) : null;
-    
+
     const isExpired = tokenExpires ? Date.now() > tokenExpires : false;
-  console.log("[Auth Store]Loading stored auth state from localStorage", { token, refreshToken, tokenExpires, user, isExpired });
+
     if (token && !isExpired) {
       return {
         token,
@@ -88,7 +88,6 @@ const persistAuth = (state: AuthState) => {
   } else {
     localStorage.removeItem(STORAGE_KEYS.USER);
   }
-  console.log("[Auth Store]Persisting auth state to localStorage", state);
 };
 
 const clearAuth = () => {
@@ -102,8 +101,6 @@ export const authStore = new Store<AuthState>(loadStoredAuth());
 
 export const authActions = {
   login: (response: LoginResponseDto) => {
-    console.log("[Auth Store]Logging in with response", response);
-
     const newState: AuthState = {
       token: response.token,
       refreshToken: response.refreshToken,
