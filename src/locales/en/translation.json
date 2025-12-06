@@ -2,6 +2,14 @@
   "app": {
     "name": "ELLA AI"
   },
+  "common": {
+    "cancel": "Cancel",
+    "create": "Create",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading..."
+  },
   "sidebar": {
     "groups": {
       "preparation": "Preparation",
@@ -44,48 +52,65 @@
     "title": "Lesson Planning Workspace",
     "subtitle": "Keep project chats tidy so every class starts with a clear plan.",
     "actions": {
-      "newProject": "New project",
+      "newClass": "New class",
       "editContext": "Edit context"
     },
-    "projects": {
-      "title": "Projects",
-      "description": "Pick a project to review its chat history and context.",
-      "searchPlaceholder": "Search projects or units",
-      "statusDraft": "Draft",
-      "statusReady": "Ready",
-      "classesLabel": "classes",
-      "chatsLabel": "chats",
-      "toggle": "Toggle projects list"
+    "classes": {
+      "title": "Classes",
+      "description": "Select a class to view and manage its chats.",
+      "empty": "No classes found. Create a class in My Class first.",
+      "toggle": "Toggle classes list"
     },
     "chats": {
-      "title": "Chats inside this project",
+      "title": "Chats",
       "description": "Each chat captures a different idea or draft.",
-      "empty": "Select a project to see available chats.",
-      "newChat": "Start new chat",
+      "empty": "Select a class and chat to start planning.",
+      "newChat": "New chat",
       "pinnedLabel": "Pinned",
       "focusLabel": "Focus",
       "toneLabel": "Tone",
-      "toggle": "Toggle chats list"
+      "toggle": "Toggle chats list",
+      "newChatTitle": "Create New Lesson Chat",
+      "newChatDescription": "Provide lesson context to help Ella generate better lesson plans.",
+      "chatTitleLabel": "Chat Title",
+      "chatTitlePlaceholder": "e.g., Week 1 vocabulary discussion",
+      "lessonTopicLabel": "Lesson Topic",
+      "lessonTopicPlaceholder": "e.g., Introduction to fractions, Past tense verbs",
+      "gradeYearLabel": "Grade/Year Level",
+      "gradeYearPlaceholder": "e.g., Grade 5, Year 7",
+      "lessonDurationLabel": "Lesson Duration (minutes)",
+      "learningObjectivesLabel": "Learning Objectives",
+      "learningObjectivesPlaceholder": "e.g., Students will be able to identify and use past tense verbs correctly...",
+      "teachingActivitiesLabel": "Teaching Activities",
+      "teachingActivitiesPlaceholder": "e.g., Group work, role-play, reading comprehension...",
+      "assessmentTypeLabel": "Assessment Type",
+      "assessmentTypePlaceholder": "e.g., Quiz, Written Test, Oral Presentation",
+      "pin": "Pin context",
+      "unpin": "Unpin context"
     },
     "snapshot": {
-      "title": "Project snapshot",
-      "objectives": "Objectives",
-      "standards": "Standards",
-      "students": "Classes",
-      "empty": "Add context to personalize Ella's ideas.",
-      "toggle": "Toggle project snapshot"
+      "title": "Class Information",
+      "className": "Class Name",
+      "grade": "Grade",
+      "students": "Students",
+      "studentsCount": "students",
+      "notSet": "Not set",
+      "empty": "Select a class to see its information.",
+      "toggle": "Toggle class information"
     },
     "conversation": {
       "title": "Idea board",
       "subtitle": "Draft objectives, centers, or exit tickets with Ella.",
       "waiting": "Choose a chat to keep planning with Ella.",
       "placeholder": "Type a request for Ella to plan, remix, or extend your lesson...",
-      "send": "Send",
+      "send": "Generate lesson",
       "promptGenerateHook": "Draft a culturally responsive hook",
       "promptRemix": "Differentiate for emerging readers",
       "promptChecklist": "Create success criteria checklist",
       "teacherLabel": "You",
-      "assistantLabel": "Ella"
+      "assistantLabel": "Ella",
+      "startConversation": "Start the conversation by typing a message below.",
+      "saveToLesson": "Save to Lesson"
     }
   },
   "languageSwitcher": {

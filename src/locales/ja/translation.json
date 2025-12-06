@@ -2,6 +2,14 @@
   "app": {
     "name": "ELLA AI"
   },
+  "common": {
+    "cancel": "キャンセル",
+    "create": "作成",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "loading": "読み込み中..."
+  },
   "sidebar": {
     "groups": {
       "preparation": "準備",
@@ -41,51 +49,68 @@
     "placeholder": "ダッシュボードのコンテンツは近日公開予定です。"
   },
   "lessonPlanning": {
-    "title": "Lesson Planning Workspace",
-    "subtitle": "Keep project chats tidy so every class starts with a clear plan.",
+    "title": "授業計画ワークスペース",
+    "subtitle": "プロジェクトチャットを整理して、各授業を明確な計画から始めましょう。",
     "actions": {
-      "newProject": "New project",
-      "editContext": "Edit context"
+      "newClass": "新しいクラス",
+      "editContext": "コンテキストを編集"
     },
-    "projects": {
-      "title": "Projects",
-      "description": "Pick a project to review its chat history and context.",
-      "searchPlaceholder": "Search projects or units",
-      "statusDraft": "Draft",
-      "statusReady": "Ready",
-      "classesLabel": "classes",
-      "chatsLabel": "chats",
-      "toggle": "Toggle projects list"
+    "classes": {
+      "title": "クラス",
+      "description": "クラスを選択してチャットを表示・管理します。",
+      "empty": "クラスが見つかりません。まずマイクラスでクラスを作成してください。",
+      "toggle": "クラスリストの切り替え"
     },
     "chats": {
-      "title": "Chats inside this project",
-      "description": "Each chat captures a different idea or draft.",
-      "empty": "Select a project to see available chats.",
-      "newChat": "Start new chat",
-      "pinnedLabel": "Pinned",
-      "focusLabel": "Focus",
-      "toneLabel": "Tone",
-      "toggle": "Toggle chats list"
+      "title": "チャット",
+      "description": "各チャットは異なるアイデアや下書きを記録します。",
+      "empty": "クラスとチャットを選択して計画を始めましょう。",
+      "newChat": "新しいチャット",
+      "pinnedLabel": "ピン留め",
+      "focusLabel": "フォーカス",
+      "toneLabel": "トーン",
+      "toggle": "チャットリストの切り替え",
+      "newChatTitle": "新しい授業チャットを作成",
+      "newChatDescription": "Ellaがより良い授業計画を作成できるよう、授業のコンテキストを入力してください。",
+      "chatTitleLabel": "チャットタイトル",
+      "chatTitlePlaceholder": "例: 第1週の語彙ディスカッション",
+      "lessonTopicLabel": "授業トピック",
+      "lessonTopicPlaceholder": "例: 分数の紹介、過去形の動詞",
+      "gradeYearLabel": "学年/年度",
+      "gradeYearPlaceholder": "例: 5年生、中学1年",
+      "lessonDurationLabel": "授業時間（分）",
+      "learningObjectivesLabel": "学習目標",
+      "learningObjectivesPlaceholder": "例: 生徒は過去形の動詞を正しく識別し、使用できるようになる...",
+      "teachingActivitiesLabel": "教育活動",
+      "teachingActivitiesPlaceholder": "例: グループワーク、ロールプレイ、読解...",
+      "assessmentTypeLabel": "評価タイプ",
+      "assessmentTypePlaceholder": "例: クイズ、筆記テスト、口頭発表",
+      "pin": "コンテキストをピン留め",
+      "unpin": "コンテキストのピン留めを解除"
     },
     "snapshot": {
-      "title": "Project snapshot",
-      "objectives": "Objectives",
-      "standards": "Standards",
-      "students": "Classes",
-      "empty": "Add context to personalize Ella's ideas.",
-      "toggle": "Toggle project snapshot"
+      "title": "クラス情報",
+      "className": "クラス名",
+      "grade": "学年",
+      "students": "生徒",
+      "studentsCount": "人",
+      "notSet": "未設定",
+      "empty": "クラスを選択して情報を表示します。",
+      "toggle": "クラス情報の切り替え"
     },
     "conversation": {
-      "title": "Idea board",
-      "subtitle": "Draft objectives, centers, or exit tickets with Ella.",
-      "waiting": "Choose a chat to keep planning with Ella.",
-      "placeholder": "Type a request for Ella to plan, remix, or extend your lesson...",
-      "send": "Send",
-      "promptGenerateHook": "Draft a culturally responsive hook",
-      "promptRemix": "Differentiate for emerging readers",
-      "promptChecklist": "Create success criteria checklist",
-      "teacherLabel": "You",
-      "assistantLabel": "Ella"
+      "title": "アイデアボード",
+      "subtitle": "Ellaと一緒に目標、センター、出口チケットを作成しましょう。",
+      "waiting": "チャットを選択してEllaと計画を続けましょう。",
+      "placeholder": "Ellaに授業の計画、リミックス、または拡張をリクエストしてください...",
+      "send": "授業を生成",
+      "promptGenerateHook": "文化的に配慮した導入を作成",
+      "promptRemix": "初心者読者向けに差別化",
+      "promptChecklist": "成功基準チェックリストを作成",
+      "teacherLabel": "あなた",
+      "assistantLabel": "Ella",
+      "startConversation": "下のメッセージを入力して会話を始めてください。",
+      "saveToLesson": "授業に保存"
     }
   },
   "languageSwitcher": {

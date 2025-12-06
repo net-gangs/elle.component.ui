@@ -16,7 +16,7 @@ export function LessonSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
     <Sidebar
       collapsible="none"
       className={cn(
-        "group border-r border-l bg-muted/40 transition-[width] duration-200 ease-linear",
+        "group border-r border-l bg-muted/40 transition-[width] duration-200 ease-linear sticky top-0 h-screen max-h-screen",
         state === "collapsed"
           ? "!w-[var(--sidebar-width-icon)]"
           : "!w-[var(--sidebar-width)]"
