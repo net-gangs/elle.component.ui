@@ -148,7 +148,7 @@ export const chatService = {
     chatId: string,
     message: string,
     onChunk: (chunk: string) => void,
-    onComplete: (fullMessage: string) => void,
+    onComplete: (fullMessage: string, stopReason: string | null) => void,
     onError: (error: Error) => void
   ): AbortController => {
     const abortController = new AbortController();
@@ -164,12 +164,13 @@ export const chatService = {
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
+
         if (data.type === "chunk") {
           fullMessage += data.content;
           onChunk(data.content);
         } else if (data.type === "done") {
           eventSource.close();
-          onComplete(fullMessage);
+          onComplete(fullMessage, data.stopReason || null);
         } else if (data.type === "error") {
           eventSource.close();
           onError(new Error(data.message));
