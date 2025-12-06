@@ -6,6 +6,7 @@ export interface Classroom {
   grade?: string;
   userId: string;
   totalStudents?: number;
+  pinned?: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
@@ -21,6 +22,7 @@ export interface UpdateClassroomDto {
   name?: string;
   grade?: string;
   code?: string;
+  pinned?: boolean;
 }
 
 export type CefrLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";

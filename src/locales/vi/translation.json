@@ -2,6 +2,14 @@
   "app": {
     "name": "ELLA AI"
   },
+  "common": {
+    "cancel": "Hủy",
+    "create": "Tạo",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "loading": "Đang tải..."
+  },
   "sidebar": {
     "groups": {
       "preparation": "Chuẩn bị",
@@ -41,51 +49,68 @@
     "placeholder": "Nội dung bảng điều khiển sẽ sớm có mặt."
   },
   "lessonPlanning": {
-    "title": "Lesson Planning Workspace",
-    "subtitle": "Keep project chats tidy so every class starts with a clear plan.",
+    "title": "Không gian Lập kế hoạch Bài học",
+    "subtitle": "Giữ các cuộc trò chuyện trong dự án gọn gàng để mỗi lớp học bắt đầu với một kế hoạch rõ ràng.",
     "actions": {
-      "newProject": "New project",
-      "editContext": "Edit context"
+      "newClass": "Lớp mới",
+      "editContext": "Chỉnh sửa ngữ cảnh"
     },
-    "projects": {
-      "title": "Projects",
-      "description": "Pick a project to review its chat history and context.",
-      "searchPlaceholder": "Search projects or units",
-      "statusDraft": "Draft",
-      "statusReady": "Ready",
-      "classesLabel": "classes",
-      "chatsLabel": "chats",
-      "toggle": "Toggle projects list"
+    "classes": {
+      "title": "Lớp học",
+      "description": "Chọn một lớp để xem và quản lý các cuộc trò chuyện.",
+      "empty": "Không tìm thấy lớp học. Hãy tạo lớp trong Lớp học của tôi trước.",
+      "toggle": "Bật/tắt danh sách lớp học"
     },
     "chats": {
-      "title": "Chats inside this project",
-      "description": "Each chat captures a different idea or draft.",
-      "empty": "Select a project to see available chats.",
-      "newChat": "Start new chat",
-      "pinnedLabel": "Pinned",
-      "focusLabel": "Focus",
-      "toneLabel": "Tone",
-      "toggle": "Toggle chats list"
+      "title": "Cuộc trò chuyện",
+      "description": "Mỗi cuộc trò chuyện ghi lại một ý tưởng hoặc bản nháp khác nhau.",
+      "empty": "Chọn lớp và cuộc trò chuyện để bắt đầu lập kế hoạch.",
+      "newChat": "Cuộc trò chuyện mới",
+      "pinnedLabel": "Đã ghim",
+      "focusLabel": "Trọng tâm",
+      "toneLabel": "Giọng điệu",
+      "toggle": "Bật/tắt danh sách cuộc trò chuyện",
+      "newChatTitle": "Tạo cuộc trò chuyện bài học mới",
+      "newChatDescription": "Cung cấp ngữ cảnh bài học để giúp Ella tạo kế hoạch bài học tốt hơn.",
+      "chatTitleLabel": "Tiêu đề cuộc trò chuyện",
+      "chatTitlePlaceholder": "VD: Thảo luận từ vựng tuần 1",
+      "lessonTopicLabel": "Chủ đề bài học",
+      "lessonTopicPlaceholder": "VD: Giới thiệu phân số, Động từ thì quá khứ",
+      "gradeYearLabel": "Cấp lớp/Năm học",
+      "gradeYearPlaceholder": "VD: Lớp 5, Năm 7",
+      "lessonDurationLabel": "Thời lượng bài học (phút)",
+      "learningObjectivesLabel": "Mục tiêu học tập",
+      "learningObjectivesPlaceholder": "VD: Học sinh sẽ có thể nhận biết và sử dụng đúng động từ thì quá khứ...",
+      "teachingActivitiesLabel": "Hoạt động dạy học",
+      "teachingActivitiesPlaceholder": "VD: Làm việc nhóm, đóng vai, đọc hiểu...",
+      "assessmentTypeLabel": "Loại đánh giá",
+      "assessmentTypePlaceholder": "VD: Kiểm tra, Bài viết, Trình bày miệng",
+      "pin": "Ghim ngữ cảnh",
+      "unpin": "Bỏ ghim ngữ cảnh"
     },
     "snapshot": {
-      "title": "Project snapshot",
-      "objectives": "Objectives",
-      "standards": "Standards",
-      "students": "Classes",
-      "empty": "Add context to personalize Ella's ideas.",
-      "toggle": "Toggle project snapshot"
+      "title": "Thông tin lớp học",
+      "className": "Tên lớp",
+      "grade": "Cấp lớp",
+      "students": "Học sinh",
+      "studentsCount": "học sinh",
+      "notSet": "Chưa đặt",
+      "empty": "Chọn một lớp để xem thông tin.",
+      "toggle": "Bật/tắt thông tin lớp học"
     },
     "conversation": {
-      "title": "Idea board",
-      "subtitle": "Draft objectives, centers, or exit tickets with Ella.",
-      "waiting": "Choose a chat to keep planning with Ella.",
-      "placeholder": "Type a request for Ella to plan, remix, or extend your lesson...",
-      "send": "Send",
-      "promptGenerateHook": "Draft a culturally responsive hook",
-      "promptRemix": "Differentiate for emerging readers",
-      "promptChecklist": "Create success criteria checklist",
-      "teacherLabel": "You",
-      "assistantLabel": "Ella"
+      "title": "Bảng ý tưởng",
+      "subtitle": "Phác thảo mục tiêu, trung tâm học tập hoặc phiếu thoát với Ella.",
+      "waiting": "Chọn cuộc trò chuyện để tiếp tục lập kế hoạch với Ella.",
+      "placeholder": "Nhập yêu cầu để Ella lập kế hoạch, chỉnh sửa hoặc mở rộng bài học của bạn...",
+      "send": "Tạo bài học",
+      "promptGenerateHook": "Phác thảo một mở bài đáp ứng văn hóa",
+      "promptRemix": "Phân hóa cho học sinh đọc mới",
+      "promptChecklist": "Tạo bảng kiểm tiêu chí thành công",
+      "teacherLabel": "Bạn",
+      "assistantLabel": "Ella",
+      "startConversation": "Bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới.",
+      "saveToLesson": "Lưu vào bài học"
     }
   },
   "languageSwitcher": {

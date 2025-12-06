@@ -2,6 +2,14 @@
   "app": {
     "name": "ELLA AI"
   },
+  "common": {
+    "cancel": "ยกเลิก",
+    "create": "สร้าง",
+    "save": "บันทึก",
+    "delete": "ลบ",
+    "edit": "แก้ไข",
+    "loading": "กำลังโหลด..."
+  },
   "sidebar": {
     "groups": {
       "preparation": "การเตรียมความพร้อม",
@@ -41,51 +49,68 @@
     "placeholder": "เนื้อหาแดชบอร์ดจะพร้อมใช้งานเร็วๆ นี้"
   },
   "lessonPlanning": {
-    "title": "Lesson Planning Workspace",
-    "subtitle": "Keep project chats tidy so every class starts with a clear plan.",
+    "title": "พื้นที่ทำงานการวางแผนบทเรียน",
+    "subtitle": "จัดระเบียบแชทโปรเจกต์เพื่อให้ทุกชั้นเรียนเริ่มต้นด้วยแผนที่ชัดเจน",
     "actions": {
-      "newProject": "New project",
-      "editContext": "Edit context"
+      "newClass": "ชั้นเรียนใหม่",
+      "editContext": "แก้ไขบริบท"
     },
-    "projects": {
-      "title": "Projects",
-      "description": "Pick a project to review its chat history and context.",
-      "searchPlaceholder": "Search projects or units",
-      "statusDraft": "Draft",
-      "statusReady": "Ready",
-      "classesLabel": "classes",
-      "chatsLabel": "chats",
-      "toggle": "Toggle projects list"
+    "classes": {
+      "title": "ชั้นเรียน",
+      "description": "เลือกชั้นเรียนเพื่อดูและจัดการแชท",
+      "empty": "ไม่พบชั้นเรียน กรุณาสร้างชั้นเรียนในชั้นเรียนของฉันก่อน",
+      "toggle": "สลับรายการชั้นเรียน"
     },
     "chats": {
-      "title": "Chats inside this project",
-      "description": "Each chat captures a different idea or draft.",
-      "empty": "Select a project to see available chats.",
-      "newChat": "Start new chat",
-      "pinnedLabel": "Pinned",
-      "focusLabel": "Focus",
-      "toneLabel": "Tone",
-      "toggle": "Toggle chats list"
+      "title": "แชท",
+      "description": "แต่ละแชทบันทึกความคิดหรือแบบร่างที่แตกต่างกัน",
+      "empty": "เลือกชั้นเรียนและแชทเพื่อเริ่มวางแผน",
+      "newChat": "แชทใหม่",
+      "pinnedLabel": "ปักหมุด",
+      "focusLabel": "จุดเน้น",
+      "toneLabel": "โทน",
+      "toggle": "สลับรายการแชท",
+      "newChatTitle": "สร้างแชทบทเรียนใหม่",
+      "newChatDescription": "ให้บริบทบทเรียนเพื่อช่วยให้ Ella สร้างแผนบทเรียนที่ดีขึ้น",
+      "chatTitleLabel": "ชื่อแชท",
+      "chatTitlePlaceholder": "เช่น การอภิปรายคำศัพท์สัปดาห์ที่ 1",
+      "lessonTopicLabel": "หัวข้อบทเรียน",
+      "lessonTopicPlaceholder": "เช่น แนะนำเศษส่วน, คำกริยาอดีตกาล",
+      "gradeYearLabel": "ระดับชั้น/ปีการศึกษา",
+      "gradeYearPlaceholder": "เช่น ป.5, ม.1",
+      "lessonDurationLabel": "ระยะเวลาบทเรียน (นาที)",
+      "learningObjectivesLabel": "วัตถุประสงค์การเรียนรู้",
+      "learningObjectivesPlaceholder": "เช่น นักเรียนสามารถระบุและใช้คำกริยาอดีตกาลได้อย่างถูกต้อง...",
+      "teachingActivitiesLabel": "กิจกรรมการสอน",
+      "teachingActivitiesPlaceholder": "เช่น ทำงานกลุ่ม, การแสดงบทบาทสมมติ, การอ่านเข้าใจ...",
+      "assessmentTypeLabel": "ประเภทการประเมิน",
+      "assessmentTypePlaceholder": "เช่น แบบทดสอบ, ข้อสอบเขียน, การนำเสนอ",
+      "pin": "ปักหมุดบริบท",
+      "unpin": "เลิกปักหมุดบริบท"
     },
     "snapshot": {
-      "title": "Project snapshot",
-      "objectives": "Objectives",
-      "standards": "Standards",
-      "students": "Classes",
-      "empty": "Add context to personalize Ella's ideas.",
-      "toggle": "Toggle project snapshot"
+      "title": "ข้อมูลชั้นเรียน",
+      "className": "ชื่อชั้นเรียน",
+      "grade": "ระดับชั้น",
+      "students": "นักเรียน",
+      "studentsCount": "คน",
+      "notSet": "ยังไม่ได้ตั้ง",
+      "empty": "เลือกชั้นเรียนเพื่อดูข้อมูล",
+      "toggle": "สลับข้อมูลชั้นเรียน"
     },
     "conversation": {
-      "title": "Idea board",
-      "subtitle": "Draft objectives, centers, or exit tickets with Ella.",
-      "waiting": "Choose a chat to keep planning with Ella.",
-      "placeholder": "Type a request for Ella to plan, remix, or extend your lesson...",
-      "send": "Send",
-      "promptGenerateHook": "Draft a culturally responsive hook",
-      "promptRemix": "Differentiate for emerging readers",
-      "promptChecklist": "Create success criteria checklist",
-      "teacherLabel": "You",
-      "assistantLabel": "Ella"
+      "title": "กระดานไอเดีย",
+      "subtitle": "ร่างวัตถุประสงค์ ศูนย์กลาง หรือตั๋วออกกับ Ella",
+      "waiting": "เลือกแชทเพื่อวางแผนต่อกับ Ella",
+      "placeholder": "พิมพ์คำขอให้ Ella วางแผน รีมิกซ์ หรือขยายบทเรียนของคุณ...",
+      "send": "สร้างบทเรียน",
+      "promptGenerateHook": "ร่างบทนำที่ตอบสนองทางวัฒนธรรม",
+      "promptRemix": "แยกความแตกต่างสำหรับผู้อ่านเริ่มต้น",
+      "promptChecklist": "สร้างรายการตรวจสอบเกณฑ์ความสำเร็จ",
+      "teacherLabel": "คุณ",
+      "assistantLabel": "Ella",
+      "startConversation": "เริ่มการสนทนาโดยพิมพ์ข้อความด้านล่าง",
+      "saveToLesson": "บันทึกลงบทเรียน"
     }
   },
   "languageSwitcher": {

@@ -5,185 +5,83 @@ export interface LessonChatMessage {
   role: "teacher" | "assistant";
   content: string;
   timestamp: string;
+  createdAt?: string;
 }
 
 export interface LessonChat {
   id: string;
+  classroomId: string;
   title: string;
-  focus: string;
-  lastActivity: string;
+  focus?: string;
+  tone?: string;
   pinned?: boolean;
-  tone: string;
+  lastActivity?: string;
   messages: LessonChatMessage[];
+  // Lesson context fields
+  lessonTopic?: string;
+  gradeYear?: string;
+  durationMinutes?: number;
+  learningObjectives?: string;
+  teachingActivities?: string;
+  assessmentType?: string;
+  targetCefrLevel?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface LessonProjectSnapshot {
-  objectives: string;
-  standards: string;
-  classes: string;
-}
-
-export interface LessonProject {
+export interface LessonClass {
   id: string;
   name: string;
-  subject: string;
-  grade: string;
-  unit: string;
-  status: "draft" | "ready";
-  classes: number;
-  snapshot: LessonProjectSnapshot;
+  grade?: string;
+  totalStudents?: number;
+  pinned?: boolean; // currently unused but kept for API compatibility
   chats: LessonChat[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export const mockProjects: LessonProject[] = [
-  {
-    id: "proj-ecosystems",
-    name: "Ecosystems Inquiry",
-    subject: "Science",
-    grade: "Grade 5",
-    unit: "Unit 4 · Energy transfer",
-    status: "draft",
-    classes: 2,
-    snapshot: {
-      objectives:
-        "Students explain how energy moves through producers, consumers, and decomposers in a biome.",
-      standards: "NGSS 5-LS2-1 · TEKS 5.9B",
-      classes: "Periods 2 & 4",
-    },
-    chats: [
-      {
-        id: "chat-launch",
-        title: "Launch day discussion",
-        focus: "Hook & discourse",
-        lastActivity: "10:24 AM",
-        pinned: true,
-        tone: "curious",
-        messages: [
-          {
-            id: "msg-launch-1",
-            role: "teacher",
-            content:
-              "I want a low-prep hook that lets students share prior knowledge about food webs without feeling put on the spot.",
-            timestamp: "10:18 AM",
-          },
-          {
-            id: "msg-launch-2",
-            role: "assistant",
-            content:
-              "Try a gallery walk with photos of local ecosystems. Ask students to place sticky notes describing how energy might flow through what they see.",
-            timestamp: "10:18 AM",
-          },
-          {
-            id: "msg-launch-3",
-            role: "assistant",
-            content:
-              "Follow with a whip-around prompt: \"Where does the energy start in your scene?\" This keeps it fast and inclusive.",
-            timestamp: "10:20 AM",
-          },
-        ],
-      },
-      {
-        id: "chat-small-groups",
-        title: "Small group coach",
-        focus: "Differentiation",
-        lastActivity: "Yesterday",
-        tone: "structured",
-        messages: [
-          {
-            id: "msg-small-1",
-            role: "teacher",
-            content:
-              "Need three versions of the energy transfer mini-lab so my emerging readers can still access the task.",
-            timestamp: "Yesterday",
-          },
-          {
-            id: "msg-small-2",
-            role: "assistant",
-            content:
-              "Use the same data table, but pre-highlight vocabulary for Group A and add sentence starters for Group B.",
-            timestamp: "Yesterday",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "proj-poetry",
-    name: "Poetry Anthology",
-    subject: "ELA",
-    grade: "Grade 7",
-    unit: "Unit 5 · Voice & form",
-    status: "ready",
-    classes: 3,
-    snapshot: {
-      objectives: "Writers experiment with figurative language to convey emotion in free verse.",
-      standards: "CCSS W.7.3 · LA 7.4",
-      classes: "Blocks A, B, C",
-    },
-    chats: [
-      {
-        id: "chat-feedback",
-        title: "Feedback stems",
-        focus: "Peer review",
-        lastActivity: "Mon",
-        tone: "warm",
-        messages: [
-          {
-            id: "msg-feedback-1",
-            role: "assistant",
-            content:
-              "Offer stems like \"A line that resonated with me...\" or \"Consider tightening...\" to keep feedback specific.",
-            timestamp: "Mon",
-          },
-        ],
-      },
-      {
-        id: "chat-publishing",
-        title: "Publishing night",
-        focus: "Family event",
-        lastActivity: "Sun",
-        tone: "celebratory",
-        messages: [
-          {
-            id: "msg-publish-1",
-            role: "teacher",
-            content:
-              "Need a short script students can use to introduce their poem during publishing night.",
-            timestamp: "Sun",
-          },
-          {
-            id: "msg-publish-2",
-            role: "assistant",
-            content:
-              "Have them share the poem title, the mentor poet, and one craft move they tried. Keep it under 45 seconds.",
-            timestamp: "Sun",
-          },
-        ],
-      },
-    ],
-  },
-];
-
 interface LessonState {
-  selectedProjectId: string;
+  selectedClassId: string | null;
   selectedChatId: string | null;
-  projectsOpen: boolean;
-  chatsOpen: boolean;
+  classesOpen: Record<string, boolean>; // Track which classes are expanded
+  classes: LessonClass[];
+  isLoadingClasses: boolean;
+  isLoadingChats: boolean;
+  isLoadingMessages: boolean;
+  currentMessages: LessonChatMessage[];
+  isSendingMessage: boolean;
+  streamingMessage: string | null;
 }
 
 export const lessonStore = new Store<LessonState>({
-  selectedProjectId: mockProjects[0]?.id ?? "",
-  selectedChatId: mockProjects[0]?.chats[0]?.id ?? null,
-  projectsOpen: true,
-  chatsOpen: true,
+  selectedClassId: null,
+  selectedChatId: null,
+  classesOpen: {},
+  classes: [],
+  isLoadingClasses: false,
+  isLoadingChats: false,
+  isLoadingMessages: false,
+  currentMessages: [],
+  isSendingMessage: false,
+  streamingMessage: null,
 });
 
-export const setSelectedProjectId = (id: string) => {
+const dateOrNow = (value?: string) => (value ? new Date(value).getTime() : Date.now());
+
+const sortChats = (chats: LessonChat[]) =>
+  [...chats].sort((a, b) => {
+    const aPinned = !!a.pinned;
+    const bPinned = !!b.pinned;
+    if (aPinned !== bPinned) return aPinned ? -1 : 1;
+    return dateOrNow(b.updatedAt || b.createdAt) - dateOrNow(a.updatedAt || a.createdAt);
+  });
+
+export const setSelectedClassId = (id: string | null) => {
   lessonStore.setState((state) => ({
     ...state,
-    selectedProjectId: id,
-    // Reset chat selection when project changes, or select first chat
-    selectedChatId: mockProjects.find(p => p.id === id)?.chats[0]?.id ?? null
+    selectedClassId: id,
+    selectedChatId: null, // Reset chat when class changes
+    currentMessages: [],
   }));
 };
 
@@ -191,19 +89,142 @@ export const setSelectedChatId = (id: string | null) => {
   lessonStore.setState((state) => ({
     ...state,
     selectedChatId: id,
+    currentMessages: [],
   }));
 };
 
-export const setProjectsOpen = (open: boolean) => {
+export const toggleClassOpen = (classId: string) => {
   lessonStore.setState((state) => ({
     ...state,
-    projectsOpen: open,
+    classesOpen: {
+      ...state.classesOpen,
+      [classId]: !state.classesOpen[classId],
+    },
   }));
 };
 
-export const setChatsOpen = (open: boolean) => {
+export const setClassOpen = (classId: string, open: boolean) => {
   lessonStore.setState((state) => ({
     ...state,
-    chatsOpen: open,
+    classesOpen: {
+      ...state.classesOpen,
+      [classId]: open,
+    },
+  }));
+};
+
+export const setClasses = (classes: LessonClass[]) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    // Newest classes first; chats sorted with pinned first
+    classes: [...classes]
+      .map((c) => ({ ...c, chats: sortChats(c.chats) }))
+      .sort((a, b) => dateOrNow(b.createdAt) - dateOrNow(a.createdAt)),
+  }));
+};
+
+export const setIsLoadingClasses = (loading: boolean) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    isLoadingClasses: loading,
+  }));
+};
+
+export const setIsLoadingChats = (loading: boolean) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    isLoadingChats: loading,
+  }));
+};
+
+export const setIsLoadingMessages = (loading: boolean) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    isLoadingMessages: loading,
+  }));
+};
+
+export const setCurrentMessages = (messages: LessonChatMessage[]) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    currentMessages: messages,
+  }));
+};
+
+export const addMessage = (message: LessonChatMessage) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    currentMessages: [...state.currentMessages, message],
+  }));
+};
+
+export const setIsSendingMessage = (sending: boolean) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    isSendingMessage: sending,
+  }));
+};
+
+export const setStreamingMessage = (message: string | null) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    streamingMessage: message,
+  }));
+};
+
+export const appendToStreamingMessage = (chunk: string) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    streamingMessage: (state.streamingMessage || '') + chunk,
+  }));
+};
+
+export const updateClassChats = (classId: string, chats: LessonChat[]) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    classes: state.classes.map((c) =>
+      c.id === classId ? { ...c, chats: sortChats(chats) } : c
+    ),
+  }));
+};
+
+export const addChatToClass = (classId: string, chat: LessonChat) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    classes: state.classes.map((c) =>
+      c.id === classId ? { ...c, chats: sortChats([...c.chats, chat]) } : c
+    ),
+  }));
+};
+
+export const updateChatInClass = (classId: string, chatId: string, updates: Partial<LessonChat>) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    classes: state.classes.map((c) =>
+      c.id === classId
+        ? {
+            ...c,
+            chats: sortChats(
+              c.chats.map((chat) =>
+                chat.id === chatId ? { ...chat, ...updates } : chat
+              )
+            ),
+          }
+        : c
+    ),
+  }));
+};
+
+export const updateClassInStore = (classId: string, updates: Partial<LessonClass>) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    classes: state.classes.map((c) => (c.id === classId ? { ...c, ...updates } : c)),
+  }));
+};
+
+export const reorderClasses = (classOrder: LessonClass[]) => {
+  lessonStore.setState((state) => ({
+    ...state,
+    classes: classOrder.map((c) => ({ ...c, chats: sortChats(c.chats) })),
   }));
 };
