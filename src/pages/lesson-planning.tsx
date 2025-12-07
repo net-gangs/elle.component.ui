@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ChevronDown,
@@ -46,83 +46,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const ChatInputArea = memo(
-  ({
-    onSendMessage,
-    isSendingMessage,
-    placeholder,
-    t,
-  }: {
-    onSendMessage: (text: string) => void;
-    isSendingMessage: boolean;
-    placeholder: string;
-    t: any;
-  }) => {
-    const [messageInput, setMessageInput] = useState("");
-
-    const handleSend = () => {
-      if (!messageInput.trim() || isSendingMessage) return;
-      onSendMessage(messageInput);
-      setMessageInput("");
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        handleSend();
-      }
-    };
-
-    return (
-      <div className="rounded-2xl border bg-white p-4 shadow-sm">
-        <Textarea
-          placeholder={placeholder}
-          rows={3}
-          className="min-h-12 border-0 shadow-none focus-visible:ring-0 resize-none"
-          value={messageInput}
-          onChange={(e) => setMessageInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={isSendingMessage}
-        />
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-1">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="size-9 text-muted-foreground hover:text-foreground"
-              disabled={isSendingMessage}
-            >
-              <Plus className="size-5" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="size-9 text-muted-foreground hover:text-foreground"
-              disabled={isSendingMessage}
-            >
-              <Mic className="size-5" />
-            </Button>
-          </div>
-          <Button
-            className="whitespace-nowrap"
-            onClick={handleSend}
-            disabled={!messageInput.trim() || isSendingMessage}
-          >
-            {isSendingMessage ? (
-              <Loader2 className="size-4 mr-2 animate-spin" />
-            ) : (
-              <Send className="size-4 mr-2" />
-            )}
-            {t("lessonPlanning.conversation.send")}
-          </Button>
-        </div>
-      </div>
-    );
-  }
-);
-
 export default function LessonPlanning() {
   const { t } = useTranslation();
   const {
@@ -135,10 +58,15 @@ export default function LessonPlanning() {
     streamingMessage,
   } = useStore(lessonStore);
   const [contextOpen, setContextOpen] = useState(false);
-  const [messageToSave, setMessageToSave] = useState<LessonChatMessage | null>(null);
+  const [messageInput, setMessageInput] = useState("");
+  const [messageToSave, setMessageToSave] = useState<LessonChatMessage | null>(
+    null
+  );
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [savingMessageId, setSavingMessageId] = useState<string | null>(null);
-  const [removingLessonMessageId, setRemovingLessonMessageId] = useState<string | null>(null);
+  const [removingLessonMessageId, setRemovingLessonMessageId] = useState<
+    string | null
+  >(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -224,72 +152,82 @@ export default function LessonPlanning() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentMessages, streamingMessage]);
 
-  const handleSendMessage = useCallback(
-    async (text: string) => {
-      if (
-        !selectedClassId ||
-        !selectedChatId ||
-        !text.trim() ||
-        isSendingMessage
-      ) {
-        return;
-      }
+  const handleSendMessage = async () => {
+    if (
+      !selectedClassId ||
+      !selectedChatId ||
+      !messageInput.trim() ||
+      isSendingMessage
+    ) {
+      return;
+    }
 
-      const userMessage: LessonChatMessage = {
-        id: `temp-${Date.now()}`,
-        role: "teacher",
-        content: text.trim(),
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
+    const userMessage: LessonChatMessage = {
+      id: `temp-${Date.now()}`,
+      role: "teacher",
+      content: messageInput.trim(),
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
 
-      addMessage(userMessage);
-      setIsSendingMessage(true);
-      setStreamingMessage("");
+    addMessage(userMessage);
+    setMessageInput("");
+    setIsSendingMessage(true);
+    setStreamingMessage("");
 
-      abortControllerRef.current = chatService.sendMessageSSE(
-        selectedClassId,
-        selectedChatId,
-        userMessage.content,
-        (chunk) => {
-          appendToStreamingMessage(chunk);
-        },
-        (fullMessage, stopReason) => {
-          addMessage({
-            id: `msg-${Date.now()}`,
-            role: "assistant",
-            content: fullMessage,
-            timestamp: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
+    abortControllerRef.current = chatService.sendMessageSSE(
+      selectedClassId,
+      selectedChatId,
+      userMessage.content,
+      (chunk) => {
+        appendToStreamingMessage(chunk);
+      },
+      (fullMessage, stopReason) => {
+        addMessage({
+          id: `msg-${Date.now()}`,
+          role: "assistant",
+          content: fullMessage,
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        });
+        setStreamingMessage(null);
+        setIsSendingMessage(false);
+        if (stopReason === "length") {
+          toast.warning("Response incomplete", {
+            description: "The AI hit the maximum word limit.",
+            duration: 5000,
           });
-          setStreamingMessage(null);
-          setIsSendingMessage(false);
-          if (stopReason === "length") {
-            toast.warning("Response incomplete", {
-              description: "The AI hit the maximum word limit.",
-              duration: 5000,
-            });
-          }
-          void fetchMessages();
-        },
-        (error) => {
-          console.error("SSE error:", error);
-          setStreamingMessage(null);
-          setIsSendingMessage(false);
         }
-      );
-    },
-    [selectedClassId, selectedChatId, isSendingMessage]
-  );
+        void fetchMessages();
+      },
+      (error) => {
+        console.error("SSE error:", error);
+        setStreamingMessage(null);
+        setIsSendingMessage(false);
+      }
+    );
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   const handleRequestSaveToLesson = (message: LessonChatMessage) => {
     if (!selectedClassId || !selectedChatId) return;
     if (message.id.startsWith("temp") || message.id.startsWith("msg-")) {
-      toast.info(t("lessonPlanning.conversation.waitForMessage", "Please wait until the response is saved."));
+      toast.info(
+        t(
+          "lessonPlanning.conversation.waitForMessage",
+          "Please wait until the response is saved."
+        )
+      );
       return;
     }
     setMessageToSave(message);
@@ -321,7 +259,10 @@ export default function LessonPlanning() {
     } catch (error) {
       console.error("Failed to save to lesson:", error);
       toast.error(
-        t("lessonPlanning.conversation.saveToLessonError", "Failed to save to lesson")
+        t(
+          "lessonPlanning.conversation.saveToLessonError",
+          "Failed to save to lesson"
+        )
       );
     } finally {
       setSavingMessageId(null);
@@ -335,18 +276,30 @@ export default function LessonPlanning() {
 
     setRemovingLessonMessageId(message.id);
     try {
-      await chatService.removeSavedLesson(selectedClassId, selectedChatId, message.id);
+      await chatService.removeSavedLesson(
+        selectedClassId,
+        selectedChatId,
+        message.id
+      );
       updateMessageLessonLink(message.id, {
         lessonId: null,
         lessonTitle: null,
         lessonCreatedAt: null,
       });
       toast.success(
-        t("lessonPlanning.conversation.lessonRemoved", "Removed lesson from message")
+        t(
+          "lessonPlanning.conversation.lessonRemoved",
+          "Removed lesson from message"
+        )
       );
     } catch (error) {
       console.error("Failed to remove lesson from message:", error);
-      toast.error(t("lessonPlanning.conversation.saveToLessonError", "Failed to save to lesson"));
+      toast.error(
+        t(
+          "lessonPlanning.conversation.saveToLessonError",
+          "Failed to save to lesson"
+        )
+      );
     } finally {
       setRemovingLessonMessageId(null);
     }
@@ -371,140 +324,181 @@ export default function LessonPlanning() {
   return (
     <>
       <div className="relative h-full bg-white">
-      {/* Messages area */}
-      <div className="absolute inset-0 overflow-y-auto pb-72 px-5">
-        <div className="flex flex-col gap-4 py-4">
-          {isLoadingMessages ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            </div>
-          ) : currentMessages.length === 0 && !streamingMessage ? (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <Sparkles className="size-8 text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground">
-                {t("lessonPlanning.conversation.startConversation")}
-              </p>
-            </div>
-          ) : (
-            <>
-              {currentMessages.map((message) => (
-                <MessageBubble
-                  key={message.id}
-                  message={message}
-                  teacherLabel={t("lessonPlanning.conversation.teacherLabel")}
-                  assistantLabel={t(
-                    "lessonPlanning.conversation.assistantLabel"
-                  )}
-                  onSaveToLesson={() => handleRequestSaveToLesson(message)}
-                  onRemoveLesson={
-                    message.lessonId ? () => handleRemoveLesson(message) : undefined
-                  }
-                  isSaving={savingMessageId === message.id}
-                  isRemoving={removingLessonMessageId === message.id}
-                />
-              ))}
-              {streamingMessage && (
-                <MessageBubble
-                  message={{
-                    id: "streaming",
-                    role: "assistant",
-                    content: streamingMessage,
-                    timestamp: "",
-                  }}
-                  teacherLabel={t("lessonPlanning.conversation.teacherLabel")}
-                  assistantLabel={t(
-                    "lessonPlanning.conversation.assistantLabel"
-                  )}
-                  isStreaming
-                />
-              )}
-            </>
-          )}
-          <div ref={messagesEndRef} />
+        {/* Messages area - scrollable with padding at bottom for input */}
+        <div className="absolute inset-0 overflow-y-auto pb-72 px-5">
+          <div className="flex flex-col gap-4 py-4">
+            {isLoadingMessages ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="size-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : currentMessages.length === 0 && !streamingMessage ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <Sparkles className="size-8 text-muted-foreground mb-2" />
+                <p className="text-sm text-muted-foreground">
+                  {t("lessonPlanning.conversation.startConversation")}
+                </p>
+              </div>
+            ) : (
+              <>
+                {currentMessages.map((message) => (
+                  <MessageBubble
+                    key={message.id}
+                    message={message}
+                    teacherLabel={t("lessonPlanning.conversation.teacherLabel")}
+                    assistantLabel={t(
+                      "lessonPlanning.conversation.assistantLabel"
+                    )}
+                    onSaveToLesson={() => handleRequestSaveToLesson(message)}
+                    onRemoveLesson={
+                      message.lessonId
+                        ? () => handleRemoveLesson(message)
+                        : undefined
+                    }
+                    isSaving={savingMessageId === message.id}
+                    isRemoving={removingLessonMessageId === message.id}
+                  />
+                ))}
+                {streamingMessage && (
+                  <MessageBubble
+                    message={{
+                      id: "streaming",
+                      role: "assistant",
+                      content: streamingMessage,
+                      timestamp: "",
+                    }}
+                    teacherLabel={t("lessonPlanning.conversation.teacherLabel")}
+                    assistantLabel={t(
+                      "lessonPlanning.conversation.assistantLabel"
+                    )}
+                    isStreaming
+                  />
+                )}
+              </>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
-      </div>
 
-      {/* Input area */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white p-5 pt-3">
-        <div className="space-y-3">
-          <div className="px-1">
-            <Collapsible
-              open={contextOpen}
-              onOpenChange={setContextOpen}
-              className="rounded-xl border bg-linear-to-r from-blue-50/50 to-indigo-50/50 px-4 py-2"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-                  <span className="font-medium text-foreground">
-                    {selectedChat.lessonTopic || selectedChat.title}
-                  </span>
-                  {selectedChat.gradeYear && (
-                    <span className="flex items-center gap-1 text-muted-foreground">
-                      <GraduationCap className="size-3.5" />
-                      {selectedChat.gradeYear}
+        {/* Input area - fixed at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 bg-white p-5 pt-3">
+          <div className="space-y-3">
+            <div className="px-1">
+              <Collapsible
+                open={contextOpen}
+                onOpenChange={setContextOpen}
+                className="rounded-xl border bg-gradient-to-r from-blue-50/50 to-indigo-50/50 px-4 py-2"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                    <span className="font-medium text-foreground">
+                      {selectedChat.lessonTopic || selectedChat.title}
                     </span>
-                  )}
-                  {selectedChat.durationMinutes && (
-                    <span className="flex items-center gap-1 text-muted-foreground">
-                      <Clock className="size-3.5" />
-                      {selectedChat.durationMinutes} min
-                    </span>
-                  )}
-                  {selectedChat.assessmentType && (
-                    <span className="flex items-center gap-1 text-muted-foreground">
-                      <ClipboardCheck className="size-3.5" />
-                      {selectedChat.assessmentType}
-                    </span>
-                  )}
+                    {selectedChat.gradeYear && (
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <GraduationCap className="size-3.5" />
+                        {selectedChat.gradeYear}
+                      </span>
+                    )}
+                    {selectedChat.durationMinutes && (
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <Clock className="size-3.5" />
+                        {selectedChat.durationMinutes} min
+                      </span>
+                    )}
+                    {selectedChat.assessmentType && (
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <ClipboardCheck className="size-3.5" />
+                        {selectedChat.assessmentType}
+                      </span>
+                    )}
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2"
+                    >
+                      {contextOpen ? (
+                        <ChevronUp className="size-3.5" />
+                      ) : (
+                        <ChevronDown className="size-3.5" />
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
                 </div>
-                <CollapsibleTrigger asChild>
+                <CollapsibleContent className="mt-2 space-y-2 text-sm">
+                  {selectedChat.learningObjectives && (
+                    <div>
+                      <span className="font-medium text-muted-foreground">
+                        {t("lessonPlanning.chats.learningObjectivesLabel")}:
+                      </span>{" "}
+                      <span className="text-foreground">
+                        {selectedChat.learningObjectives}
+                      </span>
+                    </div>
+                  )}
+                  {selectedChat.teachingActivities && (
+                    <div>
+                      <span className="font-medium text-muted-foreground">
+                        {t("lessonPlanning.chats.teachingActivitiesLabel")}:
+                      </span>{" "}
+                      <span className="text-foreground">
+                        {selectedChat.teachingActivities}
+                      </span>
+                    </div>
+                  )}
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
+
+            <div className="rounded-2xl border bg-white p-4 shadow-sm">
+              <Textarea
+                placeholder={t("lessonPlanning.conversation.placeholder")}
+                rows={3}
+                className="min-h-12 border-0 shadow-none focus-visible:ring-0 resize-none"
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={isSendingMessage}
+              />
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-1">
                   <Button
                     type="button"
                     variant="ghost"
-                    size="sm"
-                    className="h-6 px-2"
+                    size="icon"
+                    className="size-9 text-muted-foreground hover:text-foreground"
+                    disabled={isSendingMessage}
                   >
-                    {contextOpen ? (
-                      <ChevronUp className="size-3.5" />
-                    ) : (
-                      <ChevronDown className="size-3.5" />
-                    )}
+                    <Plus className="size-5" />
                   </Button>
-                </CollapsibleTrigger>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="size-9 text-muted-foreground hover:text-foreground"
+                    disabled={isSendingMessage}
+                  >
+                    <Mic className="size-5" />
+                  </Button>
+                </div>
+                <Button
+                  className="whitespace-nowrap"
+                  onClick={handleSendMessage}
+                  disabled={!messageInput.trim() || isSendingMessage}
+                >
+                  {isSendingMessage ? (
+                    <Loader2 className="size-4 mr-2 animate-spin" />
+                  ) : (
+                    <Send className="size-4 mr-2" />
+                  )}
+                  {t("lessonPlanning.conversation.send")}
+                </Button>
               </div>
-              <CollapsibleContent className="mt-2 space-y-2 text-sm">
-                {selectedChat.learningObjectives && (
-                  <div>
-                    <span className="font-medium text-muted-foreground">
-                      {t("lessonPlanning.chats.learningObjectivesLabel")}:
-                    </span>{" "}
-                    <span className="text-foreground">
-                      {selectedChat.learningObjectives}
-                    </span>
-                  </div>
-                )}
-                {selectedChat.teachingActivities && (
-                  <div>
-                    <span className="font-medium text-muted-foreground">
-                      {t("lessonPlanning.chats.teachingActivitiesLabel")}:
-                    </span>{" "}
-                    <span className="text-foreground">
-                      {selectedChat.teachingActivities}
-                    </span>
-                  </div>
-                )}
-              </CollapsibleContent>
-            </Collapsible>
+            </div>
           </div>
-
-          <ChatInputArea
-            onSendMessage={handleSendMessage}
-            isSendingMessage={isSendingMessage}
-            placeholder={t("lessonPlanning.conversation.placeholder")}
-            t={t}
-          />
         </div>
-      </div>
       </div>
 
       <Dialog
@@ -531,7 +525,10 @@ export default function LessonPlanning() {
               <Markdown content={messageToSave.content} />
             ) : (
               <p className="text-muted-foreground text-sm">
-                {t("lessonPlanning.conversation.noMessageSelected", "No message selected")}
+                {t(
+                  "lessonPlanning.conversation.noMessageSelected",
+                  "No message selected"
+                )}
               </p>
             )}
           </div>
@@ -618,7 +615,13 @@ function MessageBubble({
           <div className="mb-2 flex items-center justify-between gap-3 rounded-lg bg-emerald-50 px-3 py-2 text-emerald-700">
             <div className="flex items-center gap-2 text-xs font-medium">
               <Sparkles className="size-4" />
-              <span>{message.lessonTitle || t("lessonPlanning.conversation.savedLesson", "Saved as lesson")}</span>
+              <span>
+                {message.lessonTitle ||
+                  t(
+                    "lessonPlanning.conversation.savedLesson",
+                    "Saved as lesson"
+                  )}
+              </span>
             </div>
             {onRemoveLesson && (
               <Button
@@ -664,43 +667,44 @@ function MessageBubble({
               {message.timestamp}
             </p>
           )}
-          {!isTeacher && !isStreaming && (
-            isSavedLesson ? (
-              onRemoveLesson && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs text-emerald-800"
-                  onClick={onRemoveLesson}
-                  disabled={isRemoving}
-                >
-                  {isRemoving ? (
-                    <Loader2 className="mr-1 size-3 animate-spin" />
-                  ) : (
-                    <Trash2 className="mr-1 size-3" />
-                  )}
-                  {t("lessonPlanning.conversation.removeLesson", "Remove lesson")}
-                </Button>
-              )
-            ) : (
-              onSaveToLesson && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs"
-                  onClick={onSaveToLesson}
-                  disabled={isSaving || !isPersistedMessage}
-                >
-                  {isSaving ? (
-                    <Loader2 className="mr-1 size-3 animate-spin" />
-                  ) : (
-                    <Save className="size-3 mr-1" />
-                  )}
-                  {t("lessonPlanning.conversation.saveToLesson")}
-                </Button>
-              )
-            )
-          )}
+          {!isTeacher &&
+            !isStreaming &&
+            (isSavedLesson
+              ? onRemoveLesson && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-xs text-emerald-800"
+                    onClick={onRemoveLesson}
+                    disabled={isRemoving}
+                  >
+                    {isRemoving ? (
+                      <Loader2 className="mr-1 size-3 animate-spin" />
+                    ) : (
+                      <Trash2 className="mr-1 size-3" />
+                    )}
+                    {t(
+                      "lessonPlanning.conversation.removeLesson",
+                      "Remove lesson"
+                    )}
+                  </Button>
+                )
+              : onSaveToLesson && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-xs"
+                    onClick={onSaveToLesson}
+                    disabled={isSaving || !isPersistedMessage}
+                  >
+                    {isSaving ? (
+                      <Loader2 className="mr-1 size-3 animate-spin" />
+                    ) : (
+                      <Save className="size-3 mr-1" />
+                    )}
+                    {t("lessonPlanning.conversation.saveToLesson")}
+                  </Button>
+                ))}
         </div>
       </div>
     </div>
