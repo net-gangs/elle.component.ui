@@ -100,6 +100,7 @@ export interface LessonStructuredContent {
 export interface Lesson {
   id: string;
   classroomId: string;
+  messageId: string;
   title: string;
   topic?: string;
   targetLanguage?: string;

@@ -12,6 +12,7 @@ import {
   Send,
   Sparkles,
   ClipboardCheck,
+  Trash2,
 } from "lucide-react";
 import { useStore } from "@tanstack/react-store";
 
@@ -29,7 +30,6 @@ import {
   type LessonChatMessage,
 } from "@/stores/lesson-store";
 import { chatService } from "@/services/chat-service";
-import { lessonService } from "@/services/lesson-service";
 import { Markdown } from "@/components/ui/markdown";
 import { toast } from "sonner";
 import {
@@ -37,6 +37,14 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const ChatInputArea = memo(
   ({
@@ -127,6 +135,10 @@ export default function LessonPlanning() {
     streamingMessage,
   } = useStore(lessonStore);
   const [contextOpen, setContextOpen] = useState(false);
+  const [messageToSave, setMessageToSave] = useState<LessonChatMessage | null>(null);
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [savingMessageId, setSavingMessageId] = useState<string | null>(null);
+  const [removingLessonMessageId, setRemovingLessonMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -138,6 +150,32 @@ export default function LessonPlanning() {
   const selectedChat = useMemo(
     () => selectedClass?.chats.find((chat) => chat.id === selectedChatId),
     [selectedClass, selectedChatId]
+  );
+
+  const updateMessageLessonLink = useCallback(
+    (
+      messageId: string,
+      lessonInfo: {
+        lessonId: string | null;
+        lessonTitle?: string | null;
+        lessonCreatedAt?: string | null;
+      }
+    ) => {
+      lessonStore.setState((state) => ({
+        ...state,
+        currentMessages: state.currentMessages.map((msg) =>
+          msg.id === messageId
+            ? {
+                ...msg,
+                lessonId: lessonInfo.lessonId,
+                lessonTitle: lessonInfo.lessonTitle ?? null,
+                lessonCreatedAt: lessonInfo.lessonCreatedAt ?? null,
+              }
+            : msg
+        ),
+      }));
+    },
+    []
   );
 
   const fetchMessages = useCallback(async () => {
@@ -161,6 +199,9 @@ export default function LessonPlanning() {
           minute: "2-digit",
         }),
         createdAt: msg.createdAt,
+        lessonId: msg.lessonId ?? null,
+        lessonTitle: msg.lessonTitle ?? null,
+        lessonCreatedAt: msg.lessonCreatedAt ?? null,
       }));
       setCurrentMessages(messages);
     } catch (error) {
@@ -233,6 +274,7 @@ export default function LessonPlanning() {
               duration: 5000,
             });
           }
+          void fetchMessages();
         },
         (error) => {
           console.error("SSE error:", error);
@@ -244,20 +286,32 @@ export default function LessonPlanning() {
     [selectedClassId, selectedChatId, isSendingMessage]
   );
 
-  const handleSaveToLesson = async (message: LessonChatMessage) => {
-    if (!selectedClassId || !selectedChat) return;
+  const handleRequestSaveToLesson = (message: LessonChatMessage) => {
+    if (!selectedClassId || !selectedChatId) return;
+    if (message.id.startsWith("temp") || message.id.startsWith("msg-")) {
+      toast.info(t("lessonPlanning.conversation.waitForMessage", "Please wait until the response is saved."));
+      return;
+    }
+    setMessageToSave(message);
+    setIsSaveDialogOpen(true);
+  };
 
+  const confirmSaveToLesson = async () => {
+    if (!selectedClassId || !selectedChatId || !messageToSave) return;
+    setSavingMessageId(messageToSave.id);
     try {
-      await lessonService.create(selectedClassId, {
-        title: selectedChat.lessonTopic || selectedChat.title,
-        topic: selectedChat.lessonTopic,
-        gradeYear: selectedChat.gradeYear,
-        durationMinutes: selectedChat.durationMinutes,
-        learningObjectives: selectedChat.learningObjectives,
-        teachingActivities: selectedChat.teachingActivities,
-        contentMd: message.content,
-        generated: true,
+      const result = await chatService.saveToLesson(
+        selectedClassId,
+        selectedChatId,
+        messageToSave.id
+      );
+
+      updateMessageLessonLink(messageToSave.id, {
+        lessonId: result.lessonId,
+        lessonTitle: result.lessonTitle,
+        lessonCreatedAt: new Date().toISOString(),
       });
+
       toast.success(
         t(
           "lessonPlanning.conversation.savedToLesson",
@@ -267,11 +321,34 @@ export default function LessonPlanning() {
     } catch (error) {
       console.error("Failed to save to lesson:", error);
       toast.error(
-        t(
-          "lessonPlanning.conversation.saveToLessonError",
-          "Failed to save to lesson"
-        )
+        t("lessonPlanning.conversation.saveToLessonError", "Failed to save to lesson")
       );
+    } finally {
+      setSavingMessageId(null);
+      setIsSaveDialogOpen(false);
+      setMessageToSave(null);
+    }
+  };
+
+  const handleRemoveLesson = async (message: LessonChatMessage) => {
+    if (!selectedClassId || !selectedChatId || !message.lessonId) return;
+
+    setRemovingLessonMessageId(message.id);
+    try {
+      await chatService.removeSavedLesson(selectedClassId, selectedChatId, message.id);
+      updateMessageLessonLink(message.id, {
+        lessonId: null,
+        lessonTitle: null,
+        lessonCreatedAt: null,
+      });
+      toast.success(
+        t("lessonPlanning.conversation.lessonRemoved", "Removed lesson from message")
+      );
+    } catch (error) {
+      console.error("Failed to remove lesson from message:", error);
+      toast.error(t("lessonPlanning.conversation.saveToLessonError", "Failed to save to lesson"));
+    } finally {
+      setRemovingLessonMessageId(null);
     }
   };
 
@@ -292,7 +369,8 @@ export default function LessonPlanning() {
   }
 
   return (
-    <div className="relative h-full bg-white">
+    <>
+      <div className="relative h-full bg-white">
       {/* Messages area */}
       <div className="absolute inset-0 overflow-y-auto pb-72 px-5">
         <div className="flex flex-col gap-4 py-4">
@@ -313,10 +391,16 @@ export default function LessonPlanning() {
                 <MessageBubble
                   key={message.id}
                   message={message}
+                  teacherLabel={t("lessonPlanning.conversation.teacherLabel")}
                   assistantLabel={t(
                     "lessonPlanning.conversation.assistantLabel"
                   )}
-                  onSaveToLesson={() => handleSaveToLesson(message)}
+                  onSaveToLesson={() => handleRequestSaveToLesson(message)}
+                  onRemoveLesson={
+                    message.lessonId ? () => handleRemoveLesson(message) : undefined
+                  }
+                  isSaving={savingMessageId === message.id}
+                  isRemoving={removingLessonMessageId === message.id}
                 />
               ))}
               {streamingMessage && (
@@ -327,6 +411,7 @@ export default function LessonPlanning() {
                     content: streamingMessage,
                     timestamp: "",
                   }}
+                  teacherLabel={t("lessonPlanning.conversation.teacherLabel")}
                   assistantLabel={t(
                     "lessonPlanning.conversation.assistantLabel"
                   )}
@@ -420,23 +505,90 @@ export default function LessonPlanning() {
           />
         </div>
       </div>
-    </div>
+      </div>
+
+      <Dialog
+        open={isSaveDialogOpen}
+        onOpenChange={(open) => {
+          setIsSaveDialogOpen(open);
+          if (!open) setMessageToSave(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {t("lessonPlanning.conversation.saveToLesson", "Save as lesson")}
+            </DialogTitle>
+            <DialogDescription>
+              {t(
+                "lessonPlanning.conversation.verifySave",
+                "Do you want to save this AI response as a lesson?"
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="max-h-60 overflow-auto rounded-md border bg-muted/40 p-3 text-sm">
+            {messageToSave ? (
+              <Markdown content={messageToSave.content} />
+            ) : (
+              <p className="text-muted-foreground text-sm">
+                {t("lessonPlanning.conversation.noMessageSelected", "No message selected")}
+              </p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setIsSaveDialogOpen(false);
+                setMessageToSave(null);
+              }}
+            >
+              {t("common.cancel", "Cancel")}
+            </Button>
+            <Button
+              onClick={confirmSaveToLesson}
+              disabled={!messageToSave || savingMessageId === messageToSave?.id}
+            >
+              {savingMessageId === messageToSave?.id ? (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              ) : (
+                <Save className="mr-2 size-4" />
+              )}
+              {t("lessonPlanning.conversation.saveToLesson")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
-const MessageBubble = memo(function MessageBubble({
+function MessageBubble({
   message,
+  teacherLabel,
   assistantLabel,
   onSaveToLesson,
+  onRemoveLesson,
   isStreaming,
+  isSaving,
+  isRemoving,
 }: {
   message: LessonChatMessage;
+  teacherLabel: string;
   assistantLabel: string;
   onSaveToLesson?: () => void;
+  onRemoveLesson?: () => void;
   isStreaming?: boolean;
+  isSaving?: boolean;
+  isRemoving?: boolean;
 }) {
   const { t } = useTranslation();
   const isTeacher = message.role === "teacher";
+  const isSavedLesson = !!message.lessonId;
+  const isPersistedMessage =
+    message.role === "teacher"
+      ? !message.id.startsWith("temp-")
+      : !message.id.startsWith("msg-");
 
   return (
     <div className={cn("flex", isTeacher ? "justify-end" : "justify-start")}>
@@ -446,15 +598,45 @@ const MessageBubble = memo(function MessageBubble({
           isTeacher ? "bg-primary text-primary-foreground" : "bg-white border"
         )}
       >
-        {!isTeacher && (
+        <div className="mb-2 flex items-center justify-between gap-2">
           <p
             className={cn(
-              "text-xs font-semibold uppercase tracking-wide mb-2",
-              "text-primary"
+              "text-xs font-semibold uppercase tracking-wide",
+              isTeacher ? "text-primary-foreground/80" : "text-primary"
             )}
           >
-            {assistantLabel}
+            {isTeacher ? teacherLabel : assistantLabel}
           </p>
+          {!isTeacher && isSavedLesson && (
+            <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold uppercase text-emerald-700">
+              {t("lessonPlanning.conversation.savedBadge", "Saved as lesson")}
+            </span>
+          )}
+        </div>
+
+        {!isTeacher && isSavedLesson && (
+          <div className="mb-2 flex items-center justify-between gap-3 rounded-lg bg-emerald-50 px-3 py-2 text-emerald-700">
+            <div className="flex items-center gap-2 text-xs font-medium">
+              <Sparkles className="size-4" />
+              <span>{message.lessonTitle || t("lessonPlanning.conversation.savedLesson", "Saved as lesson")}</span>
+            </div>
+            {onRemoveLesson && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs text-emerald-800 hover:text-emerald-900"
+                onClick={onRemoveLesson}
+                disabled={isRemoving}
+              >
+                {isRemoving ? (
+                  <Loader2 className="mr-1 size-3 animate-spin" />
+                ) : (
+                  <Trash2 className="mr-1 size-3" />
+                )}
+                {t("lessonPlanning.conversation.removeLesson", "Remove")}
+              </Button>
+            )}
+          </div>
         )}
         {isTeacher ? (
           <p className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -482,19 +664,45 @@ const MessageBubble = memo(function MessageBubble({
               {message.timestamp}
             </p>
           )}
-          {!isTeacher && !isStreaming && onSaveToLesson && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 px-2 text-xs"
-              onClick={onSaveToLesson}
-            >
-              <Save className="size-3 mr-1" />
-              {t("lessonPlanning.conversation.saveToLesson")}
-            </Button>
+          {!isTeacher && !isStreaming && (
+            isSavedLesson ? (
+              onRemoveLesson && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs text-emerald-800"
+                  onClick={onRemoveLesson}
+                  disabled={isRemoving}
+                >
+                  {isRemoving ? (
+                    <Loader2 className="mr-1 size-3 animate-spin" />
+                  ) : (
+                    <Trash2 className="mr-1 size-3" />
+                  )}
+                  {t("lessonPlanning.conversation.removeLesson", "Remove lesson")}
+                </Button>
+              )
+            ) : (
+              onSaveToLesson && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs"
+                  onClick={onSaveToLesson}
+                  disabled={isSaving || !isPersistedMessage}
+                >
+                  {isSaving ? (
+                    <Loader2 className="mr-1 size-3 animate-spin" />
+                  ) : (
+                    <Save className="size-3 mr-1" />
+                  )}
+                  {t("lessonPlanning.conversation.saveToLesson")}
+                </Button>
+              )
+            )
           )}
         </div>
       </div>
     </div>
   );
-});
+}
