@@ -26,6 +26,9 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   createdAt: string;
+  lessonId?: string | null;
+  lessonTitle?: string | null;
+  lessonCreatedAt?: string | null;
 }
 
 export interface CreateChatDto {
@@ -232,10 +235,25 @@ export const chatService = {
     chatId: string,
     messageId: string,
     lessonId?: string
-  ): Promise<void> => {
-    await apiClient.post(
-      `/classrooms/${classroomId}/chats/${chatId}/messages/${messageId}/save-to-lesson`,
-      { lessonId }
-    );
+  ): Promise<{ lessonId: string; lessonTitle: string; messageId: string }> => {
+    const response = await apiClient.post<
+      never,
+      ApiResponse<{ lessonId: string; lessonTitle: string; messageId: string }>
+    >(`/classrooms/${classroomId}/chats/${chatId}/messages/${messageId}/save-to-lesson`, {
+      lessonId,
+    });
+    return response.data;
+  },
+
+  removeSavedLesson: async (
+    classroomId: string,
+    chatId: string,
+    messageId: string
+  ): Promise<{ removedLessonId?: string }> => {
+    const response = await apiClient.delete<
+      never,
+      ApiResponse<{ removedLessonId?: string }>
+    >(`/classrooms/${classroomId}/chats/${chatId}/messages/${messageId}/save-to-lesson`);
+    return response.data;
   },
 };
