@@ -6,6 +6,9 @@ export interface LessonChatMessage {
   content: string;
   timestamp: string;
   createdAt?: string;
+  lessonId?: string | null;
+  lessonTitle?: string | null;
+  lessonCreatedAt?: string | null;
 }
 
 export interface LessonChat {
