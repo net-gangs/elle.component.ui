@@ -67,9 +67,9 @@ fi
 
 # Setup Node.js version with nvm if available
 if command -v nvm &> /dev/null; then
-    log "Setting up Node.js version 20..."
+    log "Setting up Node.js version 25..."
     nvm use 25 || {
-        warn "Failed to use Node.js 20, using system default"
+        warn "Failed to use Node.js 25, using system default"
     }
 elif command -v node &> /dev/null; then
     log "Using system Node.js version: $(node --version)"
