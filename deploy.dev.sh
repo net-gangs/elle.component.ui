@@ -65,26 +65,6 @@ else
     log "No dependency changes detected"
 fi
 
-# Install PM2 globally if not already installed
-if ! command -v pm2 &> /dev/null; then
-    log "Installing PM2 globally..."
-    # Try to install PM2 with npm as fallback
-    npm install -g pm2 || {
-        warn "Failed to install PM2 globally with npm, trying with pnpm setup..."
-        # Setup pnpm global if needed
-        export PNPM_HOME="$HOME/.local/share/pnpm"
-        export PATH="$PNPM_HOME:$PATH"
-        mkdir -p "$PNPM_HOME"
-        
-        pnpm install -g pm2 || {
-            error "Failed to install PM2 globally. Please install PM2 manually."
-            exit 1
-        }
-    }
-else
-    log "PM2 is already installed"
-fi
-
 # Setup Node.js version with nvm if available
 if command -v nvm &> /dev/null; then
     log "Setting up Node.js version 20..."
@@ -98,24 +78,19 @@ else
     exit 1
 fi
 
+# Step 4: Start the UI in daemon mode with nohup
 log "Starting Elle UI in staging mode (daemon)..."
 
-pm2 delete elle-ui-staging 2>/dev/null || true
+# Start with nohup
+nohup pnpm staging > "$APP_DIR/staging.log" 2>&1 &
+echo $! > "$APP_DIR/staging.pid"
 
-pm2 start pnpm --name "elle-ui-staging" -- staging || {
-    error "Failed to start application with PM2"
-    
-    warn "Falling back to nohup..."
-    nohup pnpm staging > "$APP_DIR/staging.log" 2>&1 &
-    echo $! > "$APP_DIR/staging.pid"
-    
-    if [ $? -eq 0 ]; then
-        log "Application started successfully with nohup (PID: $(cat $APP_DIR/staging.pid))"
-    else
-        error "Failed to start application"
-        exit 1
-    fi
-}
+if [ $? -eq 0 ]; then
+    log "Application started successfully with nohup (PID: $(cat $APP_DIR/staging.pid))"
+else
+    error "Failed to start application"
+    exit 1
+fi
 
 sleep 5
 NEW_PID=$(lsof -ti:$PORT || echo "")
@@ -131,6 +106,6 @@ if [ -n "$NEW_PID" ]; then
     exit 0
 else
     error "Service failed to start on port $PORT"
-    log "Check logs at: $APP_DIR/staging.log or run 'pm2 logs elle-ui-staging'"
+    log "Check logs at: $APP_DIR/staging.log"
     exit 1
 fi
