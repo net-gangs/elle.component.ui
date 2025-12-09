@@ -18,8 +18,8 @@ export function LessonSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       className={cn(
         "group border-r border-l bg-muted/40 transition-[width] duration-200 ease-linear sticky top-0 h-screen max-h-screen",
         state === "collapsed"
-          ? "!w-[var(--sidebar-width-icon)]"
-          : "!w-[var(--sidebar-width)]"
+          ? "w-(--sidebar-width-icon)!"
+          : "w-(--sidebar-width)!"
       )}
       data-collapsible={state === "collapsed" ? "icon" : ""}
       {...props}

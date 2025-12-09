@@ -57,9 +57,13 @@ import { Textarea } from "@/components/ui/textarea";
 
 export function NavLessonPlanning() {
   const { t } = useTranslation();
-  const { selectedClassId, selectedChatId, classesOpen, classes, isLoadingClasses } = useStore(
-    lessonStore
-  );
+  const {
+    selectedClassId,
+    selectedChatId,
+    classesOpen,
+    classes,
+    isLoadingClasses,
+  } = useStore(lessonStore);
   const [draggingClassId, setDraggingClassId] = useState<string | null>(null);
   const [isNewChatDialogOpen, setIsNewChatDialogOpen] = useState(false);
   const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
@@ -71,7 +75,9 @@ export function NavLessonPlanning() {
   const [learningObjectives, setLearningObjectives] = useState("");
   const [teachingActivities, setTeachingActivities] = useState("");
   const [assessmentType, setAssessmentType] = useState("");
-  const [creatingChatForClassId, setCreatingChatForClassId] = useState<string | null>(null);
+  const [creatingChatForClassId, setCreatingChatForClassId] = useState<
+    string | null
+  >(null);
   const [isCreatingChat, setIsCreatingChat] = useState(false);
 
   const flattenedChats = classes.flatMap((classItem) =>
@@ -85,7 +91,12 @@ export function NavLessonPlanning() {
   const searchResults = useMemo(() => {
     if (!searchTerm.trim()) return [];
     const term = searchTerm.toLowerCase();
-    const results: { classId: string; className: string; chat: LessonChat; matchedMessages: LessonChat["messages"] }[] = [];
+    const results: {
+      classId: string;
+      className: string;
+      chat: LessonChat;
+      matchedMessages: LessonChat["messages"];
+    }[] = [];
     for (const { classId, className, chat } of flattenedChats) {
       const matchedMessages = chat.messages.filter((msg) =>
         msg.content.toLowerCase().includes(term)
@@ -101,7 +112,6 @@ export function NavLessonPlanning() {
     return results;
   }, [flattenedChats, searchTerm]);
 
-  // Fetch classes on mount
   const fetchClasses = useCallback(async () => {
     setIsLoadingClasses(true);
     try {
@@ -109,7 +119,9 @@ export function NavLessonPlanning() {
       const classesWithChats: LessonClass[] = await Promise.all(
         response.data.map(async (classroom) => {
           try {
-            const chatsResponse = await chatService.getAll(classroom.id, { limit: 50 });
+            const chatsResponse = await chatService.getAll(classroom.id, {
+              limit: 50,
+            });
             const chats: LessonChat[] = chatsResponse.data.map((chat) => ({
               id: chat.id,
               classroomId: chat.classroomId,
@@ -165,11 +177,15 @@ export function NavLessonPlanning() {
   }, [fetchClasses]);
 
   const selectedClass = classes.find((c) => c.id === selectedClassId);
-  const selectedChat = selectedClass?.chats.find((c) => c.id === selectedChatId);
+  const selectedChat = selectedClass?.chats.find(
+    (c) => c.id === selectedChatId
+  );
 
   const handleToggleChatPin = async (classId: string, chat: LessonChat) => {
     try {
-      const updated = await chatService.update(classId, chat.id, { pinned: !chat.pinned });
+      const updated = await chatService.update(classId, chat.id, {
+        pinned: !chat.pinned,
+      });
       updateChatInClass(classId, chat.id, { pinned: updated.pinned });
     } catch (error) {
       console.error("Failed to pin chat", error);
@@ -178,7 +194,10 @@ export function NavLessonPlanning() {
 
   const handleDragStart = (classId: string) => setDraggingClassId(classId);
 
-  const handleDragOver = (event: React.DragEvent<HTMLLIElement>, targetId: string) => {
+  const handleDragOver = (
+    event: React.DragEvent<HTMLLIElement>,
+    targetId: string
+  ) => {
     event.preventDefault();
     if (!draggingClassId || draggingClassId === targetId) return;
     const currentOrder = [...classes];
@@ -194,7 +213,8 @@ export function NavLessonPlanning() {
   const handleDragEnd = () => setDraggingClassId(null);
 
   const handleCreateChat = async () => {
-    if (!creatingChatForClassId || !newChatTitle.trim() || !lessonTopic.trim()) return;
+    if (!creatingChatForClassId || !newChatTitle.trim() || !lessonTopic.trim())
+      return;
 
     setIsCreatingChat(true);
     try {
@@ -252,7 +272,9 @@ export function NavLessonPlanning() {
   return (
     <>
       <SidebarGroup className="sticky top-0 z-10 bg-muted/40">
-        <SidebarGroupLabel>{t("lessonPlanning.classes.title")}</SidebarGroupLabel>
+        <SidebarGroupLabel>
+          {t("lessonPlanning.classes.title")}
+        </SidebarGroupLabel>
         <SidebarMenu className="hidden gap-1 group-data-[collapsible=icon]:flex">
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -319,11 +341,14 @@ export function NavLessonPlanning() {
                         )}
                         <Folder className="size-4 shrink-0 text-muted-foreground" />
                         <div className="flex-1 overflow-hidden">
-                          <p className="truncate text-sm font-medium">{classItem.name}</p>
+                          <p className="truncate text-sm font-medium">
+                            {classItem.name}
+                          </p>
                           {classItem.grade && (
                             <p className="truncate text-xs text-muted-foreground">
                               {classItem.grade}
-                              {classItem.totalStudents !== undefined && ` · ${classItem.totalStudents} students`}
+                              {classItem.totalStudents !== undefined &&
+                                ` · ${classItem.totalStudents} students`}
                             </p>
                           )}
                         </div>
@@ -352,19 +377,32 @@ export function NavLessonPlanning() {
                               className="flex-1 flex items-center gap-2 text-left"
                             >
                               <MessageSquare className="size-3.5 shrink-0 text-muted-foreground" />
-                              <span className="truncate text-sm">{chat.title}</span>
+                              <span className="truncate text-sm">
+                                {chat.title}
+                              </span>
                             </button>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className={cn("h-7 w-7", chat.pinned && "text-amber-500")}
+                              className={cn(
+                                "h-7 w-7",
+                                chat.pinned && "text-amber-500"
+                              )}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleToggleChatPin(classItem.id, chat);
                               }}
-                              aria-label={chat.pinned ? t("lessonPlanning.chats.unpin") : t("lessonPlanning.chats.pin")}
+                              aria-label={
+                                chat.pinned
+                                  ? t("lessonPlanning.chats.unpin")
+                                  : t("lessonPlanning.chats.pin")
+                              }
                             >
-                              {chat.pinned ? <PinOff className="size-3.5" /> : <Pin className="size-3.5" />}
+                              {chat.pinned ? (
+                                <PinOff className="size-3.5" />
+                              ) : (
+                                <Pin className="size-3.5" />
+                              )}
                             </Button>
                           </div>
                         ))}
@@ -396,12 +434,16 @@ export function NavLessonPlanning() {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="class-select">{t("lessonPlanning.classes.title")}</Label>
+              <Label htmlFor="class-select">
+                {t("lessonPlanning.classes.title")}
+              </Label>
               <select
                 id="class-select"
                 className="h-10 rounded-md border bg-background px-3 text-sm"
                 value={creatingChatForClassId ?? ""}
-                onChange={(e) => setCreatingChatForClassId(e.target.value || null)}
+                onChange={(e) =>
+                  setCreatingChatForClassId(e.target.value || null)
+                }
               >
                 <option value="" disabled>
                   {t("lessonPlanning.classes.title")}
@@ -416,7 +458,9 @@ export function NavLessonPlanning() {
 
             {/* Chat Title */}
             <div className="grid gap-2">
-              <Label htmlFor="chat-title">{t("lessonPlanning.chats.chatTitleLabel")}</Label>
+              <Label htmlFor="chat-title">
+                {t("lessonPlanning.chats.chatTitleLabel")}
+              </Label>
               <Input
                 id="chat-title"
                 value={newChatTitle}
@@ -428,7 +472,8 @@ export function NavLessonPlanning() {
             {/* Lesson Topic (Required) */}
             <div className="grid gap-2">
               <Label htmlFor="lesson-topic">
-                {t("lessonPlanning.chats.lessonTopicLabel")} <span className="text-destructive">*</span>
+                {t("lessonPlanning.chats.lessonTopicLabel")}{" "}
+                <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="lesson-topic"
@@ -440,7 +485,9 @@ export function NavLessonPlanning() {
 
             {/* Grade/Year */}
             <div className="grid gap-2">
-              <Label htmlFor="grade-year">{t("lessonPlanning.chats.gradeYearLabel")}</Label>
+              <Label htmlFor="grade-year">
+                {t("lessonPlanning.chats.gradeYearLabel")}
+              </Label>
               <Input
                 id="grade-year"
                 value={gradeYear}
@@ -451,50 +498,66 @@ export function NavLessonPlanning() {
 
             {/* Lesson Duration */}
             <div className="grid gap-2">
-              <Label htmlFor="lesson-duration">{t("lessonPlanning.chats.lessonDurationLabel")}</Label>
+              <Label htmlFor="lesson-duration">
+                {t("lessonPlanning.chats.lessonDurationLabel")}
+              </Label>
               <Input
                 id="lesson-duration"
                 type="number"
                 min={1}
                 max={480}
                 value={lessonDuration}
-                onChange={(e) => setLessonDuration(parseInt(e.target.value) || 45)}
+                onChange={(e) =>
+                  setLessonDuration(parseInt(e.target.value) || 45)
+                }
                 placeholder="45"
               />
             </div>
 
             {/* Learning Objectives */}
             <div className="grid gap-2">
-              <Label htmlFor="learning-objectives">{t("lessonPlanning.chats.learningObjectivesLabel")}</Label>
+              <Label htmlFor="learning-objectives">
+                {t("lessonPlanning.chats.learningObjectivesLabel")}
+              </Label>
               <Textarea
                 id="learning-objectives"
                 value={learningObjectives}
                 onChange={(e) => setLearningObjectives(e.target.value)}
-                placeholder={t("lessonPlanning.chats.learningObjectivesPlaceholder")}
+                placeholder={t(
+                  "lessonPlanning.chats.learningObjectivesPlaceholder"
+                )}
                 rows={3}
               />
             </div>
 
             {/* Teaching Activities */}
             <div className="grid gap-2">
-              <Label htmlFor="teaching-activities">{t("lessonPlanning.chats.teachingActivitiesLabel")}</Label>
+              <Label htmlFor="teaching-activities">
+                {t("lessonPlanning.chats.teachingActivitiesLabel")}
+              </Label>
               <Textarea
                 id="teaching-activities"
                 value={teachingActivities}
                 onChange={(e) => setTeachingActivities(e.target.value)}
-                placeholder={t("lessonPlanning.chats.teachingActivitiesPlaceholder")}
+                placeholder={t(
+                  "lessonPlanning.chats.teachingActivitiesPlaceholder"
+                )}
                 rows={3}
               />
             </div>
 
             {/* Assessment Type */}
             <div className="grid gap-2">
-              <Label htmlFor="assessment-type">{t("lessonPlanning.chats.assessmentTypeLabel")}</Label>
+              <Label htmlFor="assessment-type">
+                {t("lessonPlanning.chats.assessmentTypeLabel")}
+              </Label>
               <Input
                 id="assessment-type"
                 value={assessmentType}
                 onChange={(e) => setAssessmentType(e.target.value)}
-                placeholder={t("lessonPlanning.chats.assessmentTypePlaceholder")}
+                placeholder={t(
+                  "lessonPlanning.chats.assessmentTypePlaceholder"
+                )}
               />
             </div>
           </div>
@@ -508,9 +571,16 @@ export function NavLessonPlanning() {
             </Button>
             <Button
               onClick={handleCreateChat}
-              disabled={!creatingChatForClassId || !newChatTitle.trim() || !lessonTopic.trim() || isCreatingChat}
+              disabled={
+                !creatingChatForClassId ||
+                !newChatTitle.trim() ||
+                !lessonTopic.trim() ||
+                isCreatingChat
+              }
             >
-              {isCreatingChat && <Loader2 className="mr-2 size-4 animate-spin" />}
+              {isCreatingChat && (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              )}
               {t("common.create")}
             </Button>
           </DialogFooter>
@@ -521,55 +591,79 @@ export function NavLessonPlanning() {
         <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
             <DialogTitle>{t("common.search")}</DialogTitle>
-            <DialogDescription>{t("lessonPlanning.chats.searchPlaceholder", "Search chats and classes")}</DialogDescription>
+            <DialogDescription>
+              {t(
+                "lessonPlanning.chats.searchPlaceholder",
+                "Search chats and classes"
+              )}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <Input
               autoFocus
-              placeholder={t("lessonPlanning.chats.searchPlaceholder", "Search by title or class")}
+              placeholder={t(
+                "lessonPlanning.chats.searchPlaceholder",
+                "Search by title or class"
+              )}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <div className="max-h-80 space-y-1 overflow-y-auto">
               {searchTerm.trim() && searchResults.length === 0 && (
-                <p className="px-1 py-2 text-sm text-muted-foreground">{t("common.noResults", "No results found")}</p>
+                <p className="px-1 py-2 text-sm text-muted-foreground">
+                  {t("common.noResults", "No results found")}
+                </p>
               )}
-              {searchResults.map(({ classId, className, chat, matchedMessages }) => (
-                <button
-                  key={chat.id}
-                  type="button"
-                  className="w-full rounded-md px-3 py-2 text-left hover:bg-muted"
-                  onClick={() => {
-                    setSelectedClassId(classId);
-                    setClassOpen(classId, true);
-                    setSelectedChatId(chat.id);
-                    setIsSearchDialogOpen(false);
-                    setSearchTerm("");
-                  }}
-                >
-                  <p className="text-sm font-medium truncate">{chat.title}</p>
-                  <p className="text-xs text-muted-foreground truncate">{className}</p>
-                  {matchedMessages.length > 0 && (
-                    <div className="mt-1 space-y-1">
-                      {matchedMessages.slice(0, 2).map((msg) => (
-                        <p key={msg.id} className="text-xs text-muted-foreground bg-muted/50 rounded px-2 py-1 truncate">
-                          <span className="font-medium">{msg.role === "teacher" ? "You" : "AI"}:</span>{" "}
-                          {msg.content.length > 80 ? `${msg.content.slice(0, 80)}...` : msg.content}
-                        </p>
-                      ))}
-                      {matchedMessages.length > 2 && (
-                        <p className="text-xs text-muted-foreground italic px-2">
-                          +{matchedMessages.length - 2} more matches
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </button>
-              ))}
+              {searchResults.map(
+                ({ classId, className, chat, matchedMessages }) => (
+                  <button
+                    key={chat.id}
+                    type="button"
+                    className="w-full rounded-md px-3 py-2 text-left hover:bg-muted"
+                    onClick={() => {
+                      setSelectedClassId(classId);
+                      setClassOpen(classId, true);
+                      setSelectedChatId(chat.id);
+                      setIsSearchDialogOpen(false);
+                      setSearchTerm("");
+                    }}
+                  >
+                    <p className="text-sm font-medium truncate">{chat.title}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {className}
+                    </p>
+                    {matchedMessages.length > 0 && (
+                      <div className="mt-1 space-y-1">
+                        {matchedMessages.slice(0, 2).map((msg) => (
+                          <p
+                            key={msg.id}
+                            className="text-xs text-muted-foreground bg-muted/50 rounded px-2 py-1 truncate"
+                          >
+                            <span className="font-medium">
+                              {msg.role === "teacher" ? "You" : "AI"}:
+                            </span>{" "}
+                            {msg.content.length > 80
+                              ? `${msg.content.slice(0, 80)}...`
+                              : msg.content}
+                          </p>
+                        ))}
+                        {matchedMessages.length > 2 && (
+                          <p className="text-xs text-muted-foreground italic px-2">
+                            +{matchedMessages.length - 2} more matches
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </button>
+                )
+              )}
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsSearchDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsSearchDialogOpen(false)}
+            >
               {t("common.close", "Close")}
             </Button>
           </DialogFooter>
