@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { MainLayout } from "./components/layout/main-layout";
 import Dashboard from "./pages/dashboard";
-import LessonPlanning from "./pages/lesson-planning";
+import LessonPlanning from "./pages/lesson-planning/lesson-planning";
 import Login from "./pages/login";
 import MyClassPage from "./pages/class/MyClassPage";
 import NoPermissionPage from "./lib/route/NoPermissionPage";
@@ -60,14 +60,8 @@ const routeTree = rootRoute.addChildren([
 
 const router = createRouter({ routeTree });
 
-
-
 function App() {
-  return (
-
-      <RouterProvider router={router} />
-
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

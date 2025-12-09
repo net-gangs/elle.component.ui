@@ -68,6 +68,21 @@ export interface ChatWithMessages extends Chat {
   messages: ChatMessage[];
 }
 
+export type StreamEvent =
+  | {
+    type: "chunk";
+    content: string;
+  }
+  | {
+    type: "done";
+    stopReason: string | null;
+    savedMessageId: string;
+  }
+  | {
+    type: "error";
+    message: string;
+  };
+
 // CEFR levels for selection
 export const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 export type CefrLevel = (typeof CEFR_LEVELS)[number];
@@ -151,7 +166,7 @@ export const chatService = {
     chatId: string,
     message: string,
     onChunk: (chunk: string) => void,
-    onComplete: (fullMessage: string, stopReason: string | null) => void,
+    onComplete: (fullMessage: string, stopReason: string | null, savedMessageId: string) => void,
     onError: (error: Error) => void
   ): AbortController => {
     const abortController = new AbortController();
@@ -166,14 +181,14 @@ export const chatService = {
 
     eventSource.onmessage = (event) => {
       try {
-        const data = JSON.parse(event.data);
+        const data = JSON.parse(event.data) as StreamEvent;
 
         if (data.type === "chunk") {
           fullMessage += data.content;
           onChunk(data.content);
         } else if (data.type === "done") {
           eventSource.close();
-          onComplete(fullMessage, data.stopReason || null);
+          onComplete(fullMessage, data.stopReason || null, data.savedMessageId);
         } else if (data.type === "error") {
           eventSource.close();
           onError(new Error(data.message));
@@ -224,6 +239,7 @@ export const chatService = {
       never,
       ApiResponse<PageResponseDto<ChatMessage>>
     >(`/classrooms/${classroomId}/chats/${chatId}/messages`, { params });
+
     return response.data;
   },
 
