@@ -50,10 +50,6 @@ interface LessonState {
   classes: LessonClass[];
   isLoadingClasses: boolean;
   isLoadingChats: boolean;
-  isLoadingMessages: boolean;
-  currentMessages: LessonChatMessage[];
-  isSendingMessage: boolean;
-  streamingMessage: string | null;
 }
 
 export const lessonStore = new Store<LessonState>({
@@ -63,10 +59,6 @@ export const lessonStore = new Store<LessonState>({
   classes: [],
   isLoadingClasses: false,
   isLoadingChats: false,
-  isLoadingMessages: false,
-  currentMessages: [],
-  isSendingMessage: false,
-  streamingMessage: null,
 });
 
 const dateOrNow = (value?: string) => (value ? new Date(value).getTime() : Date.now());
@@ -154,13 +146,6 @@ export const setCurrentMessages = (messages: LessonChatMessage[]) => {
   }));
 };
 
-export const addMessage = (message: LessonChatMessage) => {
-  lessonStore.setState((state) => ({
-    ...state,
-    currentMessages: [...state.currentMessages, message],
-  }));
-};
-
 export const setIsSendingMessage = (sending: boolean) => {
   lessonStore.setState((state) => ({
     ...state,
@@ -172,13 +157,6 @@ export const setStreamingMessage = (message: string | null) => {
   lessonStore.setState((state) => ({
     ...state,
     streamingMessage: message,
-  }));
-};
-
-export const appendToStreamingMessage = (chunk: string) => {
-  lessonStore.setState((state) => ({
-    ...state,
-    streamingMessage: (state.streamingMessage || '') + chunk,
   }));
 };
 
@@ -206,13 +184,13 @@ export const updateChatInClass = (classId: string, chatId: string, updates: Part
     classes: state.classes.map((c) =>
       c.id === classId
         ? {
-            ...c,
-            chats: sortChats(
-              c.chats.map((chat) =>
-                chat.id === chatId ? { ...chat, ...updates } : chat
-              )
-            ),
-          }
+          ...c,
+          chats: sortChats(
+            c.chats.map((chat) =>
+              chat.id === chatId ? { ...chat, ...updates } : chat
+            )
+          ),
+        }
         : c
     ),
   }));
