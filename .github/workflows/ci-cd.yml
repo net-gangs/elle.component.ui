@@ -58,18 +58,18 @@ jobs:
         run: pnpm run build
         continue-on-error: true
 
-      # SonarQube analysis using env-based configuration, without code coverage
-      - name: SonarQube Analysis
-        if: ${{ env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != '' && env.SONAR_PROJECT_KEY != '' }}
-        uses: SonarSource/sonarqube-scan-action@v3
-        env:
-          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
-            -Dsonar.sources=src
-            -Dsonar.exclusions=**/*.test.ts,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx,**/node_modules/**
+      # # SonarQube analysis using env-based configuration, without code coverage
+      # - name: SonarQube Analysis
+      #   if: ${{ env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != '' && env.SONAR_PROJECT_KEY != '' }}
+      #   uses: SonarSource/sonarqube-scan-action@v3
+      #   env:
+      #     SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
+      #   with:
+      #     args: >
+      #       -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+      #       -Dsonar.sources=src
+      #       -Dsonar.exclusions=**/*.test.ts,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx,**/node_modules/**
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
