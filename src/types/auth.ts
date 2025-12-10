@@ -48,6 +48,36 @@ export interface AuthEmailLoginDto {
   password: string;
 }
 
+export interface AuthRegisterDto {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface AuthForgotPasswordDto {
+  email: string;
+}
+
+export interface AuthResetPasswordDto {
+  password: string;
+  hash: string;
+}
+
+export interface AuthGoogleLoginDto {
+  idToken: string;
+}
+
+export interface AuthFacebookLoginDto {
+  accessToken: string;
+}
+
+export interface AuthAppleLoginDto {
+  idToken: string;
+  firstName?: string;
+  lastName?: string;
+}
+
 export interface AuthState {
   token: string | null;
   refreshToken: string | null;

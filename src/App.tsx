@@ -9,6 +9,8 @@ import { MainLayout } from "./components/layout/main-layout";
 import Dashboard from "./pages/dashboard";
 import LessonPlanning from "./pages/lesson-planning/lesson-planning";
 import Login from "./pages/login";
+import Signup from "./pages/signup";
+import ForgotPassword from "./pages/forgot-password";
 import MyClassPage from "./pages/class/MyClassPage";
 import NoPermissionPage from "./lib/route/NoPermissionPage";
 
@@ -20,6 +22,18 @@ const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/login",
   component: Login,
+});
+
+const signupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/signup",
+  component: Signup,
+});
+
+const forgotPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/forgot-password",
+  component: ForgotPassword,
 });
 
 const noPermissionRoute = createRoute({
@@ -54,6 +68,8 @@ const myClassRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   loginRoute,
+  signupRoute,
+  forgotPasswordRoute,
   noPermissionRoute,
   layoutRoute.addChildren([dashboardRoute, lessonPlanningRoute, myClassRoute]),
 ]);

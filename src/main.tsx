@@ -4,7 +4,9 @@ import "@/lib/i18n";
 import "./index.css";
 import App from "./App.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Toaster } from "sonner";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -21,7 +23,8 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />
-    <ReactQueryDevtools initialIsOpen={false} />
+      <Toaster position="top-right" richColors />
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>
 );
