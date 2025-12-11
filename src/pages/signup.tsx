@@ -144,7 +144,7 @@ export default function Signup() {
         <div className="flex flex-col justify-between h-full max-w-lg text-white py-8 lg:py-0 w-full lg:w-auto">
           <div className="opacity-0 animate-fade-in">
             <h2 className="text-2xl font-bold tracking-wider flex items-center gap-2">
-              <div className="w-2 h-8 bg-green-500 rounded-full"></div>
+              <div className="w-2 h-8 bg-primary rounded-full"></div>
               ELLA AI
             </h2>
           </div>
@@ -207,8 +207,8 @@ export default function Signup() {
               <form.Field
                 name="name"
                 children={(field) => (
-                  <div className="space-y-1 group focus-within:text-green-700">
-                    <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-green-800">
+                  <div className="space-y-1 group focus-within:text-primary">
+                    <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-primary">
                       Name
                     </label>
                     <Input
@@ -218,7 +218,7 @@ export default function Signup() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-green-700 focus:ring-4 focus:ring-green-700/10 transition-all outline-none ${
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none ${
                         field.state.meta.errors.length ? "border-red-500" : ""
                       }`}
                     />
@@ -234,8 +234,8 @@ export default function Signup() {
               <form.Field
                 name="email"
                 children={(field) => (
-                  <div className="space-y-1 group focus-within:text-green-700">
-                    <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-green-800">
+                  <div className="space-y-1 group focus-within:text-primary">
+                    <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-primary">
                       Email
                     </label>
                     <Input
@@ -245,7 +245,7 @@ export default function Signup() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-green-700 focus:ring-4 focus:ring-green-700/10 transition-all outline-none ${
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none ${
                         field.state.meta.errors.length ? "border-red-500" : ""
                       }`}
                     />
@@ -262,7 +262,7 @@ export default function Signup() {
                 name="password"
                 children={(field) => (
                   <div className="space-y-1 group">
-                    <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-green-800">
+                    <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-primary">
                       Password
                     </label>
                     <div className="relative">
@@ -273,7 +273,7 @@ export default function Signup() {
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-green-700 focus:ring-4 focus:ring-green-700/10 transition-all outline-none ${
+                        className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none ${
                           field.state.meta.errors.length ? "border-red-500" : ""
                         }`}
                       />
