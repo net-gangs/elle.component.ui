@@ -68,18 +68,18 @@ export default function Login() {
     },
   });
 
-  const facebookLoginMutation = useMutation({
-    mutationFn: async (accessToken: string) => {
-      return await authService.facebookLogin({ accessToken });
-    },
-    onSuccess: (response: LoginResponseDto) => {
-      authActions.login(response);
-      navigate({ to: "/" });
-    },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Facebook login failed");
-    },
-  });
+  // const facebookLoginMutation = useMutation({
+  //   mutationFn: async (accessToken: string) => {
+  //     return await authService.facebookLogin({ accessToken });
+  //   },
+  //   onSuccess: (response: LoginResponseDto) => {
+  //     authActions.login(response);
+  //     navigate({ to: "/" });
+  //   },
+  //   onError: (error: any) => {
+  //     toast.error(error?.response?.data?.message || "Facebook login failed");
+  //   },
+  // });
 
   const form = useForm({
     defaultValues: {
