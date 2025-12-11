@@ -91,9 +91,9 @@ export default function ForgotPassword() {
 
             {/* Header */}
             <div className="text-center space-y-2 mb-8">
-              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <svg
-                  className="w-8 h-8 text-green-700"
+                  className="w-8 h-8 text-primary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -129,8 +129,8 @@ export default function ForgotPassword() {
                   <form.Field
                     name="email"
                     children={(field) => (
-                      <div className="space-y-1 group focus-within:text-green-700">
-                        <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-green-800">
+                      <div className="space-y-1 group focus-within:text-primary">
+                        <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-primary">
                           Email Address
                         </label>
                         <Input
@@ -140,7 +140,7 @@ export default function ForgotPassword() {
                           value={field.state.value}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
-                          className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-green-700 focus:ring-4 focus:ring-green-700/10 transition-all outline-none ${
+                          className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none ${
                             field.state.meta.errors.length ? "border-red-500" : ""
                           }`}
                         />
@@ -171,9 +171,9 @@ export default function ForgotPassword() {
               </>
             ) : (
               <div className="space-y-6">
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-sm text-green-800">
+                <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary">
                   <p className="font-medium mb-1">Check your email</p>
-                  <p className="text-green-700">
+                  <p className="text-primary/90">
                     We've sent a password reset link to your email address. Please check your inbox
                     and follow the instructions.
                   </p>
