@@ -38,10 +38,11 @@ import Autoplay from "embla-carousel-autoplay";
 import Fade from "embla-carousel-fade";
 import { useTranslation } from "react-i18next";
 import { Separator } from "@/components/ui/separator";
+import { LanguageSwitcher } from "./components/language-switcher";
 
 const loginSchema = z.object({
-  email: z.email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  email: z.email("login.validation.emailInvalid"),
+  password: z.string().min(1, "login.validation.passwordRequired"),
 });
 
 type LoginPayload = z.infer<typeof loginSchema>;
@@ -66,16 +67,16 @@ export default function Login() {
   // Carousel Data
   const slides = [
     {
-      title: "Building the <br/>Future...",
-      desc: "Experience the next generation of artificial intelligence, designed to adapt to your nature.",
+      title: t("login.slides.slide1.title"),
+      desc: t("login.slides.slide1.desc"),
     },
     {
-      title: "Seamless <br/>Integration",
-      desc: "Connect your workflow effortlessly with our advanced plugins and API support.",
+      title: t("login.slides.slide2.title"),
+      desc: t("login.slides.slide2.desc"),
     },
     {
-      title: "Secure by <br/>Default",
-      desc: "Enterprise-grade encryption and privacy controls to keep your data safe and sound.",
+      title: t("login.slides.slide3.title"),
+      desc: t("login.slides.slide3.desc"),
     },
   ];
 
@@ -187,7 +188,6 @@ export default function Login() {
         .delay-300 { animation-delay: 300ms; }
        
       `}</style>
-
       {/* FULL SCREEN BACKGROUND */}
       <div className="absolute inset-0 z-0 bg-black">
         <img
@@ -196,6 +196,10 @@ export default function Login() {
           className="w-full h-full object-cover opacity-90 animate-ken-burns"
         />
         <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
+      </div>
+
+      <div className="absolute z-50 top-4 right-4 md:top-8 md:right-8">
+        <LanguageSwitcher />
       </div>
 
       {/* MAIN CONTAINER */}
@@ -270,8 +274,10 @@ export default function Login() {
           <Card className="px-2 lg:px-4">
             {/* Header */}
             <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold">Log In</CardTitle>
-              <CardDescription>Welcome Back</CardDescription>
+              <CardTitle className="text-3xl font-bold">
+                {t("login.title")}
+              </CardTitle>
+              <CardDescription>{t("login.subtitle")}</CardDescription>
             </CardHeader>
 
             {/* Form */}
@@ -294,7 +300,9 @@ export default function Login() {
                         field.state.meta.isTouched && !field.state.meta.isValid;
                       return (
                         <Field data-invalid={isInvalid}>
-                          <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                          <FieldLabel htmlFor={field.name}>
+                            {t("login.emailLabel")}
+                          </FieldLabel>
                           <Input
                             id={field.name}
                             name={field.name}
@@ -321,7 +329,9 @@ export default function Login() {
                         field.state.meta.isTouched && !field.state.meta.isValid;
                       return (
                         <Field data-invalid={isInvalid}>
-                          <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                          <FieldLabel htmlFor={field.name}>
+                            {t("login.passwordLabel")}
+                          </FieldLabel>
                           <div className="relative">
                             <Input
                               id={field.name}
@@ -369,7 +379,7 @@ export default function Login() {
                         htmlFor="rememberMe"
                         className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                       >
-                        Remember me
+                        {t("login.rememberMe")}
                       </Label>
                     </div>
                     <a
@@ -380,7 +390,7 @@ export default function Login() {
                       }}
                       className="text-sm font-medium text-foreground hover:text-primary hover:underline transition-colors"
                     >
-                      Forgot Password?
+                      {t("login.forgotPassword")}
                     </a>
                   </div>
 
@@ -393,10 +403,10 @@ export default function Login() {
                     {loginMutation.isPending ? (
                       <>
                         <Spinner />
-                        Loading...
+                        {t("login.loading")}
                       </>
                     ) : (
-                      "Continue"
+                      t("login.submit")
                     )}
                   </Button>
                 </FieldGroup>
@@ -408,7 +418,7 @@ export default function Login() {
 
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="px-2 text-muted-foreground backdrop-blur-sm">
-                    Or
+                    {t("login.orDivider")}
                   </span>
                 </div>
               </div>
@@ -474,7 +484,7 @@ export default function Login() {
 
             <CardFooter className="justify-center">
               <div className="text-center text-sm text-muted-foreground">
-                New User?{" "}
+                {t("login.newUser")}{" "}
                 <a
                   href="/signup"
                   onClick={(e) => {
@@ -483,7 +493,7 @@ export default function Login() {
                   }}
                   className="font-bold text-foreground hover:text-primary hover:underline transition-colors"
                 >
-                  SIGN UP HERE
+                  {t("login.signUpLink")}
                 </a>
               </div>
             </CardFooter>

@@ -123,9 +123,6 @@ apiClient.interceptors.response.use(
       const errorValue = data.errors[firstField];
       messageKey = errorValue;
     }
-    else if (data?.message) {
-      messageKey = data.message;
-    }
 
     const translatedMessage = i18n.exists(`errors.${messageKey}`)
       ? i18n.t(`errors.${messageKey}`)

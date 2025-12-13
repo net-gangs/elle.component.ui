@@ -16,13 +16,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-
-const LANGUAGE_OPTIONS: { code: string; labelKey: string }[] = [
-  { code: "en", labelKey: "languageSwitcher.languages.en" },
-  { code: "vi", labelKey: "languageSwitcher.languages.vi" },
-  { code: "ja", labelKey: "languageSwitcher.languages.ja" },
-  { code: "th", labelKey: "languageSwitcher.languages.th" },
-];
+import { LANGUAGE_OPTIONS } from "@/lib/i18n";
 
 export function LanguageSwitcher() {
   const { i18n, t } = useTranslation();
@@ -52,7 +46,9 @@ export function LanguageSwitcher() {
             sideOffset={4}
             className="w-44"
           >
-            <DropdownMenuLabel>{t("languageSwitcher.menuLabel")}</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              {t("languageSwitcher.menuLabel")}
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             {LANGUAGE_OPTIONS.map((option) => {
               const isActive = option.code === activeLanguage;
