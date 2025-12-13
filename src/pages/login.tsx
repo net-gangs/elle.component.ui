@@ -22,7 +22,22 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import Fade from "embla-carousel-fade";
 import { useTranslation } from "react-i18next";
+import { Separator } from "@/components/ui/separator";
 
 const loginSchema = z.object({
   email: z.email("Please enter a valid email address"),
@@ -36,9 +51,17 @@ export default function Login() {
   const { t } = useTranslation();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [api, setApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!api) return;
+
+    api.on("select", () => {
+      setCurrentSlide(api.selectedScrollSnap());
+    });
+  }, [api]);
 
   // Carousel Data
   const slides = [
@@ -109,30 +132,6 @@ export default function Login() {
     },
   });
 
-  // Carousel Logic
-  const changeSlide = (index: number) => {
-    if (index === currentSlide || isTransitioning) return;
-
-    setIsTransitioning(true);
-
-    setTimeout(() => {
-      setCurrentSlide(index);
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, 50);
-    }, 500);
-  };
-
-  const nextSlide = () => {
-    const nextIndex = (currentSlide + 1) % slides.length;
-    changeSlide(nextIndex);
-  };
-
-  useEffect(() => {
-    const interval = setInterval(nextSlide, 5000);
-    return () => clearInterval(interval);
-  }, [currentSlide]);
-
   useEffect(() => {
     const loadFacebookSDK = () => {
       if ((window as any).FB) return;
@@ -165,6 +164,16 @@ export default function Login() {
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes kenBurns { 0% { transform: scale(1.1); } 100% { transform: scale(1); } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes slideUpFade {
+          0% { opacity: 0; transform: translateY(30px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-slide-up {
+          animation: slideUpFade 1s ease-out forwards;
+          animation-delay: 0.5s;
+          opacity: 0;
+        }
 
         .animate-ken-burns { animation: kenBurns 10s ease-out forwards; }
         .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
@@ -200,31 +209,53 @@ export default function Login() {
             </h2>
           </div>
 
-          <div className="space-y-6 mt-auto lg:mb-20">
-            <div className="min-h-[180px] transition-all duration-500">
-              <h1
-                className={`text-4xl lg:text-6xl font-bold leading-tight drop-shadow-lg ${
-                  isTransitioning ? "slide-exit" : "slide-enter"
-                }`}
-                dangerouslySetInnerHTML={{ __html: slides[currentSlide].title }}
-              />
-              <p
-                className={`text-lg max-w-sm drop-shadow-md mt-6 ${
-                  isTransitioning ? "slide-exit" : "slide-enter"
-                }`}
-              >
-                {slides[currentSlide].desc}
-              </p>
-            </div>
+          <div className="mt-auto lg:mb-20">
+            <Carousel
+              setApi={setApi}
+              opts={{
+                loop: true,
+                duration: 40,
+              }}
+              plugins={[
+                Autoplay({
+                  delay: 5000,
+                }),
+                Fade(),
+              ]}
+              className="w-full max-w-lg"
+            >
+              <CarouselContent>
+                {slides.map((slide, index) => (
+                  <CarouselItem key={index}>
+                    <div
+                      className={`h-[300px] select-none flex flex-col justify-end pb-10
+                        ${
+                          currentSlide === index
+                            ? "animate-slide-up opacity-100"
+                            : "slide-exit"
+                        }`}
+                    >
+                      <h1
+                        className="text-4xl lg:text-6xl font-bold leading-tight drop-shadow-lg"
+                        dangerouslySetInnerHTML={{ __html: slide.title }}
+                      />
+                      <p className="text-lg max-w-sm drop-shadow-md mt-6">
+                        {slide.desc}
+                      </p>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
 
-            <div className="flex gap-2 mt-8 opacity-0 animate-fade-in delay-300">
+            <div className="flex gap-2 opacity-0 animate-fade-in delay-300">
               {slides.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => changeSlide(index)}
+                  onClick={() => api?.scrollTo(index)}
                   className={`h-1 rounded-full transition-all duration-300 ${
                     currentSlide === index
-                      ? "w-8 bg-primary opacity-100"
+                      ? "w-8 bg-primary opacity-100 shadow-[0_0_10px_rgba(255,255,255,0.5)]"
                       : "w-4 bg-primary/40 hover:bg-primary/60"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
@@ -254,137 +285,127 @@ export default function Login() {
                 }}
                 className="space-y-5"
               >
-                {/* Email Field */}
-                <form.Field
-                  name="email"
-                  children={(field) => (
-                    <div className="space-y-2 group">
-                      <Label
-                        htmlFor={field.name}
-                        className="ml-1 group-focus-within:text-primary transition-colors"
-                      >
-                        Email
-                      </Label>
-                      <Input
-                        id={field.name}
-                        type="email"
-                        placeholder="name@example.com"
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className={`h-12 rounded-xl focus-visible:ring-primary/20 ${
-                          field.state.meta.errors.length
-                            ? "border-destructive focus-visible:ring-destructive/20"
-                            : ""
-                        }`}
-                      />
-                      {field.state.meta.errors.length > 0 && (
-                        <p className="text-sm text-destructive font-medium ml-1">
-                          {field.state.meta.errors.join(", ")}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-
-                {/* Password Field */}
-                <form.Field
-                  name="password"
-                  children={(field) => (
-                    <div className="space-y-2 group">
-                      <Label
-                        htmlFor={field.name}
-                        className="ml-1 group-focus-within:text-primary transition-colors"
-                      >
-                        Password
-                      </Label>
-                      <div className="relative">
-                        <Input
-                          id={field.name}
-                          type={showPassword ? "text" : "password"}
-                          placeholder="••••••••"
-                          value={field.state.value}
-                          onBlur={field.handleBlur}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                          className={`h-12 rounded-xl focus-visible:ring-primary/20 pr-10 ${
-                            field.state.meta.errors.length
-                              ? "border-destructive focus-visible:ring-destructive/20"
-                              : ""
-                          }`}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                          {showPassword ? (
-                            <EyeOff size={18} />
-                          ) : (
-                            <Eye size={18} />
+                <FieldGroup>
+                  {/* Email Field */}
+                  <form.Field
+                    name="email"
+                    children={(field) => {
+                      const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid;
+                      return (
+                        <Field data-invalid={isInvalid}>
+                          <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                          <Input
+                            id={field.name}
+                            name={field.name}
+                            type="email"
+                            placeholder="name@example.com"
+                            value={field.state.value}
+                            onBlur={field.handleBlur}
+                            aria-invalid={isInvalid}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                          />
+                          {isInvalid && (
+                            <FieldError errors={field.state.meta.errors} />
                           )}
-                        </button>
-                      </div>
-                      {field.state.meta.errors.length > 0 && (
-                        <p className="text-sm text-destructive font-medium ml-1">
-                          {field.state.meta.errors.join(", ")}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-
-                {/* Remember Me & Forgot Password */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="rememberMe"
-                      checked={rememberMe}
-                      onCheckedChange={(checked) =>
-                        setRememberMe(checked as boolean)
-                      }
-                      className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                    />
-                    <Label
-                      htmlFor="rememberMe"
-                      className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
-                    >
-                      Remember me
-                    </Label>
-                  </div>
-                  <a
-                    href="/forgot-password"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate({ to: "/forgot-password" });
+                        </Field>
+                      );
                     }}
-                    className="text-sm font-medium text-foreground hover:text-primary hover:underline transition-colors"
-                  >
-                    Forgot Password?
-                  </a>
-                </div>
+                  />
 
-                {/* Submit Button */}
-                <Button
-                  type="submit"
-                  disabled={loginMutation.isPending}
-                  className="w-full h-12 rounded-xl text-base font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
-                >
-                  {loginMutation.isPending ? (
-                    <>
-                      <Spinner />
-                      Loading...
-                    </>
-                  ) : (
-                    "Continue"
-                  )}
-                </Button>
+                  {/* Password Field */}
+                  <form.Field
+                    name="password"
+                    children={(field) => {
+                      const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid;
+                      return (
+                        <Field data-invalid={isInvalid}>
+                          <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                          <div className="relative">
+                            <Input
+                              id={field.name}
+                              name={field.name}
+                              type={showPassword ? "text" : "password"}
+                              placeholder="••••••••"
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              {showPassword ? (
+                                <EyeOff size={18} />
+                              ) : (
+                                <Eye size={18} />
+                              )}
+                            </button>
+                          </div>
+                          {isInvalid && (
+                            <FieldError errors={field.state.meta.errors} />
+                          )}
+                        </Field>
+                      );
+                    }}
+                  />
+
+                  {/* Remember Me & Forgot Password */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="rememberMe"
+                        checked={rememberMe}
+                        onCheckedChange={(checked) =>
+                          setRememberMe(checked as boolean)
+                        }
+                        className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      />
+                      <Label
+                        htmlFor="rememberMe"
+                        className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+                      >
+                        Remember me
+                      </Label>
+                    </div>
+                    <a
+                      href="/forgot-password"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate({ to: "/forgot-password" });
+                      }}
+                      className="text-sm font-medium text-foreground hover:text-primary hover:underline transition-colors"
+                    >
+                      Forgot Password?
+                    </a>
+                  </div>
+
+                  {/* Submit Button */}
+                  <Button
+                    type="submit"
+                    disabled={loginMutation.isPending}
+                    className="w-full h-12 rounded-xl text-base font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                  >
+                    {loginMutation.isPending ? (
+                      <>
+                        <Spinner />
+                        Loading...
+                      </>
+                    ) : (
+                      "Continue"
+                    )}
+                  </Button>
+                </FieldGroup>
               </form>
 
               {/* Divider */}
               <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t"></span>
-                </div>
+                <Separator className="absolute inset-1.5" />
+
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="px-2 text-muted-foreground backdrop-blur-sm">
                     Or
