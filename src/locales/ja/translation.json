@@ -42,10 +42,86 @@
     "section": "データ取得"
   },
   "login": {
-    "title": "Ella AI にログイン",
-    "submit": "ログイン",
+    "title": "ログイン",
+    "subtitle": "おかえりなさい",
+    "emailLabel": "メールアドレス",
+    "passwordLabel": "パスワード",
+    "rememberMe": "ログイン状態を保持",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "submit": "次へ",
+    "loading": "読み込み中...",
+    "orDivider": "または",
     "social": {
-      "google": "Google でログイン"
+      "google": "Googleでログイン"
+    },
+    "newUser": "アカウントをお持ちでないですか？",
+    "signUpLink": "新規登録",
+    "slides": {
+      "slide1": {
+        "title": "未来を<br/>築く...",
+        "desc": "あなたの性質に適応するように設計された、次世代の人工知能を体験してください。"
+      },
+      "slide2": {
+        "title": "シームレスな<br/>統合",
+        "desc": "高度なプラグインとAPIサポートにより、ワークフローを簡単に接続できます。"
+      },
+      "slide3": {
+        "title": "標準で<br/>安全",
+        "desc": "エンタープライズグレードの暗号化とプライバシー管理により、データを安全に保ちます。"
+      }
+    },
+    "validation": {
+      "emailInvalid": "有効なメールアドレスを入力してください",
+      "passwordRequired": "パスワードを入力してください"
+    }
+  },
+  "signup": {
+    "title": "始めましょう",
+    "subtitle": "アカウント作成",
+    "nameLabel": "名前",
+    "emailLabel": "メールアドレス",
+    "passwordLabel": "パスワード",
+    "submit": "アカウント作成",
+    "loading": "アカウント作成中...",
+    "existingUser": "すでにアカウントをお持ちですか？",
+    "signInLink": "ログインはこちら",
+    "successMessage": "アカウントが作成されました！メールを確認してアカウントを認証してください。",
+    "slides": {
+      "slide1": {
+        "title": "未来へ<br/>参加しよう...",
+        "desc": "アカウントを作成し、次世代の人工知能を体験してください。"
+      },
+      "slide2": {
+        "title": "強力な<br/>機能",
+        "desc": "生産性と創造性を高めるために設計された高度なAI機能にアクセスできます。"
+      },
+      "slide3": {
+        "title": "データは<br/>保護されます",
+        "desc": "エンタープライズグレードのセキュリティにより、情報は安全かつプライベートに保たれます。"
+      }
+    },
+    "validation": {
+      "nameRequired": "名前を入力してください",
+      "emailInvalid": "有効なメールアドレスを入力してください",
+      "passwordMin": "パスワードは6文字以上である必要があります"
+    }
+  },
+  "forgotPassword": {
+    "title": "パスワードをお忘れですか？",
+    "subtitle": "ご心配なく。リセット手順をお送りします。",
+    "subtitleSent": "パスワードリセットの手順をメールでお送りしました。",
+    "backToLogin": "ログインに戻る",
+    "emailLabel": "メールアドレス",
+    "submit": "リセットリンクを送信",
+    "sending": "送信中...",
+    "toastSuccess": "パスワードリセットメールを送信しました！受信トレイを確認してください。",
+    "successBox": {
+      "title": "メールを確認してください",
+      "text": "メールアドレスにパスワードリセットリンクを送信しました。受信トレイを確認し、手順に従ってください。"
+    },
+    "retry": "メールが届きませんか？再試行",
+    "validation": {
+      "emailInvalid": "有効なメールアドレスを入力してください"
     }
   },
   "dashboard": {
@@ -133,6 +209,10 @@
     "notFound": "見つかりません",
     "serverErrorDesc": "問題が発生しました。後でもう一度お試しください。",
     "emailAlreadyExists": "このメールアドレスは既に使用されています。",
-    "emailSendFailed": "確認メールを送信できませんでした。後でもう一度お試しください。"
+    "emailNotExists": "このメールアドレスは登録されていません。",
+    "needLoginViaProvider": {
+      "google": "このメールはGoogleと連携されています。Googleでログインしてください。",
+      "facebook": "このメールはFacebookと連携されています。Facebookでログインしてください。"
+    }
   }
 }

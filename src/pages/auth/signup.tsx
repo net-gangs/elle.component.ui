@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import * as z from "zod";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 import { authService } from "@/services/auth-service";
 import { Input } from "@/components/ui/input";
@@ -32,17 +33,20 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "./components/language-switcher";
 
 const signupSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z.string().min(1, "signup.validation.nameRequired"),
+  email: z.email("signup.validation.emailInvalid"),
+  password: z.string().min(6, "signup.validation.passwordMin"),
 });
 
 type SignupPayload = z.infer<typeof signupSchema>;
 
 export default function Signup() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -59,16 +63,16 @@ export default function Signup() {
   // Carousel Data
   const slides = [
     {
-      title: "Join the <br/>Future...",
-      desc: "Create your account and experience the next generation of artificial intelligence.",
+      title: t("signup.slides.slide1.title"),
+      desc: t("signup.slides.slide1.desc"),
     },
     {
-      title: "Powerful <br/>Features",
-      desc: "Access advanced AI capabilities designed to enhance your productivity and creativity.",
+      title: t("signup.slides.slide2.title"),
+      desc: t("signup.slides.slide2.desc"),
     },
     {
-      title: "Your Data, <br/>Protected",
-      desc: "Enterprise-grade security ensures your information is safe and private.",
+      title: t("signup.slides.slide3.title"),
+      desc: t("signup.slides.slide3.desc"),
     },
   ];
 
@@ -86,9 +90,7 @@ export default function Signup() {
       });
     },
     onSuccess: () => {
-      toast.success(
-        "Account created! Please check your email to verify your account."
-      );
+      toast.success(t("signup.successMessage"));
       setTimeout(() => {
         navigate({ to: "/login" });
       }, 2000);
@@ -175,6 +177,10 @@ export default function Signup() {
         <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
       </div>
 
+      <div className="absolute z-50 top-4 right-4 md:top-8 md:right-8">
+        <LanguageSwitcher />
+      </div>
+
       {/* MAIN CONTAINER */}
       <div className="relative z-10 w-full h-full flex flex-col lg:flex-row items-center justify-between px-6 lg:px-24 py-12">
         {/* LEFT SIDE: Brand & Visuals */}
@@ -247,8 +253,10 @@ export default function Signup() {
           <Card className="px-2 lg:px-4">
             {/* Header */}
             <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold">Get Started</CardTitle>
-              <CardDescription>Create Account</CardDescription>
+              <CardTitle className="text-3xl font-bold">
+                {t("signup.title")}
+              </CardTitle>
+              <CardDescription>{t("signup.subtitle")}</CardDescription>
             </CardHeader>
 
             {/* Form */}
@@ -270,7 +278,9 @@ export default function Signup() {
                         field.state.meta.isTouched && !field.state.meta.isValid;
                       return (
                         <Field data-invalid={isInvalid}>
-                          <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                          <FieldLabel htmlFor={field.name}>
+                            {t("signup.nameLabel")}
+                          </FieldLabel>
                           <Input
                             id={field.name}
                             name={field.name}
@@ -295,7 +305,9 @@ export default function Signup() {
                         field.state.meta.isTouched && !field.state.meta.isValid;
                       return (
                         <Field data-invalid={isInvalid}>
-                          <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                          <FieldLabel htmlFor={field.name}>
+                            {t("signup.emailLabel")}
+                          </FieldLabel>
                           <Input
                             id={field.name}
                             name={field.name}
@@ -320,7 +332,9 @@ export default function Signup() {
                         field.state.meta.isTouched && !field.state.meta.isValid;
                       return (
                         <Field data-invalid={isInvalid}>
-                          <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                          <FieldLabel htmlFor={field.name}>
+                            {t("signup.passwordLabel")}
+                          </FieldLabel>
                           <div className="relative">
                             <Input
                               id={field.name}
@@ -357,10 +371,10 @@ export default function Signup() {
                     {signupMutation.isPending ? (
                       <>
                         <Spinner />
-                        Creating Account...
+                        {t("signup.loading")}
                       </>
                     ) : (
-                      "CREATE ACCOUNT"
+                      t("signup.submit")
                     )}
                   </Button>
                 </FieldGroup>
@@ -369,9 +383,16 @@ export default function Signup() {
 
             <CardFooter className="justify-center">
               <div className="text-center text-sm text-muted-foreground mt-6">
-                Already have an account?{" "}
-                <a href="/login" className="font-bold hover:underline">
-                  SIGN IN HERE
+                {t("signup.existingUser")}{" "}
+                <a
+                  href="/login"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate({ to: "/login" });
+                  }}
+                  className="font-bold hover:underline"
+                >
+                  {t("signup.signInLink")}
                 </a>
               </div>
             </CardFooter>

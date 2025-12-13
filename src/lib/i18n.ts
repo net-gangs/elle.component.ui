@@ -7,6 +7,13 @@ import jaTranslation from "@/locales/ja/translation.json";
 import thTranslation from "@/locales/th/translation.json";
 import viTranslation from "@/locales/vi/translation.json";
 
+export const LANGUAGE_OPTIONS: { code: string; labelKey: string }[] = [
+  { code: "en", labelKey: "languageSwitcher.languages.en" },
+  { code: "vi", labelKey: "languageSwitcher.languages.vi" },
+  { code: "ja", labelKey: "languageSwitcher.languages.ja" },
+  { code: "th", labelKey: "languageSwitcher.languages.th" },
+];
+
 void i18n
   .use(LanguageDetector)
   .use(initReactI18next)

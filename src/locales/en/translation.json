@@ -42,10 +42,86 @@
     "section": "Data Fetching"
   },
   "login": {
-    "title": "Login to Ella AI",
-    "submit": "Log In",
+    "title": "Log In",
+    "subtitle": "Welcome Back",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot Password?",
+    "submit": "Continue",
+    "loading": "Loading...",
+    "orDivider": "Or",
     "social": {
-      "google": "Login with Google"
+      "google": "Sign in with Google"
+    },
+    "newUser": "New User?",
+    "signUpLink": "SIGN UP HERE",
+    "slides": {
+      "slide1": {
+        "title": "Building the <br/>Future...",
+        "desc": "Experience the next generation of artificial intelligence, designed to adapt to your nature."
+      },
+      "slide2": {
+        "title": "Seamless <br/>Integration",
+        "desc": "Connect your workflow effortlessly with our advanced plugins and API support."
+      },
+      "slide3": {
+        "title": "Secure by <br/>Default",
+        "desc": "Enterprise-grade encryption and privacy controls to keep your data safe and sound."
+      }
+    },
+    "validation": {
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required"
+    }
+  },
+  "signup": {
+    "title": "Get Started",
+    "subtitle": "Create Account",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submit": "CREATE ACCOUNT",
+    "loading": "Creating Account...",
+    "existingUser": "Already have an account?",
+    "signInLink": "SIGN IN HERE",
+    "successMessage": "Account created! Please check your email to verify your account.",
+    "slides": {
+      "slide1": {
+        "title": "Join the <br/>Future...",
+        "desc": "Create your account and experience the next generation of artificial intelligence."
+      },
+      "slide2": {
+        "title": "Powerful <br/>Features",
+        "desc": "Access advanced AI capabilities designed to enhance your productivity and creativity."
+      },
+      "slide3": {
+        "title": "Your Data, <br/>Protected",
+        "desc": "Enterprise-grade security ensures your information is safe and private."
+      }
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordMin": "Password must be at least 6 characters"
+    }
+  },
+  "forgotPassword": {
+    "title": "Forgot Password?",
+    "subtitle": "No worries, we'll send you reset instructions.",
+    "subtitleSent": "We've sent password reset instructions to your email.",
+    "backToLogin": "Back to Login",
+    "emailLabel": "Email Address",
+    "submit": "SEND RESET LINK",
+    "sending": "Sending...",
+    "toastSuccess": "Password reset email sent! Please check your inbox.",
+    "successBox": {
+      "title": "Check your email",
+      "text": "We've sent a password reset link to your email address. Please check your inbox and follow the instructions."
+    },
+    "retry": "Didn't receive the email? Try again",
+    "validation": {
+      "emailInvalid": "Please enter a valid email address"
     }
   },
   "dashboard": {
@@ -133,6 +209,10 @@
     "notFound": "Not Found",
     "serverErrorDesc": "Something went wrong. Please try again later.",
     "emailAlreadyExists": "This email address is already in use.",
-    "emailSendFailed": "Unable to send verification email. Please try again later."
+    "emailNotExists": "This email address is not registered.",
+    "needLoginViaProvider": {
+      "google": "This email is linked to Google. Please log in with Google.",
+      "facebook": "This email is linked to Facebook. Please log in with Facebook."
+    }
   }
 }
