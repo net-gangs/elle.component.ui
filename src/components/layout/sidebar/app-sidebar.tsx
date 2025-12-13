@@ -24,7 +24,7 @@ import { NavMain } from "./nav-main";
 import { LanguageSwitcher } from "./language-switcher";
 
 // This is sample data.
-const data : any = {
+const data: any = {
   teams: [
     {
       name: "ELLA AI",
@@ -36,7 +36,7 @@ const data : any = {
     preparation: [
       {
         titleKey: "sidebar.items.myClass",
-        url: "/my-class",
+        url: "/",
         icon: GraduationCap,
       },
       {

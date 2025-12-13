@@ -3,11 +3,12 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import * as z from "zod";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 import { authService } from "@/services/auth-service";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -28,7 +29,9 @@ export default function ForgotPassword() {
       toast.success("Password reset email sent! Please check your inbox.");
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to send reset email");
+      toast.error(
+        error?.response?.data?.message || "Failed to send reset email"
+      );
     },
   });
 
@@ -72,7 +75,7 @@ export default function ForgotPassword() {
           alt="Nature Background"
           className="w-full h-full object-cover opacity-90 animate-ken-burns"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
       </div>
 
       {/* MAIN CONTAINER */}
@@ -106,7 +109,9 @@ export default function ForgotPassword() {
                   />
                 </svg>
               </div>
-              <h2 className="text-3xl font-bold text-slate-900">Forgot Password?</h2>
+              <h2 className="text-3xl font-bold text-slate-900">
+                Forgot Password?
+              </h2>
               <p className="text-slate-600 text-sm">
                 {emailSent
                   ? "We've sent password reset instructions to your email."
@@ -141,7 +146,9 @@ export default function ForgotPassword() {
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
                           className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none ${
-                            field.state.meta.errors.length ? "border-red-500" : ""
+                            field.state.meta.errors.length
+                              ? "border-red-500"
+                              : ""
                           }`}
                         />
                         {field.state.meta.errors.length > 0 && (
@@ -160,7 +167,7 @@ export default function ForgotPassword() {
                   >
                     {forgotPasswordMutation.isPending ? (
                       <span className="flex items-center justify-center">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Spinner />
                         Sending...
                       </span>
                     ) : (
@@ -174,8 +181,8 @@ export default function ForgotPassword() {
                 <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary">
                   <p className="font-medium mb-1">Check your email</p>
                   <p className="text-primary/90">
-                    We've sent a password reset link to your email address. Please check your inbox
-                    and follow the instructions.
+                    We've sent a password reset link to your email address.
+                    Please check your inbox and follow the instructions.
                   </p>
                 </div>
 

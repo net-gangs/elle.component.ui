@@ -1,4 +1,5 @@
 import axios from "axios";
+import i18n from "i18next";
 import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { toast } from "sonner";
 import { authActions } from "@/stores/auth-store";
@@ -79,7 +80,7 @@ apiClient.interceptors.response.use(
       }
 
       try {
-    
+
         const response = await axios.post<ApiResponse<RefreshResponseDto>>(
           `${apiClient.defaults.baseURL}/auth/refresh`,
           {},
@@ -90,7 +91,7 @@ apiClient.interceptors.response.use(
           }
         );
 
-        
+
         const { token, refreshToken: newRefreshToken, tokenExpires } = response.data.data;
 
         authActions.refresh({ token, refreshToken: newRefreshToken, tokenExpires });
@@ -113,24 +114,34 @@ apiClient.interceptors.response.use(
     }
 
     // Handle other errors
-    const message =
-      (error.response?.data as { message?: string })?.message || error.message;
+    const status = error.response?.status;
+    const data = error.response?.data as any;
+    let messageKey = "serverErrorDesc";
+
+    if (status === 422 && data?.errors) {
+      const firstField = Object.keys(data.errors)[0];
+      const errorValue = data.errors[firstField];
+      messageKey = errorValue;
+    }
+    else if (data?.message) {
+      messageKey = data.message;
+    }
+
+    const translatedMessage = i18n.exists(`errors.${messageKey}`)
+      ? i18n.t(`errors.${messageKey}`)
+      : (i18n.exists(messageKey) ? i18n.t(messageKey) : messageKey);
 
     if (error.response?.status === 403) {
-      toast.error("Access denied", {
-        description: "You don't have permission to access this resource",
+      toast.error(i18n.t("errors.accessDenied"), {
+        description: i18n.t("errors.accessDeniedDesc"),
       });
     } else if (error.response?.status === 404) {
-      toast.error("Not found", {
-        description: message,
+      toast.error(i18n.t("errors.notFound"), {
+        description: translatedMessage,
       });
-    } else if (error.response?.status === 500) {
-      toast.error("Server error", {
-        description: "Something went wrong. Please try again later.",
-      });
-    } else if (error.response?.status !== 401) {
-      toast.error("Error", {
-        description: message,
+    } else {
+      toast.error(i18n.t("errors.errorTitle"), {
+        description: translatedMessage,
       });
     }
 
