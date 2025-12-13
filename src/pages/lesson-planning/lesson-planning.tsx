@@ -5,7 +5,6 @@ import {
   ChevronUp,
   Clock,
   GraduationCap,
-  Loader2,
   Save,
   Sparkles,
   ClipboardCheck,
@@ -33,6 +32,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ChatInputArea from "./components/chat-input-area";
 import MessageBubble from "./components/message-bubble";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function LessonPlanning() {
   const { t } = useTranslation();
@@ -272,7 +272,7 @@ export default function LessonPlanning() {
           <div className="flex flex-col gap-4 py-4">
             {isLoadingMessages ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="size-6 animate-spin text-muted-foreground" />
+                <Spinner />
               </div>
             ) : messages.length === 0 && !streamingContent ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -461,7 +461,7 @@ export default function LessonPlanning() {
               disabled={!messageToSave || saveToLessonMutation.isPending}
             >
               {saveToLessonMutation.isPending ? (
-                <Loader2 className="mr-2 size-4 animate-spin" />
+                <Spinner />
               ) : (
                 <Save className="mr-2 size-4" />
               )}

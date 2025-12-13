@@ -65,7 +65,7 @@ export interface AuthResetPasswordDto {
 }
 
 export interface AuthGoogleLoginDto {
-  idToken: string;
+  code: string;
 }
 
 export interface AuthFacebookLoginDto {

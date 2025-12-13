@@ -3,7 +3,6 @@ import {
   ChevronDown,
   ChevronRight,
   Folder,
-  Loader2,
   MessageSquare,
   Pin,
   PinOff,
@@ -54,6 +53,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Spinner } from "@/components/ui/spinner";
 
 export function NavLessonPlanning() {
   const { t } = useTranslation();
@@ -299,7 +299,7 @@ export function NavLessonPlanning() {
           {isLoadingClasses ? (
             <SidebarMenuItem>
               <div className="flex items-center justify-center py-4">
-                <Loader2 className="size-5 animate-spin text-muted-foreground" />
+                <Spinner />
               </div>
             </SidebarMenuItem>
           ) : classes.length === 0 ? (
@@ -578,9 +578,7 @@ export function NavLessonPlanning() {
                 isCreatingChat
               }
             >
-              {isCreatingChat && (
-                <Loader2 className="mr-2 size-4 animate-spin" />
-              )}
+              {isCreatingChat && <Spinner />}
               {t("common.create")}
             </Button>
           </DialogFooter>

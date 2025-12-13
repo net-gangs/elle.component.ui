@@ -9,7 +9,6 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Check,
   ChevronsUpDown,
-  Loader2,
   Camera,
   Dices,
   Heart,
@@ -30,6 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "../ui/spinner";
 
 const SPECIAL_NEEDS_OPTIONS = [
   "ADHD",
@@ -70,7 +70,16 @@ interface StudentFormProps {
 // Generate random dicebear avatar URL
 function generateRandomAvatar(): string {
   const seed = Math.random().toString(36).substring(2, 10);
-  const colors = ["a855f7", "e9d5ff", "fbcfe8", "c4b5fd", "bae6fd", "ddd6fe", "6366f1", "ec4899"];
+  const colors = [
+    "a855f7",
+    "e9d5ff",
+    "fbcfe8",
+    "c4b5fd",
+    "bae6fd",
+    "ddd6fe",
+    "6366f1",
+    "ec4899",
+  ];
   const color = colors[Math.floor(Math.random() * colors.length)];
   return `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}&backgroundColor=${color}`;
 }
@@ -481,11 +490,7 @@ export function StudentForm({
           className="h-12 flex-2 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] active:scale-95"
           disabled={isSubmitting}
         >
-          {isSubmitting ? (
-            <Loader2 className="mr-2 size-4 animate-spin" />
-          ) : (
-            <Save className="mr-2 size-4" />
-          )}
+          {isSubmitting ? <Spinner /> : <Save />}
           {isEditMode ? "Save Changes" : "Create Student"}
         </Button>
       </div>

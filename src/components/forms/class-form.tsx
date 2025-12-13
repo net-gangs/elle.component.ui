@@ -26,8 +26,9 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Loader2, Save, BookOpen } from "lucide-react";
+import { Save, BookOpen } from "lucide-react";
 import type { Classroom } from "@/types/classroom";
+import { Spinner } from "../ui/spinner";
 
 const formSchema = z.object({
   name: z
@@ -164,7 +165,7 @@ export function ClassForm({
             form="class-form"
             disabled={isSubmitting}
           >
-            {isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}
+            {isSubmitting && <Spinner />}
             {isEditMode ? "Save Changes" : "Create Class"}
           </Button>
         </div>
@@ -275,7 +276,9 @@ export function ClassDialog({
                       autoComplete="off"
                       className="h-11 rounded-xl"
                     />
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
                   </Field>
                 );
               }}
@@ -308,7 +311,9 @@ export function ClassDialog({
                       autoComplete="off"
                       className="h-11 rounded-xl"
                     />
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
                   </Field>
                 );
               }}
@@ -332,11 +337,7 @@ export function ClassDialog({
             className="flex-1 rounded-xl shadow-lg shadow-primary/25"
             disabled={isSubmitting}
           >
-            {isSubmitting ? (
-              <Loader2 className="mr-2 size-4 animate-spin" />
-            ) : (
-              <Save className="mr-2 size-4" />
-            )}
+            {isSubmitting ? <Spinner /> : <Save className="mr-2 size-4" />}
             {isEditMode ? "Save Changes" : "Create Class"}
           </Button>
         </DialogFooter>
