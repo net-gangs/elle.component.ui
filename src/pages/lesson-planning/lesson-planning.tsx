@@ -48,6 +48,8 @@ export default function LessonPlanning() {
     null
   );
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  // dialog viewing state removed for message bubble view
+  // removed class navigation state
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -249,6 +251,8 @@ export default function LessonPlanning() {
     setIsSaveDialogOpen(true);
   };
 
+  // removed handleViewLesson - opening dialog from message bubble is disabled
+
   if (!selectedChat) {
     return (
       <div className="flex h-full items-center justify-center bg-white p-5">
@@ -297,6 +301,7 @@ export default function LessonPlanning() {
                         ? () => removeLessonMutation.mutate(message.id)
                         : undefined
                     }
+                    // Removed view action for saved lesson banner
                     isSaving={
                       saveToLessonMutation.isPending &&
                       messageToSave?.id === message.id
@@ -420,10 +425,12 @@ export default function LessonPlanning() {
           if (!open) setMessageToSave(null);
         }}
       >
-        <DialogContent>
+        <DialogContent size="xl">
           <DialogHeader>
             <DialogTitle>
-              {t("lessonPlanning.conversation.saveToLesson", "Save as lesson")}
+               {`${t("lessonPlanning.conversation.saveToLesson", "Save as lesson")}${
+                selectedClass?.name ? ` – ${selectedClass.name}` : ""
+              }`}
             </DialogTitle>
             <DialogDescription>
               {t(
@@ -432,7 +439,7 @@ export default function LessonPlanning() {
               )}
             </DialogDescription>
           </DialogHeader>
-          <div className="max-h-60 overflow-auto rounded-md border bg-muted/40 p-3 text-sm">
+          <div className="max-h-150 overflow-auto rounded-md border bg-muted/40 p-3 text-sm">
             {messageToSave ? (
               <Markdown content={messageToSave.content} />
             ) : (
@@ -470,6 +477,9 @@ export default function LessonPlanning() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Lesson Details Dialog */}
+      {/* Removed lesson details dialog from message bubble view */}
     </>
   );
 }

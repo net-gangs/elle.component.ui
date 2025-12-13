@@ -7,6 +7,8 @@ import { type LessonChatMessage } from "@/stores/lesson-store";
 import { Spinner } from "@/components/ui/spinner";
 
 interface MessageBubbleProps {
+
+
   message: LessonChatMessage;
   teacherLabel?: string;
   assistantLabel?: string;
@@ -146,8 +148,7 @@ function SavedLessonBanner({
       <div className="flex items-center gap-2 text-xs font-medium">
         <Sparkles className="size-3.5 shrink-0 text-emerald-600" />
         <span className="line-clamp-1 break-all">
-          {lessonTitle ||
-            t("lessonPlanning.conversation.savedLesson", "Saved as lesson")}
+          {lessonTitle || t("lessonPlanning.conversation.savedLesson", "Saved as lesson")}
         </span>
       </div>
       {onRemove && (
@@ -209,7 +210,7 @@ function MessageFooter({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-5 gap-1.5 px-2 text-[10px] font-medium text-emerald-700 hover:bg-emerald-50 hover:text-emerald-900"
+                  className="h-5 gap-1.5 px-2 text-xs font-medium text-emerald-700 hover:bg-emerald-50 hover:text-emerald-900"
                   onClick={onRemove}
                   disabled={isRemoving}
                 >
@@ -221,7 +222,7 @@ function MessageFooter({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-5 gap-1.5 px-2 text-[10px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                  className="h-5 gap-1.5 px-2 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
                   onClick={onSave}
                   disabled={isSaving || !isPersistedMessage}
                 >
