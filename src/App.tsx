@@ -12,9 +12,9 @@ import { authStore } from "./stores/auth-store";
 import { MainLayout } from "./components/layout/main-layout";
 import Dashboard from "./pages/dashboard";
 import LessonPlanning from "./pages/lesson-planning/lesson-planning";
-import Login from "./pages/login";
-import Signup from "./pages/signup";
-import ForgotPassword from "./pages/forgot-password";
+import Login from "./pages/auth/login";
+import Signup from "./pages/auth/signup";
+import ForgotPassword from "./pages/auth/forgot-password";
 import MyClassPage from "./pages/class/my-class-page";
 import NoPermissionPage from "./lib/route/NoPermissionPage";
 

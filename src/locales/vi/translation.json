@@ -42,10 +42,86 @@
     "section": "Lấy dữ liệu"
   },
   "login": {
-    "title": "Đăng nhập vào Ella AI",
-    "submit": "Đăng nhập",
+    "title": "Đăng nhập",
+    "subtitle": "Chào mừng trở lại",
+    "emailLabel": "Email",
+    "passwordLabel": "Mật khẩu",
+    "rememberMe": "Ghi nhớ tôi",
+    "forgotPassword": "Quên mật khẩu?",
+    "submit": "Tiếp tục",
+    "loading": "Đang tải...",
+    "orDivider": "Hoặc",
     "social": {
       "google": "Đăng nhập bằng Google"
+    },
+    "newUser": "Người dùng mới?",
+    "signUpLink": "ĐĂNG KÝ TẠI ĐÂY",
+    "slides": {
+      "slide1": {
+        "title": "Xây dựng <br/>Tương lai...",
+        "desc": "Trải nghiệm thế hệ trí tuệ nhân tạo tiếp theo, được thiết kế để thích ứng với bản chất của bạn."
+      },
+      "slide2": {
+        "title": "Tích hợp <br/>Liền mạch",
+        "desc": "Kết nối quy trình làm việc của bạn dễ dàng với các plugin tiên tiến và hỗ trợ API của chúng tôi."
+      },
+      "slide3": {
+        "title": "Bảo mật <br/>Mặc định",
+        "desc": "Mã hóa cấp doanh nghiệp và kiểm soát quyền riêng tư để giữ an toàn tuyệt đối cho dữ liệu của bạn."
+      }
+    },
+    "validation": {
+      "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+      "passwordRequired": "Vui lòng nhập mật khẩu"
+    }
+  },
+  "signup": {
+    "title": "Bắt đầu ngay",
+    "subtitle": "Tạo tài khoản",
+    "nameLabel": "Tên",
+    "emailLabel": "Email",
+    "passwordLabel": "Mật khẩu",
+    "submit": "TẠO TÀI KHOẢN",
+    "loading": "Đang tạo tài khoản...",
+    "existingUser": "Đã có tài khoản?",
+    "signInLink": "ĐĂNG NHẬP TẠI ĐÂY",
+    "successMessage": "Tài khoản đã được tạo! Vui lòng kiểm tra email để xác minh tài khoản.",
+    "slides": {
+      "slide1": {
+        "title": "Tham gia <br/>Tương lai...",
+        "desc": "Tạo tài khoản của bạn và trải nghiệm thế hệ trí tuệ nhân tạo tiếp theo."
+      },
+      "slide2": {
+        "title": "Tính năng <br/>Mạnh mẽ",
+        "desc": "Truy cập các khả năng AI tiên tiến được thiết kế để nâng cao năng suất và sự sáng tạo của bạn."
+      },
+      "slide3": {
+        "title": "Dữ liệu của bạn, <br/>Được bảo vệ",
+        "desc": "Bảo mật cấp doanh nghiệp đảm bảo thông tin của bạn được an toàn và riêng tư."
+      }
+    },
+    "validation": {
+      "nameRequired": "Vui lòng nhập tên",
+      "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
+    }
+  },
+  "forgotPassword": {
+    "title": "Quên mật khẩu?",
+    "subtitle": "Đừng lo, chúng tôi sẽ gửi hướng dẫn đặt lại cho bạn.",
+    "subtitleSent": "Chúng tôi đã gửi hướng dẫn đặt lại mật khẩu đến email của bạn.",
+    "backToLogin": "Quay lại Đăng nhập",
+    "emailLabel": "Địa chỉ Email",
+    "submit": "GỬI LIÊN KẾT ĐẶT LẠI",
+    "sending": "Đang gửi...",
+    "toastSuccess": "Đã gửi email đặt lại mật khẩu! Vui lòng kiểm tra hộp thư đến.",
+    "successBox": {
+      "title": "Kiểm tra email của bạn",
+      "text": "Chúng tôi đã gửi liên kết đặt lại mật khẩu đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư đến và làm theo hướng dẫn."
+    },
+    "retry": "Không nhận được email? Thử lại",
+    "validation": {
+      "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ"
     }
   },
   "dashboard": {
@@ -133,6 +209,10 @@
     "notFound": "Không tìm thấy",
     "serverErrorDesc": "Đã xảy ra sự cố. Vui lòng thử lại sau.",
     "emailAlreadyExists": "Địa chỉ email này đã được sử dụng.",
-    "emailSendFailed": "Không thể gửi email xác minh. Vui lòng thử lại sau."
+    "emailNotExists": "Địa chỉ email này chưa được đăng ký.",
+    "needLoginViaProvider": {
+      "google": "Email này đã liên kết với Google. Vui lòng đăng nhập bằng Google.",
+      "facebook": "Email này đã liên kết với Facebook. Vui lòng đăng nhập bằng Facebook."
+    }
   }
 }
