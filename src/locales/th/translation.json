@@ -43,7 +43,10 @@
   },
   "login": {
     "title": "เข้าสู่ระบบ Ella AI",
-    "submit": "เข้าสู่ระบบ"
+    "submit": "เข้าสู่ระบบ",
+    "social": {
+      "google": "เข้าสู่ระบบด้วย Google"
+    }
   },
   "dashboard": {
     "placeholder": "เนื้อหาแดชบอร์ดจะพร้อมใช้งานเร็วๆ นี้"

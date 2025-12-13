@@ -79,7 +79,7 @@ apiClient.interceptors.response.use(
       }
 
       try {
-    
+
         const response = await axios.post<ApiResponse<RefreshResponseDto>>(
           `${apiClient.defaults.baseURL}/auth/refresh`,
           {},
@@ -90,7 +90,7 @@ apiClient.interceptors.response.use(
           }
         );
 
-        
+
         const { token, refreshToken: newRefreshToken, tokenExpires } = response.data.data;
 
         authActions.refresh({ token, refreshToken: newRefreshToken, tokenExpires });
@@ -115,7 +115,7 @@ apiClient.interceptors.response.use(
     // Handle other errors
     const message =
       (error.response?.data as { message?: string })?.message || error.message;
-
+    console.log(error)
     if (error.response?.status === 403) {
       toast.error("Access denied", {
         description: "You don't have permission to access this resource",

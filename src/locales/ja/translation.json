@@ -43,7 +43,10 @@
   },
   "login": {
     "title": "Ella AI にログイン",
-    "submit": "ログイン"
+    "submit": "ログイン",
+    "social": {
+      "google": "Google でログイン"
+    }
   },
   "dashboard": {
     "placeholder": "ダッシュボードのコンテンツは近日公開予定です。"

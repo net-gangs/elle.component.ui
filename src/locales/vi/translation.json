@@ -43,7 +43,10 @@
   },
   "login": {
     "title": "Đăng nhập vào Ella AI",
-    "submit": "Đăng nhập"
+    "submit": "Đăng nhập",
+    "social": {
+      "google": "Đăng nhập bằng Google"
+    }
   },
   "dashboard": {
     "placeholder": "Nội dung bảng điều khiển sẽ sớm có mặt."

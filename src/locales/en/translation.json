@@ -43,7 +43,10 @@
   },
   "login": {
     "title": "Login to Ella AI",
-    "submit": "Log In"
+    "submit": "Log In",
+    "social": {
+      "google": "Login with Google"
+    }
   },
   "dashboard": {
     "placeholder": "Dashboard content coming soon."

@@ -3,17 +3,29 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import * as z from "zod";
-import { Loader2, Eye, EyeOff } from "lucide-react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { toast } from "sonner";
+import { Eye, EyeOff } from "lucide-react";
+import { useGoogleLogin } from "@react-oauth/google";
+import { Spinner } from "@/components/ui/spinner";
 
 import { authService } from "@/services/auth-service";
 import { authActions } from "@/stores/auth-store";
 import type { LoginResponseDto } from "@/types/auth";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.email("Please enter a valid email address"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -21,6 +33,8 @@ type LoginPayload = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -50,21 +64,22 @@ export default function Login() {
       authActions.login(response);
       navigate({ to: "/" });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Login failed");
-    },
   });
 
   const googleLoginMutation = useMutation({
-    mutationFn: async (idToken: string) => {
-      return await authService.googleLogin({ idToken });
+    mutationFn: async (code: string) => {
+      return await authService.googleLogin({ code });
     },
     onSuccess: (response: LoginResponseDto) => {
       authActions.login(response);
       navigate({ to: "/" });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Google login failed");
+  });
+
+  const performGoogleLogin = useGoogleLogin({
+    flow: "auth-code",
+    onSuccess: (codeResponse) => {
+      googleLoginMutation.mutate(codeResponse.code);
     },
   });
 
@@ -122,18 +137,18 @@ export default function Login() {
     const loadFacebookSDK = () => {
       if ((window as any).FB) return;
 
-      (window as any).fbAsyncInit = function() {
+      (window as any).fbAsyncInit = function () {
         (window as any).FB.init({
-          appId: import.meta.env.VITE_FACEBOOK_APP_ID || '',
+          appId: import.meta.env.VITE_FACEBOOK_APP_ID || "",
           cookie: true,
           xfbml: true,
-          version: 'v18.0'
+          version: "v18.0",
         });
       };
 
-      const script = document.createElement('script');
-      script.id = 'facebook-jssdk';
-      script.src = 'https://connect.facebook.net/en_US/sdk.js';
+      const script = document.createElement("script");
+      script.id = "facebook-jssdk";
+      script.src = "https://connect.facebook.net/en_US/sdk.js";
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);
@@ -143,7 +158,7 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="h-screen w-full relative overflow-hidden font-sans text-slate-900">
+    <div className="h-screen w-full relative overflow-hidden">
       {/* Global Styles & Animations */}
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -161,29 +176,23 @@ export default function Login() {
         .delay-100 { animation-delay: 100ms; }
         .delay-200 { animation-delay: 200ms; }
         .delay-300 { animation-delay: 300ms; }
-
-        .form-card {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-        .social-btn:hover { background-color: #f8fafc; transform: translateY(-1px); border-color: #cbd5e1; }
+       
       `}</style>
 
       {/* FULL SCREEN BACKGROUND */}
       <div className="absolute inset-0 z-0 bg-black">
         <img
-          src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=2000&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1482686115713-0fbcaced6e28?q=80&w=2000&auto=format&fit=crop"
           alt="Nature Background"
           className="w-full h-full object-cover opacity-90 animate-ken-burns"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
       </div>
 
       {/* MAIN CONTAINER */}
       <div className="relative z-10 w-full h-full flex flex-col lg:flex-row items-center justify-between px-6 lg:px-24 py-12">
         {/* LEFT SIDE: Brand & Visuals */}
-        <div className="flex flex-col justify-between h-full max-w-lg text-white py-8 lg:py-0 w-full lg:w-auto">
+        <div className="flex flex-col justify-between h-full max-w-lg text-secondary py-8 lg:py-0 w-full lg:w-auto">
           <div className="opacity-0 animate-fade-in">
             <h2 className="text-2xl font-bold tracking-wider flex items-center gap-2">
               <div className="w-2 h-8 bg-primary rounded-full"></div>
@@ -194,13 +203,13 @@ export default function Login() {
           <div className="space-y-6 mt-auto lg:mb-20">
             <div className="min-h-[180px] transition-all duration-500">
               <h1
-                className={`text-4xl lg:text-6xl font-bold leading-tight shadow-black drop-shadow-lg ${
+                className={`text-4xl lg:text-6xl font-bold leading-tight drop-shadow-lg ${
                   isTransitioning ? "slide-exit" : "slide-enter"
                 }`}
                 dangerouslySetInnerHTML={{ __html: slides[currentSlide].title }}
               />
               <p
-                className={`text-slate-200 text-lg max-w-sm drop-shadow-md mt-6 ${
+                className={`text-lg max-w-sm drop-shadow-md mt-6 ${
                   isTransitioning ? "slide-exit" : "slide-enter"
                 }`}
               >
@@ -215,8 +224,8 @@ export default function Login() {
                   onClick={() => changeSlide(index)}
                   className={`h-1 rounded-full transition-all duration-300 ${
                     currentSlide === index
-                      ? "w-8 bg-white opacity-100 shadow-[0_0_10px_rgba(255,255,255,0.5)]"
-                      : "w-4 bg-white/40 hover:bg-white/60"
+                      ? "w-8 bg-primary opacity-100"
+                      : "w-4 bg-primary/40 hover:bg-primary/60"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -226,161 +235,185 @@ export default function Login() {
         </div>
 
         {/* RIGHT SIDE: Login Form (Floating Card) */}
-        <div className="w-full max-w-[480px] perspective-1000 mt-8 lg:mt-0">
-          <div className="form-card w-full rounded-3xl shadow-2xl p-8 lg:p-10 relative opacity-0 animate-slide-in delay-100">
+        <div className="w-full max-w-[480px] perspective-1000">
+          <Card className="px-2 lg:px-4">
             {/* Header */}
-            <div className="text-center space-y-2 mb-8">
-              <span className="text-xs font-bold tracking-widest text-slate-500 uppercase">
-                Welcome Back
-              </span>
-              <h2 className="text-3xl font-bold text-slate-900">Log In</h2>
-            </div>
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl font-bold">Log In</CardTitle>
+              <CardDescription>Welcome Back</CardDescription>
+            </CardHeader>
 
             {/* Form */}
-            <form
-              id="login-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                form.handleSubmit();
-              }}
-              className="space-y-5"
-            >
-              <form.Field
-                name="email"
-                children={(field) => (
-                  <div className="space-y-1 group focus-within:text-primary">
-                    <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-primary">
-                      Email
-                    </label>
-                    <Input
-                      id={field.name}
-                      type="email"
-                      placeholder="name@example.com"
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none ${
-                        field.state.meta.errors.length ? "border-red-500" : ""
-                      }`}
-                    />
-                    {field.state.meta.errors.length > 0 && (
-                      <p className="text-sm text-red-500 ml-1">
-                        {field.state.meta.errors.join(", ")}
-                      </p>
-                    )}
-                  </div>
-                )}
-              />
-
-              <form.Field
-                name="password"
-                children={(field) => (
-                  <div className="space-y-1 group">
-                    <label className="text-sm font-medium text-slate-600 ml-1 transition-colors group-focus-within:text-primary">
-                      Password
-                    </label>
-                    <div className="relative">
+            <CardContent>
+              <form
+                id="login-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  form.handleSubmit();
+                }}
+                className="space-y-5"
+              >
+                {/* Email Field */}
+                <form.Field
+                  name="email"
+                  children={(field) => (
+                    <div className="space-y-2 group">
+                      <Label
+                        htmlFor={field.name}
+                        className="ml-1 group-focus-within:text-primary transition-colors"
+                      >
+                        Email
+                      </Label>
                       <Input
                         id={field.name}
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••"
+                        type="email"
+                        placeholder="name@example.com"
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none ${
-                          field.state.meta.errors.length ? "border-red-500" : ""
+                        className={`h-12 rounded-xl focus-visible:ring-primary/20 ${
+                          field.state.meta.errors.length
+                            ? "border-destructive focus-visible:ring-destructive/20"
+                            : ""
                         }`}
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                      >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                      </button>
+                      {field.state.meta.errors.length > 0 && (
+                        <p className="text-sm text-destructive font-medium ml-1">
+                          {field.state.meta.errors.join(", ")}
+                        </p>
+                      )}
                     </div>
-                    {field.state.meta.errors.length > 0 && (
-                      <p className="text-sm text-red-500 ml-1">
-                        {field.state.meta.errors.join(", ")}
-                      </p>
-                    )}
-                  </div>
-                )}
-              />
+                  )}
+                />
 
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
-                  />
-                  <span className="text-slate-500 group-hover:text-slate-700 transition">
-                    Remember me
-                  </span>
-                </label>
-                <a
-                  href="/forgot-password"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate({ to: "/forgot-password" });
-                  }}
-                  className="font-medium text-slate-900 hover:underline"
-                >
-                  Forgot Password?
-                </a>
-              </div>
+                {/* Password Field */}
+                <form.Field
+                  name="password"
+                  children={(field) => (
+                    <div className="space-y-2 group">
+                      <Label
+                        htmlFor={field.name}
+                        className="ml-1 group-focus-within:text-primary transition-colors"
+                      >
+                        Password
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id={field.name}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          className={`h-12 rounded-xl focus-visible:ring-primary/20 pr-10 ${
+                            field.state.meta.errors.length
+                              ? "border-destructive focus-visible:ring-destructive/20"
+                              : ""
+                          }`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {showPassword ? (
+                            <EyeOff size={18} />
+                          ) : (
+                            <Eye size={18} />
+                          )}
+                        </button>
+                      </div>
+                      {field.state.meta.errors.length > 0 && (
+                        <p className="text-sm text-destructive font-medium ml-1">
+                          {field.state.meta.errors.join(", ")}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
 
-              <button
-                type="submit"
-                disabled={loginMutation.isPending}
-                className="w-full bg-[#1a1a1a] text-white font-semibold py-3.5 rounded-xl hover:opacity-90 transition shadow-lg shadow-slate-900/10 active:scale-[0.99] disabled:opacity-50"
-              >
-                {loginMutation.isPending ? (
-                  <span className="flex items-center justify-center">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Loading...
-                  </span>
-                ) : (
-                  "CONTINUE"
-                )}
-              </button>
-            </form>
-
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-slate-200"></span>
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white/80 px-2 text-slate-400 backdrop-blur-sm">
-                  Or
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}>
-                <div className="w-full [&>div]:w-full [&_button]:!w-full [&_button]:!px-4 [&_button]:!py-3 [&_button]:!rounded-xl [&_button]:!border-slate-200 [&_button]:!shadow-none hover:[&_button]:!bg-slate-50 [&_button]:!transition-all">
-                  <GoogleLogin
-                    context="signin"
-                    onSuccess={(credentialResponse) => {
-                      if (credentialResponse.credential) {
-                        googleLoginMutation.mutate(credentialResponse.credential);
+                {/* Remember Me & Forgot Password */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="rememberMe"
+                      checked={rememberMe}
+                      onCheckedChange={(checked) =>
+                        setRememberMe(checked as boolean)
                       }
+                      className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    />
+                    <Label
+                      htmlFor="rememberMe"
+                      className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+                    >
+                      Remember me
+                    </Label>
+                  </div>
+                  <a
+                    href="/forgot-password"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate({ to: "/forgot-password" });
                     }}
-                    onError={() => {
-                      toast.error("Google login failed");
-                    }}
-                    text="signin_with"
-                    theme="outline"
-                    size="large"
-                  />
+                    className="text-sm font-medium text-foreground hover:text-primary hover:underline transition-colors"
+                  >
+                    Forgot Password?
+                  </a>
                 </div>
-              </GoogleOAuthProvider>
 
-              {/* <button
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  disabled={loginMutation.isPending}
+                  className="w-full h-12 rounded-xl text-base font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                >
+                  {loginMutation.isPending ? (
+                    <>
+                      <Spinner />
+                      Loading...
+                    </>
+                  ) : (
+                    "Continue"
+                  )}
+                </Button>
+              </form>
+
+              {/* Divider */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t"></span>
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="px-2 text-muted-foreground backdrop-blur-sm">
+                    Or
+                  </span>
+                </div>
+              </div>
+
+              {/* Social Login */}
+              <div className="space-y-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => performGoogleLogin()}
+                  disabled={googleLoginMutation.isPending}
+                  className="w-full h-12"
+                >
+                  {googleLoginMutation.isPending ? (
+                    <Spinner />
+                  ) : (
+                    <img
+                      src="https://www.svgrepo.com/show/475656/google-color.svg"
+                      className="w-5 h-5"
+                      alt="Google"
+                    />
+                  )}
+                  {t("login.social.google")}
+                </Button>
+
+                {/* <button
                 type="button"
                 onClick={() => {
                   if (typeof window !== 'undefined' && (window as any).FB) {
@@ -415,22 +448,25 @@ export default function Login() {
                 </svg>
                 <span>Sign in with Apple</span>
               </button> */}
-            </div>
+              </div>
+            </CardContent>
 
-            <div className="text-center text-sm text-slate-500 mt-6">
-              New User?{" "}
-              <a
-                href="/signup"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate({ to: "/signup" });
-                }}
-                className="font-bold text-slate-900 hover:underline"
-              >
-                SIGN UP HERE
-              </a>
-            </div>
-          </div>
+            <CardFooter className="justify-center">
+              <div className="text-center text-sm text-muted-foreground">
+                New User?{" "}
+                <a
+                  href="/signup"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate({ to: "/signup" });
+                  }}
+                  className="font-bold text-foreground hover:text-primary hover:underline transition-colors"
+                >
+                  SIGN UP HERE
+                </a>
+              </div>
+            </CardFooter>
+          </Card>
         </div>
       </div>
     </div>
