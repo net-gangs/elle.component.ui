@@ -21,6 +21,7 @@ import { ClassCard } from "./components/class-card";
 import { AddClassCard } from "./components/add-class-card";
 import { StudentDrawer, type StudentFormData } from "./components/student-drawer";
 import { ClassDialog, type ClassFormData } from "./components/class-dialog";
+import { LessonDetailsSheet } from "@/components/ui/lesson-details-dialog";
 import { useClassrooms, useCreateClassroom, useUpdateClassroom } from "@/hooks/use-classrooms";
 import { useStudents, useCreateStudent, useUpdateStudent } from "@/hooks/use-students";
 import { useLessons } from "@/hooks/use-lessons";
@@ -70,6 +71,9 @@ const MyClassPage = () => {
   const [isClassDialogOpen, setIsClassDialogOpen] = useState(false);
   const [editingClassroom, setEditingClassroom] = useState<Classroom | null>(null);
 
+  const [viewingLessonId, setViewingLessonId] = useState<string | null>(null);
+  const [isLessonDetailsOpen, setIsLessonDetailsOpen] = useState(false);
+
   const debouncedSearchQuery = useDebounce(searchQuery, SEARCH_DEBOUNCE_MS);
 
   const {
@@ -87,6 +91,8 @@ const MyClassPage = () => {
     }
     return classrooms[0];
   }, [classrooms, selectedClassId]);
+
+  // no router state-based selection: keep local selection logic
 
   const {
     data: studentsData,
@@ -134,7 +140,8 @@ const MyClassPage = () => {
   };
 
   const handleLessonClick = (lesson: Lesson) => {
-    console.log("Lesson clicked:", lesson);
+    setViewingLessonId(lesson.id);
+    setIsLessonDetailsOpen(true);
   };
 
   const handleAddClass = () => {
@@ -355,11 +362,11 @@ const MyClassPage = () => {
 
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-         
+
             <AddStudentCard onClick={handleAddStudent} />
 
             {isLoadingStudents ? (
-          
+
               <>
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <Skeleton key={i} className="aspect-square rounded-[8px]" />
@@ -431,7 +438,7 @@ const MyClassPage = () => {
             </div>
           </motion.div>
 
-      
+
           <AnimatePresence mode="wait">
             {lessonViewMode === "grid" && (
               <motion.div
@@ -442,7 +449,7 @@ const MyClassPage = () => {
                 transition={{ duration: 0.2 }}
                 className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"
               >
-   
+
                 <AddLessonCard onClick={handleAddLesson} />
 
                 {isLoadingLessons ? (
@@ -520,6 +527,18 @@ const MyClassPage = () => {
         onSubmit={handleClassSubmit}
         isSubmitting={createClassroomMutation.isPending || updateClassroomMutation.isPending}
       />
+
+      {/* Lesson Details Dialog */}
+      {selectedClassroom && viewingLessonId && (
+        <LessonDetailsSheet
+          open={isLessonDetailsOpen}
+          onOpenChange={setIsLessonDetailsOpen}
+          classroomId={selectedClassroom.id}
+          lessonId={viewingLessonId}
+          showContent={true}
+          classroomName={selectedClassroom?.name}
+        />
+      )}
     </div>
   );
 };
