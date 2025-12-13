@@ -3,11 +3,12 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import * as z from "zod";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 import { authService } from "@/services/auth-service";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 
 const signupSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -41,10 +42,10 @@ export default function Signup() {
 
   const signupMutation = useMutation({
     mutationFn: async (data: SignupPayload) => {
-      const nameParts = data.name.trim().split(' ');
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.slice(1).join(' ') || firstName;
-      
+      const nameParts = data.name.trim().split(" ");
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || firstName;
+
       return await authService.register({
         email: data.email,
         password: data.password,
@@ -53,7 +54,9 @@ export default function Signup() {
       });
     },
     onSuccess: () => {
-      toast.success("Account created! Please check your email to verify your account.");
+      toast.success(
+        "Account created! Please check your email to verify your account."
+      );
       setTimeout(() => {
         navigate({ to: "/login" });
       }, 2000);
@@ -191,7 +194,9 @@ export default function Signup() {
               <span className="text-xs font-bold tracking-widest text-slate-500 uppercase">
                 Get Started
               </span>
-              <h2 className="text-3xl font-bold text-slate-900">Create Account</h2>
+              <h2 className="text-3xl font-bold text-slate-900">
+                Create Account
+              </h2>
             </div>
 
             {/* Form */}
@@ -282,7 +287,11 @@ export default function Signup() {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                       >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        {showPassword ? (
+                          <EyeOff size={20} />
+                        ) : (
+                          <Eye size={20} />
+                        )}
                       </button>
                     </div>
                     {field.state.meta.errors.length > 0 && (
@@ -301,7 +310,7 @@ export default function Signup() {
               >
                 {signupMutation.isPending ? (
                   <span className="flex items-center justify-center">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Spinner />
                     Creating Account...
                   </span>
                 ) : (
@@ -312,7 +321,10 @@ export default function Signup() {
 
             <div className="text-center text-sm text-slate-500 mt-6">
               Already have an account?{" "}
-              <a href="/login" className="font-bold text-slate-900 hover:underline">
+              <a
+                href="/login"
+                className="font-bold text-slate-900 hover:underline"
+              >
                 SIGN IN HERE
               </a>
             </div>

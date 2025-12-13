@@ -1,9 +1,10 @@
 import { useTranslation } from "react-i18next";
-import { Loader2, Save, Sparkles, Trash2 } from "lucide-react";
+import { Save, Sparkles, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Markdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/utils";
 import { type LessonChatMessage } from "@/stores/lesson-store";
+import { Spinner } from "@/components/ui/spinner";
 
 interface MessageBubbleProps {
   message: LessonChatMessage;
@@ -158,11 +159,7 @@ function SavedLessonBanner({
           disabled={isRemoving}
           title={t("lessonPlanning.conversation.removeLesson", "Remove lesson")}
         >
-          {isRemoving ? (
-            <Loader2 className="size-3 animate-spin" />
-          ) : (
-            <Trash2 className="size-3" />
-          )}
+          {isRemoving ? <Spinner /> : <Trash2 className="size-3" />}
         </Button>
       )}
     </div>
@@ -216,11 +213,7 @@ function MessageFooter({
                   onClick={onRemove}
                   disabled={isRemoving}
                 >
-                  {isRemoving ? (
-                    <Loader2 className="size-3 animate-spin" />
-                  ) : (
-                    <Trash2 className="size-3" />
-                  )}
+                  {isRemoving ? <Spinner /> : <Trash2 className="size-3" />}
                   {t("lessonPlanning.conversation.removeLesson", "Remove")}
                 </Button>
               )
@@ -232,11 +225,7 @@ function MessageFooter({
                   onClick={onSave}
                   disabled={isSaving || !isPersistedMessage}
                 >
-                  {isSaving ? (
-                    <Loader2 className="size-3 animate-spin" />
-                  ) : (
-                    <Save className="size-3" />
-                  )}
+                  {isSaving ? <Spinner /> : <Save className="size-3" />}
                   {t(
                     "lessonPlanning.conversation.saveToLesson",
                     "Save to Lesson"

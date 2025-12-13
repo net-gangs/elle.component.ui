@@ -1,7 +1,8 @@
 import { useState, useRef } from "react";
-import { Loader2, Mic, Plus, Send } from "lucide-react";
+import { Mic, Plus, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function ChatInputArea({
   onSendMessage,
@@ -67,11 +68,7 @@ export default function ChatInputArea({
           onClick={handleSend}
           disabled={!input.trim() || isSendingMessage}
         >
-          {isSendingMessage ? (
-            <Loader2 className="size-4 mr-2 animate-spin" />
-          ) : (
-            <Send className="size-4 mr-2" />
-          )}
+          {isSendingMessage ? <Spinner /> : <Send className="size-4 mr-2" />}
           {t("lessonPlanning.conversation.send")}
         </Button>
       </div>
