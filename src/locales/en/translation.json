@@ -125,5 +125,14 @@
       "ja": "Japanese",
       "th": "Thai"
     }
+  },
+  "errors": {
+    "errorTitle": "Error",
+    "accessDenied": "Access Denied",
+    "accessDeniedDesc": "You don't have permission to access this resource.",
+    "notFound": "Not Found",
+    "serverErrorDesc": "Something went wrong. Please try again later.",
+    "emailAlreadyExists": "This email address is already in use.",
+    "emailSendFailed": "Unable to send verification email. Please try again later."
   }
 }

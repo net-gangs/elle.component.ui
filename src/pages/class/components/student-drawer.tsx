@@ -35,12 +35,13 @@ interface StudentDrawerProps {
 }
 
 function getAvatarUrl(student?: Student | null): string {
-    console.log("student avatar url:", student?.avatarUrl);
   if (student?.avatarUrl) return student.avatarUrl;
   const seed = student?.fullName || "New";
   const encodedSeed = encodeURIComponent(seed);
   const colors = ["a855f7", "e9d5ff", "fbcfe8", "c4b5fd", "bae6fd", "ddd6fe"];
-  const colorIndex = seed.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+  const colorIndex =
+    seed.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+    colors.length;
   return `https://api.dicebear.com/7.x/bottts/svg?seed=${encodedSeed}&backgroundColor=${colors[colorIndex]}`;
 }
 
@@ -61,7 +62,6 @@ export function StudentDrawer({
   onSubmit,
   isSubmitting = false,
 }: StudentDrawerProps) {
-    console.log("[StudentDrawer] student:", {student});
   const isEditMode = !!student;
 
   const initialData = student
@@ -95,7 +95,9 @@ export function StudentDrawer({
                   src={getAvatarUrl(student)}
                   alt={student?.fullName || "New Student"}
                 />
-                <AvatarFallback>{getInitials(student?.fullName)}</AvatarFallback>
+                <AvatarFallback>
+                  {getInitials(student?.fullName)}
+                </AvatarFallback>
               </Avatar>
               <button
                 type="button"
@@ -110,7 +112,9 @@ export function StudentDrawer({
                 {isEditMode ? "Edit Student" : "Add New Student"}
               </SheetTitle>
               <SheetDescription className="text-xs">
-                {isEditMode ? "Update profile details" : "Create a new student profile"}
+                {isEditMode
+                  ? "Update profile details"
+                  : "Create a new student profile"}
               </SheetDescription>
             </div>
           </div>

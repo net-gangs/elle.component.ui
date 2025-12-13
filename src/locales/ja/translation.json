@@ -125,5 +125,14 @@
       "ja": "日本語",
       "th": "タイ語"
     }
+  },
+  "errors": {
+    "errorTitle": "エラー",
+    "accessDenied": "アクセスが拒否されました",
+    "accessDeniedDesc": "このリソースにアクセスする権限がありません。",
+    "notFound": "見つかりません",
+    "serverErrorDesc": "問題が発生しました。後でもう一度お試しください。",
+    "emailAlreadyExists": "このメールアドレスは既に使用されています。",
+    "emailSendFailed": "確認メールを送信できませんでした。後でもう一度お試しください。"
   }
 }

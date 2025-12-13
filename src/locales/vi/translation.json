@@ -125,5 +125,14 @@
       "ja": "Tiếng Nhật",
       "th": "Tiếng Thái"
     }
+  },
+  "errors": {
+    "errorTitle": "Lỗi",
+    "accessDenied": "Truy cập bị từ chối",
+    "accessDeniedDesc": "Bạn không có quyền truy cập vào tài nguyên này.",
+    "notFound": "Không tìm thấy",
+    "serverErrorDesc": "Đã xảy ra sự cố. Vui lòng thử lại sau.",
+    "emailAlreadyExists": "Địa chỉ email này đã được sử dụng.",
+    "emailSendFailed": "Không thể gửi email xác minh. Vui lòng thử lại sau."
   }
 }
