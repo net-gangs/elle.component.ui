@@ -56,7 +56,7 @@
       "google": "Đăng nhập bằng Google"
     },
     "newUser": "Người dùng mới?",
-    "signUpLink": "ĐĂNG KÝ TẠI ĐÂY",
+    "signUpLink": "Đăng ký tại đây",
     "slides": {
       "slide1": {
         "title": "Xây dựng <br/>Tương lai...",
@@ -82,10 +82,10 @@
     "nameLabel": "Tên",
     "emailLabel": "Email",
     "passwordLabel": "Mật khẩu",
-    "submit": "TẠO TÀI KHOẢN",
+    "submit": "Tạo Tài Khoản",
     "loading": "Đang tạo tài khoản...",
     "existingUser": "Đã có tài khoản?",
-    "signInLink": "ĐĂNG NHẬP TẠI ĐÂY",
+    "signInLink": "Đăng nhập tại đây",
     "successMessage": "Tài khoản đã được tạo! Vui lòng kiểm tra email để xác minh tài khoản.",
     "slides": {
       "slide1": {
@@ -112,7 +112,7 @@
     "subtitle": "Đừng lo, chúng tôi sẽ gửi hướng dẫn đặt lại cho bạn.",
     "subtitleSent": "Chúng tôi đã gửi hướng dẫn đặt lại mật khẩu đến email của bạn.",
     "emailLabel": "Địa chỉ Email",
-    "submit": "GỬI LIÊN KẾT ĐẶT LẠI",
+    "submit": "Gửi Liên Kết Đặt Lại",
     "sending": "Đang gửi...",
     "toastSuccess": "Đã gửi email đặt lại mật khẩu! Vui lòng kiểm tra hộp thư đến.",
     "successBox": {
@@ -131,7 +131,7 @@
     "newPasswordPlaceholder": "Nhập mật khẩu mới của bạn",
     "confirmPassword": "Xác nhận mật khẩu",
     "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
-    "submit": "ĐẶT LẠI MẬT KHẨU",
+    "submit": "Đặt Lại Mật Khẩu",
     "submitting": "Đang xử lý...",
     "success": "Cập nhật mật khẩu thành công!",
     "error": "Không thể đặt lại mật khẩu",

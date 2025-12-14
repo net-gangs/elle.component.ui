@@ -77,10 +77,10 @@ export default function ForgotPassword() {
               variant="outline"
               onClick={() => navigate({ to: loginRoute.fullPath })}
               className="w-fit"
-              aria-label={t("forgotPassword.backToLogin")}
+              aria-label={t("common.backToLogin")}
             >
               <ArrowLeft aria-hidden="true" />
-              <span>{t("forgotPassword.backToLogin")}</span>
+              <span>{t("common.backToLogin")}</span>
             </Button>
             <CardTitle className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
               <Key aria-hidden="true" />
