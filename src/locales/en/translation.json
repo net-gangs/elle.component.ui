@@ -14,7 +14,7 @@
   "sidebar": {
     "groups": {
       "preparation": "Preparation",
-      "tools": "Tools"
+      "tool": "Tools"
     },
     "items": {
       "myClass": "My Class",

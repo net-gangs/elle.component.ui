@@ -1,85 +1,158 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { type LucideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { ChevronRight } from "lucide-react";
 
-import { Collapsible } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import type { NavItemType } from "@/types/menu";
 
-export function NavMain({
-  groupLabel,
-  items,
-}: {
-  groupLabel: string;
-  items: {
-    titleKey: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      titleKey: string;
-      url: string;
-    }[];
-  }[];
-}) {
+interface NavMainProps {
+  groupLabel?: string;
+  items: NavItemType[];
+}
+
+export function NavMain({ groupLabel, items }: NavMainProps) {
   const { t } = useTranslation();
   const routerState = useRouterState();
   const currentPathname = routerState.location.pathname;
 
+  // Check if any child item is active (for collapsible items)
+  const isItemOrChildActive = (item: NavItemType): boolean => {
+    // Check if this item is active
+    if (item.url && item.url !== "#") {
+      if (item.url === "/") {
+        if (currentPathname === "/") return true;
+      } else if (currentPathname.startsWith(item.url)) {
+        return true;
+      }
+    }
+
+    // Check if any children are active
+    if (item.children) {
+      return item.children.some((child) => isItemOrChildActive(child));
+    }
+
+    return false;
+  };
+
+  const renderMenuItem = (item: NavItemType) => {
+    const Icon = item.icon;
+    const isActive = isItemOrChildActive(item);
+    const isNavigable = Boolean(item.url && item.url !== "#");
+    const hasChildren = item.children && item.children.length > 0;
+
+    // Collapsible item with children
+    if (item.type === "collapse" && hasChildren) {
+      return (
+        <Collapsible
+          key={item.id || item.title?.toString()}
+          asChild
+          defaultOpen={isActive}
+          className="group/collapsible"
+        >
+          <SidebarMenuItem>
+            <CollapsibleTrigger asChild>
+              <SidebarMenuButton tooltip={t(item.title as string)}>
+                {Icon && <Icon />}
+                <span>{t(item.title as string)}</span>
+                <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarMenuSub>
+                {item.children?.map((subItem) => {
+                  const SubIcon = subItem.icon;
+                  const subIsNavigable = Boolean(
+                    subItem.url && subItem.url !== "#"
+                  );
+                  const subIsActive =
+                    subIsNavigable && subItem.url
+                      ? subItem.url === "/"
+                        ? currentPathname === "/"
+                        : currentPathname.startsWith(subItem.url)
+                      : false;
+
+                  return (
+                    <SidebarMenuSubItem key={subItem.id || subItem.title?.toString()}>
+                      {subIsNavigable ? (
+                        <SidebarMenuSubButton asChild isActive={subIsActive}>
+                          <Link to={subItem.url!}>
+                            {SubIcon && <SubIcon />}
+                            <span>{t(subItem.title as string)}</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      ) : (
+                        <SidebarMenuSubButton isActive={subIsActive}>
+                          {SubIcon && <SubIcon />}
+                          <span>{t(subItem.title as string)}</span>
+                        </SidebarMenuSubButton>
+                      )}
+                    </SidebarMenuSubItem>
+                  );
+                })}
+              </SidebarMenuSub>
+            </CollapsibleContent>
+          </SidebarMenuItem>
+        </Collapsible>
+      );
+    }
+
+    // Regular item without children
+    const buttonContent = (
+      <>
+        {Icon && <Icon />}
+        <span>{t(item.title as string)}</span>
+      </>
+    );
+
+    return (
+      <SidebarMenuItem key={item.id || item.title?.toString()}>
+        {isNavigable ? (
+          <SidebarMenuButton
+            asChild
+            tooltip={t(item.title as string)}
+            isActive={isActive}
+            disabled={item.disabled}
+          >
+            <Link to={item.url!}>{buttonContent}</Link>
+          </SidebarMenuButton>
+        ) : (
+          <SidebarMenuButton
+            tooltip={t(item.title as string)}
+            isActive={isActive}
+            disabled={item.disabled || !isNavigable}
+          >
+            {buttonContent}
+          </SidebarMenuButton>
+        )}
+      </SidebarMenuItem>
+    );
+  };
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>{t(groupLabel)}</SidebarGroupLabel>
+      {groupLabel && <SidebarGroupLabel>{t(groupLabel)}</SidebarGroupLabel>}
       <SidebarMenu>
         {items.map((item) => {
-          const isNavigable = Boolean(item.url && item.url !== "#");
-          const derivedActive =
-            isNavigable && item.url
-              ? item.url === "/"
-                ? currentPathname === "/"
-                : currentPathname.startsWith(item.url)
-              : false;
-          const isActive = item.isActive ?? derivedActive;
+          // Skip group items (they should be at the top level)
+          if (item.type === "group") {
+            return null;
+          }
 
-          const buttonContent = (
-            <>
-              {item.icon && <item.icon />}
-              <span>{t(item.titleKey)}</span>
-            </>
-          );
-
-          return (
-            <Collapsible
-              key={item.titleKey}
-              asChild
-              defaultOpen={isActive}
-              className="group/collapsible"
-            >
-              <SidebarMenuItem>
-                {isNavigable ? (
-                  <SidebarMenuButton
-                    asChild
-                    tooltip={t(item.titleKey)}
-                    isActive={isActive}
-                  >
-                    <Link to={item.url!}>{buttonContent}</Link>
-                  </SidebarMenuButton>
-                ) : (
-                  <SidebarMenuButton
-                    tooltip={t(item.titleKey)}
-                    isActive={isActive}
-                    disabled
-                  >
-                    {buttonContent}
-                  </SidebarMenuButton>
-                )}
-              </SidebarMenuItem>
-            </Collapsible>
-          );
+          return renderMenuItem(item);
         })}
       </SidebarMenu>
     </SidebarGroup>
