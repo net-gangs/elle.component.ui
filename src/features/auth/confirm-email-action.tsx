@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Spinner } from "@/components/ui/spinner";
 import { authService } from "@/services/auth-service";
 import { authStore } from "@/stores/auth-store";
-import { confirmEmailRoute } from "@/app/router";
+import { confirmEmailRoute, loginRoute } from "@/app/router";
 
 export default function ConfirmEmailAction() {
   const navigate = useNavigate();
@@ -27,11 +27,11 @@ export default function ConfirmEmailAction() {
       if (isAuthenticated) {
         navigate({ to: "/" });
       } else {
-        navigate({ to: "/auth/login" });
+        navigate({ to: loginRoute.fullPath });
       }
     },
     onError: () => {
-      navigate({ to: "/auth/login" });
+      navigate({ to: loginRoute.fullPath });
     },
   });
 

@@ -35,7 +35,7 @@ import { useCarousel } from "@/hooks/common/use-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Fade from "embla-carousel-fade";
 import { LanguageSwitcher } from "./components/language-switcher";
-import { loginRoute } from "@/app/router";
+import { loginRoute, signupRoute, forgotPasswordRoute } from "@/app/router";
 
 const loginSchema = z.object({
   email: z.email("login.validation.emailInvalid"),
@@ -90,9 +90,12 @@ export default function Login() {
 
   useEffect(() => {
     const loadFacebookSDK = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- FB SDK attaches to window at runtime
       if ((window as any).FB) return;
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- FB SDK attaches to window at runtime
       (window as any).fbAsyncInit = function () {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- FB init expects any-typed config
         (window as any).FB.init({
           appId: import.meta.env.VITE_FACEBOOK_APP_ID || "",
           cookie: true,
@@ -121,7 +124,10 @@ export default function Login() {
           alt="Nature Background"
           className="w-full h-full object-cover opacity-90 animate-ken-burns"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent" aria-hidden="true"></div>
+        <div
+          className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"
+          aria-hidden="true"
+        ></div>
       </div>
 
       <div className="absolute z-50 top-4 right-4 md:top-8 md:right-8">
@@ -277,7 +283,11 @@ export default function Login() {
                               type="button"
                               onClick={togglePasswordVisibility}
                               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                              aria-label={showPassword ? t("login.hidePassword") : t("login.showPassword")}
+                              aria-label={
+                                showPassword
+                                  ? t("login.hidePassword")
+                                  : t("login.showPassword")
+                              }
                             >
                               {showPassword ? (
                                 <EyeOff size={18} aria-hidden="true" />
@@ -316,7 +326,7 @@ export default function Login() {
                       href="/forgot-password"
                       onClick={(e) => {
                         e.preventDefault();
-                        navigate({ to: "/forgot-password" });
+                        navigate({ to: forgotPasswordRoute.fullPath });
                       }}
                       className="text-sm font-medium text-foreground hover:text-primary hover:underline transition-colors"
                     >
@@ -380,7 +390,9 @@ export default function Login() {
                 {/* <button
                 type="button"
                 onClick={() => {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- FB SDK runtime types
                   if (typeof window !== 'undefined' && (window as any).FB) {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- response shape is dynamic from FB SDK
                     (window as any).FB.login((response: any) => {
                       if (response.authResponse && response.authResponse.accessToken) {
                         facebookLoginMutation.mutate(response.authResponse.accessToken);
@@ -422,7 +434,7 @@ export default function Login() {
                   href="/signup"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate({ to: "/signup" });
+                    navigate({ to: signupRoute.fullPath });
                   }}
                   className="font-bold text-foreground hover:text-primary hover:underline transition-colors"
                 >

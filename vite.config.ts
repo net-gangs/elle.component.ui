@@ -31,7 +31,7 @@ export default defineConfig({
     allowedHosts: ["ella-ui-dev.wyvernp.id.vn"],
   },
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         manualChunks: (id) => {
           if (id.includes("node_modules")) {

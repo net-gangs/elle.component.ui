@@ -1,25 +1,36 @@
 import {
-    createRootRouteWithContext,
-    createRoute,
-    createRouter,
-    Outlet,
-    redirect,
-    lazyRouteComponent
+  createRootRouteWithContext,
+  createRoute,
+  createRouter,
+  Outlet,
+  redirect,
+  lazyRouteComponent,
 } from "@tanstack/react-router";
 
 import { MainLayout } from "../components/layout/main-layout";
 import z from "zod";
-const PasswordChange = lazyRouteComponent(() => import("../features/auth/password-change"));
-const ConfirmEmailAction = lazyRouteComponent(() => import("../features/auth/confirm-email-action"));
+const PasswordChange = lazyRouteComponent(
+  () => import("../features/auth/password-change"),
+);
+const ConfirmEmailAction = lazyRouteComponent(
+  () => import("../features/auth/confirm-email-action"),
+);
 
 const Login = lazyRouteComponent(() => import("../features/auth/login"));
 const Signup = lazyRouteComponent(() => import("../features/auth/signup"));
-const ForgotPassword = lazyRouteComponent(() => import("../features/auth/forgot-password"));
+const ForgotPassword = lazyRouteComponent(
+  () => import("../features/auth/forgot-password"),
+);
 const Dashboard = lazyRouteComponent(() => import("../features/dashboard"));
-const LessonPlanning = lazyRouteComponent(() => import("../features/lesson-planning"));
-const MyClassPage = lazyRouteComponent(() => import("../features/my-class/index"));
-const NoPermissionPage = lazyRouteComponent(() => import("../lib/route/NoPermissionPage"));
-
+const LessonPlanning = lazyRouteComponent(
+  () => import("../features/lesson-planning"),
+);
+const MyClassPage = lazyRouteComponent(
+  () => import("../features/my-class/index"),
+);
+const NoPermissionPage = lazyRouteComponent(
+  () => import("../lib/route/NoPermissionPage"),
+);
 
 export interface RouterContext {
   auth: {
@@ -51,7 +62,7 @@ const layoutRoute = createRoute({
   },
 });
 
-const authLayout = createRoute({
+export const authLayout = createRoute({
   getParentRoute: () => rootRoute,
   id: "auth",
   beforeLoad: ({ context }) => {
@@ -100,53 +111,53 @@ export const loginRoute = createRoute({
   component: Login,
 });
 
-const signupRoute = createRoute({
+export const signupRoute = createRoute({
   getParentRoute: () => authLayout,
   path: "/auth/signup",
   component: Signup,
 });
 
-const forgotPasswordRoute = createRoute({
+export const forgotPasswordRoute = createRoute({
   getParentRoute: () => authLayout,
   path: "/auth/forgot-password",
   component: ForgotPassword,
 });
 
-const noPermissionRoute = createRoute({
+export const noPermissionRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/no-permission",
   component: NoPermissionPage,
 });
 
-const dashboardRoute = createRoute({
+export const dashboardRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/dashboard",
   component: Dashboard,
 });
 
-const lessonPlanningRoute = createRoute({
+export const lessonPlanningRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/lesson-planning",
   component: LessonPlanning,
 });
 
-const myClassRoute = createRoute({
+export const myClassRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/",
   component: MyClassPage,
 });
 
-    const routeTree = rootRoute.addChildren([
+const routeTree = rootRoute.addChildren([
   authLayout.addChildren([
-        loginRoute,
-        signupRoute,
-        forgotPasswordRoute,
-        passwordChangeRoute,
+    loginRoute,
+    signupRoute,
+    forgotPasswordRoute,
+    passwordChangeRoute,
   ]),
-      layoutRoute.addChildren([dashboardRoute, lessonPlanningRoute, myClassRoute]),
+  layoutRoute.addChildren([dashboardRoute, lessonPlanningRoute, myClassRoute]),
   confirmEmailRoute,
   noPermissionRoute,
-    ]);
+]);
 
 export const router = createRouter({
   routeTree,
