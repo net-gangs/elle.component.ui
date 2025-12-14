@@ -1,6 +1,5 @@
 import { useId, useRef, useCallback } from "react";
 import { useForm } from "@tanstack/react-form";
-import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -30,36 +29,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Spinner } from "../ui/spinner";
-
-const SPECIAL_NEEDS_OPTIONS = [
-  "ADHD",
-  "ODD",
-  "ASD",
-  "Depression",
-  "ACEs",
-  "Dysgraphia",
-  "Dyslexia",
-  "Anxiety Disorders",
-];
-
-const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
-
-const studentSchema = z.object({
-  fullName: z.string().min(2, "Name is required"),
-  grade: z.string(),
-  hobby: z.string(),
-  notes: z.string(),
-  avatarUrl: z.string().optional(),
-  specialNeeds: z.array(z.string()),
-  cefrLevels: z.object({
-    reading: z.string(),
-    writing: z.string(),
-    speaking: z.string(),
-    listening: z.string(),
-  }),
-});
-
-type StudentFormData = z.infer<typeof studentSchema>;
+import { CEFR_LEVEL_VALUES, SPECIAL_NEED_VALUES } from "@/types/classroom";
+import {
+  studentSchema,
+  type StudentFormData,
+} from "@/pages/class/components/student-schema";
 
 interface StudentFormProps {
   initialData?: StudentFormData;
@@ -100,13 +74,28 @@ function ProficiencyPill({ level, isSelected, onClick }: ProficiencyPillProps) {
         "flex size-9 items-center justify-center rounded-full border text-xs font-medium transition-all",
         isSelected
           ? "border-primary bg-primary text-primary-foreground shadow-md"
-          : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"
+          : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary",
       )}
     >
       {level}
     </button>
   );
 }
+
+const defaultFormValues: StudentFormData = {
+  fullName: "",
+  grade: "",
+  hobby: "",
+  notes: "",
+  avatarUrl: "",
+  specialNeeds: [],
+  cefrLevels: {
+    reading: "A1",
+    writing: "A1",
+    speaking: "A1",
+    listening: "A1",
+  },
+};
 
 export function StudentForm({
   initialData,
@@ -118,20 +107,7 @@ export function StudentForm({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm({
-    defaultValues: initialData || {
-      fullName: "",
-      grade: "",
-      hobby: "",
-      notes: "",
-      avatarUrl: "",
-      specialNeeds: [],
-      cefrLevels: {
-        reading: "A1",
-        writing: "A1",
-        speaking: "A1",
-        listening: "A1",
-      },
-    },
+    defaultValues: initialData || defaultFormValues,
     validators: {
       onSubmit: studentSchema,
     },
@@ -152,7 +128,7 @@ export function StudentForm({
         reader.readAsDataURL(file);
       }
     },
-    [form]
+    [form],
   );
 
   // Handle drag and drop
@@ -169,7 +145,7 @@ export function StudentForm({
         reader.readAsDataURL(file);
       }
     },
-    [form]
+    [form],
   );
 
   const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -183,7 +159,7 @@ export function StudentForm({
       e.stopPropagation();
       form.setFieldValue("avatarUrl", generateRandomAvatar());
     },
-    [form]
+    [form],
   );
 
   return (
@@ -327,7 +303,7 @@ export function StudentForm({
                       {skill}
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {CEFR_LEVELS.map((level) => (
+                      {CEFR_LEVEL_VALUES.map((level) => (
                         <ProficiencyPill
                           key={level}
                           level={level}
@@ -339,7 +315,7 @@ export function StudentForm({
                   </div>
                 )}
               />
-            )
+            ),
           )}
         </div>
       </div>
@@ -410,7 +386,7 @@ export function StudentForm({
                   type="button"
                   className={cn(
                     "h-auto min-h-11 w-full justify-between rounded-xl text-left font-normal",
-                    !field.state.value.length && "text-muted-foreground"
+                    !field.state.value.length && "text-muted-foreground",
                   )}
                 >
                   {field.state.value.length > 0 ? (
@@ -439,7 +415,7 @@ export function StudentForm({
                   <CommandList>
                     <CommandEmpty>No condition found.</CommandEmpty>
                     <CommandGroup>
-                      {SPECIAL_NEEDS_OPTIONS.map((option) => (
+                      {SPECIAL_NEED_VALUES.map((option) => (
                         <CommandItem
                           key={option}
                           value={option}
@@ -447,7 +423,7 @@ export function StudentForm({
                             const current = field.state.value;
                             if (current.includes(option)) {
                               field.handleChange(
-                                current.filter((v) => v !== option)
+                                current.filter((v) => v !== option),
                               );
                             } else {
                               field.handleChange([...current, option]);
@@ -459,7 +435,7 @@ export function StudentForm({
                               "mr-2 size-4",
                               field.state.value.includes(option)
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
                           />
                           {option}

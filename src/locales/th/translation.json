@@ -202,6 +202,7 @@
     },
     "conversation": {
       "title": "กระดานไอเดีย",
+      "savedBadge": "บันทึกแล้ว",
       "subtitle": "ร่างวัตถุประสงค์ ศูนย์กลาง หรือตั๋วออกกับ Ella",
       "waiting": "เลือกแชทเพื่อวางแผนต่อกับ Ella",
       "placeholder": "พิมพ์คำขอให้ Ella วางแผน รีมิกซ์ หรือขยายบทเรียนของคุณ...",
@@ -212,7 +213,11 @@
       "teacherLabel": "คุณ",
       "assistantLabel": "Ella",
       "startConversation": "เริ่มการสนทนาโดยพิมพ์ข้อความด้านล่าง",
-      "saveToLesson": "บันทึกลงบทเรียน"
+      "saveToLesson": "บันทึกลงบทเรียน",
+      "removeLesson": "ลบ",
+      "verifySave": "คุณต้องการบันทึกการตอบกลับของ AI นี้เป็นบทเรียนหรือไม่?",
+      "lessonSaved": "บันทึกบทเรียนเรียบร้อยแล้ว",
+      "lessonRemoved": "ลบบทเรียนเรียบร้อยแล้ว"
     }
   },
   "languageSwitcher": {

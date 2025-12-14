@@ -45,7 +45,7 @@ export default function LessonPlanning() {
 
   const [contextOpen, setContextOpen] = useState(false);
   const [messageToSave, setMessageToSave] = useState<LessonChatMessage | null>(
-    null
+    null,
   );
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   // dialog viewing state removed for message bubble view
@@ -55,17 +55,17 @@ export default function LessonPlanning() {
 
   const selectedClass = useMemo(
     () => classes.find((c) => c.id === selectedClassId),
-    [classes, selectedClassId]
+    [classes, selectedClassId],
   );
 
   const selectedChat = useMemo(
     () => selectedClass?.chats.find((chat) => chat.id === selectedChatId),
-    [selectedClass, selectedChatId]
+    [selectedClass, selectedChatId],
   );
 
   const messagesQueryKey = useMemo(
     () => ["class", selectedClassId, "chat", selectedChatId, "messages"],
-    [selectedClassId, selectedChatId]
+    [selectedClassId, selectedChatId],
   );
 
   const { data: messages = [], isLoading: isLoadingMessages } = useQuery({
@@ -75,7 +75,7 @@ export default function LessonPlanning() {
       const response = await chatService.getMessages(
         selectedClassId!,
         selectedChatId!,
-        { limit: 100 }
+        { limit: 100 },
       );
 
       return response.data.map((msg) => ({
@@ -108,12 +108,10 @@ export default function LessonPlanning() {
                 lessonTitle: result.lessonTitle,
                 lessonCreatedAt: new Date().toISOString(),
               }
-            : msg
-        )
+            : msg,
+        ),
       );
-      toast.success(
-        t("lessonPlanning.conversation.savedToLesson", "Saved successfully")
-      );
+      toast.success(t("lessonPlanning.conversation.lessonSaved"));
       setIsSaveDialogOpen(false);
       setMessageToSave(null);
     },
@@ -124,7 +122,7 @@ export default function LessonPlanning() {
       chatService.removeSavedLesson(
         selectedClassId!,
         selectedChatId!,
-        messageId
+        messageId,
       ),
     onSuccess: (_, messageId) => {
       queryClient.setQueryData<LessonChatMessage[]>(messagesQueryKey, (old) =>
@@ -136,12 +134,10 @@ export default function LessonPlanning() {
                 lessonTitle: null,
                 lessonCreatedAt: null,
               }
-            : msg
-        )
+            : msg,
+        ),
       );
-      toast.success(
-        t("lessonPlanning.conversation.lessonRemoved", "Lesson removed")
-      );
+      toast.success(t("lessonPlanning.conversation.lessonRemoved"));
     },
   });
 
@@ -211,7 +207,7 @@ export default function LessonPlanning() {
 
           queryClient.setQueryData<LessonChatMessage[]>(
             messagesQueryKey,
-            (old) => [...(old || []), assistantMsg]
+            (old) => [...(old || []), assistantMsg],
           );
 
           setStreamingContent(null);
@@ -229,7 +225,7 @@ export default function LessonPlanning() {
           setStreamingContent(null);
           setIsSendingMessage(false);
           toast.error("Failed to send message");
-        }
+        },
       );
     },
     [
@@ -238,7 +234,7 @@ export default function LessonPlanning() {
       isSendingMessage,
       messagesQueryKey,
       queryClient,
-    ]
+    ],
   );
 
   const handleRequestSaveToLesson = (message: LessonChatMessage) => {
@@ -293,7 +289,7 @@ export default function LessonPlanning() {
                     message={message}
                     teacherLabel={t("lessonPlanning.conversation.teacherLabel")}
                     assistantLabel={t(
-                      "lessonPlanning.conversation.assistantLabel"
+                      "lessonPlanning.conversation.assistantLabel",
                     )}
                     onSaveToLesson={() => handleRequestSaveToLesson(message)}
                     onRemoveLesson={
@@ -323,7 +319,7 @@ export default function LessonPlanning() {
                     }}
                     teacherLabel={t("lessonPlanning.conversation.teacherLabel")}
                     assistantLabel={t(
-                      "lessonPlanning.conversation.assistantLabel"
+                      "lessonPlanning.conversation.assistantLabel",
                     )}
                     isStreaming
                   />
@@ -428,15 +424,12 @@ export default function LessonPlanning() {
         <DialogContent size="xl">
           <DialogHeader>
             <DialogTitle>
-               {`${t("lessonPlanning.conversation.saveToLesson", "Save as lesson")}${
+              {`${t("lessonPlanning.conversation.saveToLesson", "Save as lesson")}${
                 selectedClass?.name ? ` – ${selectedClass.name}` : ""
               }`}
             </DialogTitle>
             <DialogDescription>
-              {t(
-                "lessonPlanning.conversation.verifySave",
-                "Do you want to save this AI response as a lesson?"
-              )}
+              {t("lessonPlanning.conversation.verifySave")}
             </DialogDescription>
           </DialogHeader>
           <div className="max-h-150 overflow-auto rounded-md border bg-muted/40 p-3 text-sm">
@@ -446,7 +439,7 @@ export default function LessonPlanning() {
               <p className="text-muted-foreground text-sm">
                 {t(
                   "lessonPlanning.conversation.noMessageSelected",
-                  "No message selected"
+                  "No message selected",
                 )}
               </p>
             )}

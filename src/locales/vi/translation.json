@@ -165,6 +165,7 @@
     },
     "chats": {
       "title": "Cuộc trò chuyện",
+      "savedBadge": "Đã lưu",
       "description": "Mỗi cuộc trò chuyện ghi lại một ý tưởng hoặc bản nháp khác nhau.",
       "empty": "Chọn lớp và cuộc trò chuyện để bắt đầu lập kế hoạch.",
       "newChat": "Cuộc trò chuyện mới",
@@ -212,7 +213,11 @@
       "teacherLabel": "Bạn",
       "assistantLabel": "Ella",
       "startConversation": "Bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới.",
-      "saveToLesson": "Lưu thành bài học"
+      "saveToLesson": "Lưu thành bài học",
+      "removeLesson": "Xóa",
+      "verifySave": "Bạn có muốn lưu phản hồi này của AI thành bài học không?",
+      "lessonSaved": "Đã lưu bài học thành công",
+      "lessonRemoved": "Đã xóa bài học thành công"
     }
   },
   "languageSwitcher": {
