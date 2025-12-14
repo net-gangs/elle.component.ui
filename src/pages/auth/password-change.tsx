@@ -24,7 +24,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { passwordChangeRoute } from "@/App";
+import { passwordChangeRoute } from "@/router";
 import { LanguageSwitcher } from "./components/language-switcher";
 
 const passwordChangeSchema = z
@@ -146,7 +146,7 @@ export default function PasswordChange() {
                             name={field.name}
                             type={showPassword ? "text" : "password"}
                             placeholder={t(
-                              "passwordChange.newPasswordPlaceholder"
+                              "passwordChange.newPasswordPlaceholder",
                             )}
                             value={field.state.value}
                             onBlur={field.handleBlur}
@@ -188,7 +188,7 @@ export default function PasswordChange() {
                           name={field.name}
                           type="password"
                           placeholder={t(
-                            "passwordChange.confirmPasswordPlaceholder"
+                            "passwordChange.confirmPasswordPlaceholder",
                           )}
                           value={field.state.value}
                           onBlur={field.handleBlur}

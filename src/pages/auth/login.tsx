@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import * as z from "zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -39,6 +38,7 @@ import Fade from "embla-carousel-fade";
 import { useTranslation } from "react-i18next";
 import { Separator } from "@/components/ui/separator";
 import { LanguageSwitcher } from "./components/language-switcher";
+import { loginRoute } from "@/router";
 
 const loginSchema = z.object({
   email: z.email("login.validation.emailInvalid"),
@@ -48,8 +48,9 @@ const loginSchema = z.object({
 type LoginPayload = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const navigate = useNavigate();
   const { t } = useTranslation();
+  const search = loginRoute.useSearch();
+  const navigate = loginRoute.useNavigate();
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
@@ -86,7 +87,7 @@ export default function Login() {
     },
     onSuccess: (response: LoginResponseDto) => {
       authActions.login(response);
-      navigate({ to: "/" });
+      navigate({ to: search.redirect });
     },
   });
 
@@ -96,7 +97,7 @@ export default function Login() {
     },
     onSuccess: (response: LoginResponseDto) => {
       authActions.login(response);
-      navigate({ to: "/" });
+      navigate({ to: search.redirect });
     },
   });
 
@@ -133,29 +134,29 @@ export default function Login() {
     },
   });
 
-  useEffect(() => {
-    const loadFacebookSDK = () => {
-      if ((window as any).FB) return;
+  // useEffect(() => {
+  //   const loadFacebookSDK = () => {
+  //     if ((window as any).FB) return;
 
-      (window as any).fbAsyncInit = function () {
-        (window as any).FB.init({
-          appId: import.meta.env.VITE_FACEBOOK_APP_ID || "",
-          cookie: true,
-          xfbml: true,
-          version: "v18.0",
-        });
-      };
+  //     (window as any).fbAsyncInit = function () {
+  //       (window as any).FB.init({
+  //         appId: import.meta.env.VITE_FACEBOOK_APP_ID || "",
+  //         cookie: true,
+  //         xfbml: true,
+  //         version: "v18.0",
+  //       });
+  //     };
 
-      const script = document.createElement("script");
-      script.id = "facebook-jssdk";
-      script.src = "https://connect.facebook.net/en_US/sdk.js";
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-    };
+  //     const script = document.createElement("script");
+  //     script.id = "facebook-jssdk";
+  //     script.src = "https://connect.facebook.net/en_US/sdk.js";
+  //     script.async = true;
+  //     script.defer = true;
+  //     document.body.appendChild(script);
+  //   };
 
-    loadFacebookSDK();
-  }, []);
+  //   loadFacebookSDK();
+  // }, []);
 
   return (
     <div className="h-screen w-full relative overflow-hidden">
