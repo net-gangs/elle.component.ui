@@ -36,10 +36,10 @@ import { Input } from "@/components/ui/input";
 import { LessonDetailsSheet } from "@/components/ui/lesson-details-dialog";
 import { Pagination } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useClassrooms, useCreateClassroom, useUpdateClassroom } from "@/hooks/use-classrooms";
-import { useDebounce } from "@/hooks/use-debounce";
-import { useLessons } from "@/hooks/use-lessons";
-import { useCreateStudent, useStudents, useUpdateStudent } from "@/hooks/use-students";
+import { useClassrooms, useCreateClassroom, useUpdateClassroom } from "@/hooks/@ella/use-classrooms";
+import { useDebounce } from "@/hooks/common/use-debounce";
+import { useLessons } from "@/hooks/@ella/use-lessons";
+import { useCreateStudent, useStudents, useUpdateStudent } from "@/hooks/@ella/use-students";
 import type { Classroom, Lesson, Student } from "@/types/classroom";
 import { AnimatePresence, motion } from "framer-motion";
 import {

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Users, X as XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useClassroom } from "@/hooks/use-classrooms";
+import { useClassroom } from "@/hooks/@ella/use-classrooms";
 import {
   Dialog,
   DialogContent,

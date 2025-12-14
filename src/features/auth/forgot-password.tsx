@@ -1,12 +1,9 @@
-import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import * as z from "zod";
-import { ArrowLeft } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowLeft, Key } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-import { authService } from "@/services/auth-service";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
@@ -17,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Key } from "lucide-react";
 import {
   Field,
   FieldError,
@@ -25,28 +21,16 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { LanguageSwitcher } from "./components/language-switcher";
-import { useTranslation } from "react-i18next";
+import { useForgotPassword } from "@/hooks/auth/use-forgot-password";
 
 const forgotPasswordSchema = z.object({
   email: z.email("forgotPassword.validation.emailInvalid"),
 });
 
-type ForgotPasswordPayload = z.infer<typeof forgotPasswordSchema>;
-
 export default function ForgotPassword() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [emailSent, setEmailSent] = useState(false);
-
-  const forgotPasswordMutation = useMutation({
-    mutationFn: async (data: ForgotPasswordPayload) => {
-      return await authService.forgotPassword(data);
-    },
-    onSuccess: () => {
-      setEmailSent(true);
-      toast.success(t("forgotPassword.toastSuccess"));
-    },
-  });
+  const { emailSent, forgotPasswordMutation } = useForgotPassword();
 
   const form = useForm({
     defaultValues: {
@@ -61,26 +45,7 @@ export default function ForgotPassword() {
   });
 
   return (
-    <div className="h-screen w-full relative overflow-hidden">
-      {/* Global Styles & Animations */}
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes kenBurns { 0% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
-        .animate-ken-burns { animation: kenBurns 10s ease-out forwards; }
-        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
-        .animate-slide-in { animation: slideIn 0.6s ease-out forwards; }
-        
-        .delay-100 { animation-delay: 100ms; }
-
-        .form-card {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-      `}</style>
-
+    <div className="h-screen w-full relative overflow-hidden font-sans text-slate-900">
       {/* FULL SCREEN BACKGROUND */}
       <div className="absolute inset-0 z-0 bg-black">
         <img
@@ -88,7 +53,7 @@ export default function ForgotPassword() {
           alt="Nature Background"
           className="w-full h-full object-cover opacity-90 animate-ken-burns"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent" aria-hidden="true"></div>
       </div>
 
       <div className="absolute z-50 top-4 right-4 md:top-8 md:right-8">
@@ -107,15 +72,13 @@ export default function ForgotPassword() {
               variant="outline"
               onClick={() => navigate({ to: "/auth/login" })}
               className="w-fit"
+              aria-label={t("forgotPassword.backToLogin")}
             >
-              <ArrowLeft />
-              {t("common.backToLogin")}
+              <ArrowLeft aria-hidden="true" />
+              <span>{t("forgotPassword.backToLogin")}</span>
             </Button>
-            <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <Key className="w-8 h-8 text-primary" />
-            </div>
-            <CardTitle className="text-2xl font-bold">
-              {t("forgotPassword.title")}
+            <CardTitle className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+              <Key aria-hidden="true" />
             </CardTitle>
             <CardDescription>
               {emailSent
@@ -158,6 +121,8 @@ export default function ForgotPassword() {
                               onChange={(e) =>
                                 field.handleChange(e.target.value)
                               }
+                              aria-invalid={isInvalid}
+                              aria-describedby={isInvalid ? `${field.name}-error` : undefined}
                             />
                             {isInvalid && (
                               <FieldError errors={field.state.meta.errors} />
@@ -170,11 +135,13 @@ export default function ForgotPassword() {
                     <Button
                       type="submit"
                       disabled={forgotPasswordMutation.isPending}
+                      className="w-full h-12 rounded-xl text-base font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                      aria-busy={forgotPasswordMutation.isPending}
                     >
                       {forgotPasswordMutation.isPending ? (
                         <>
-                          <Spinner />
-                          {t("forgotPassword.sending")}
+                          <Spinner aria-hidden="true" />
+                          <span>{t("forgotPassword.sending")}</span>
                         </>
                       ) : (
                         t("forgotPassword.submit")
@@ -184,8 +151,8 @@ export default function ForgotPassword() {
                 </form>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center space-y-6 text-center">
-                <div className="text-start bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary">
+              <div className="space-y-6">
+                <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary" role="status" aria-live="polite">
                   <p className="font-medium mb-1">
                     {t("forgotPassword.successBox.title")}
                   </p>

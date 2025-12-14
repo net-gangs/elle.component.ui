@@ -29,9 +29,8 @@ export function NavMain({ groupLabel, items }: NavMainProps) {
   const routerState = useRouterState();
   const currentPathname = routerState.location.pathname;
 
-  // Check if any child item is active (for collapsible items)
   const isItemOrChildActive = (item: NavItemType): boolean => {
-    // Check if this item is active
+
     if (item.url && item.url !== "#") {
       if (item.url === "/") {
         if (currentPathname === "/") return true;
@@ -40,7 +39,6 @@ export function NavMain({ groupLabel, items }: NavMainProps) {
       }
     }
 
-    // Check if any children are active
     if (item.children) {
       return item.children.some((child) => isItemOrChildActive(child));
     }
@@ -54,7 +52,6 @@ export function NavMain({ groupLabel, items }: NavMainProps) {
     const isNavigable = Boolean(item.url && item.url !== "#");
     const hasChildren = item.children && item.children.length > 0;
 
-    // Collapsible item with children
     if (item.type === "collapse" && hasChildren) {
       return (
         <Collapsible
@@ -110,7 +107,6 @@ export function NavMain({ groupLabel, items }: NavMainProps) {
       );
     }
 
-    // Regular item without children
     const buttonContent = (
       <>
         {Icon && <Icon />}

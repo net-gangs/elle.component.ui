@@ -1,4 +1,4 @@
-import { useId, useRef, useCallback } from "react";
+import { useId, useCallback } from "react";
 import { useForm } from "@tanstack/react-form";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Spinner } from "../ui/spinner";
+import { useAvatarUpload } from "@/hooks/@ella/use-avatar-upload";
+import { ProficiencyPill } from "./proficiency-pill";
 import { CEFR_LEVEL_VALUES, SPECIAL_NEED_VALUES } from "@/types/classroom";
 import {
   studentSchema,
@@ -104,7 +106,6 @@ export function StudentForm({
 }: StudentFormProps) {
   const uniqueId = useId();
   const isEditMode = !!initialData;
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm({
     defaultValues: initialData || defaultFormValues,
@@ -116,42 +117,15 @@ export function StudentForm({
     },
   });
 
-  // Handle file upload and convert to base64/data URL
-  const handleFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          form.setFieldValue("avatarUrl", reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    [form],
-  );
-
-  // Handle drag and drop
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const file = e.dataTransfer.files?.[0];
-      if (file && file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          form.setFieldValue("avatarUrl", reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    [form],
-  );
-
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }, []);
+  const {
+    fileInputRef,
+    handleFileChange,
+    handleDrop,
+    handleDragOver,
+    triggerFileInput,
+  } = useAvatarUpload({
+    onUpload: (dataUrl) => form.setFieldValue("avatarUrl", dataUrl),
+  });
 
   const handleRandomize = useCallback(
     (e: React.MouseEvent) => {
@@ -182,15 +156,24 @@ export function StudentForm({
               {/* Avatar Container with Upload/Randomize */}
               <div className="group relative">
                 <div
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={triggerFileInput}
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
                   className="size-20 cursor-pointer overflow-hidden rounded-full border-2 border-dashed border-border bg-secondary p-1 transition-colors group-hover:border-primary"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Upload avatar image"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      triggerFileInput();
+                    }
+                  }}
                 >
                   {field.state.value ? (
                     <img
                       src={field.state.value}
-                      alt="Avatar"
+                      alt="Student avatar"
                       className="size-full rounded-full object-cover"
                       onError={() => {
                         field.handleChange("");
@@ -198,11 +181,11 @@ export function StudentForm({
                     />
                   ) : (
                     <div className="flex size-full items-center justify-center rounded-full bg-muted">
-                      <Camera className="size-6 text-muted-foreground" />
+                      <Camera className="size-6 text-muted-foreground" aria-hidden="true" />
                     </div>
                   )}
                   {/* Hover Overlay */}
-                  <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true">
                     <Camera className="size-5" />
                     <span className="mt-0.5 text-[8px] font-bold uppercase">
                       Upload
@@ -224,9 +207,9 @@ export function StudentForm({
                   type="button"
                   onClick={handleRandomize}
                   className="absolute -bottom-1 -right-1 z-10 flex size-7 items-center justify-center rounded-full bg-primary text-white shadow-md transition-transform hover:scale-110"
-                  title="Randomize Avatar"
+                  aria-label="Generate random avatar"
                 >
-                  <Dices className="size-4" />
+                  <Dices className="size-4" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -237,49 +220,64 @@ export function StudentForm({
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <form.Field
             name="fullName"
-            children={(nameField) => (
-              <Field>
-                <FieldLabel
-                  htmlFor={`${uniqueId}-name`}
-                  className="text-xs font-bold uppercase tracking-wide"
-                >
-                  Full Name <span className="text-destructive">*</span>
-                </FieldLabel>
-                <Input
-                  id={`${uniqueId}-name`}
-                  name={nameField.name}
-                  value={nameField.state.value}
-                  onBlur={nameField.handleBlur}
-                  onChange={(e) => nameField.handleChange(e.target.value)}
-                  placeholder="Enter student name"
-                  className="h-11 rounded-xl"
-                />
-                <FieldError errors={nameField.state.meta.errors} />
-              </Field>
-            )}
+            children={(nameField) => {
+              const isInvalid = nameField.state.meta.isTouched && !nameField.state.meta.isValid;
+              return (
+                <Field>
+                  <FieldLabel
+                    htmlFor={`${uniqueId}-name`}
+                    className="text-xs font-bold uppercase tracking-wide"
+                  >
+                    Full Name <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    id={`${uniqueId}-name`}
+                    name={nameField.name}
+                    value={nameField.state.value}
+                    onBlur={nameField.handleBlur}
+                    onChange={(e) => nameField.handleChange(e.target.value)}
+                    placeholder="Enter student name"
+                    className="h-11 rounded-xl"
+                    aria-invalid={isInvalid}
+                    aria-describedby={isInvalid ? `${uniqueId}-name-error` : undefined}
+                  />
+                  {isInvalid && (
+                    <FieldError id={`${uniqueId}-name-error`} errors={nameField.state.meta.errors} />
+                  )}
+                </Field>
+              );
+            }}
           />
 
           <form.Field
             name="grade"
-            children={(gradeField) => (
-              <Field>
-                <FieldLabel
-                  htmlFor={`${uniqueId}-grade`}
-                  className="text-xs font-bold uppercase tracking-wide"
-                >
-                  Grade <span className="text-destructive">*</span>
-                </FieldLabel>
-                <Input
-                  id={`${uniqueId}-grade`}
-                  name={gradeField.name}
-                  value={gradeField.state.value}
-                  onBlur={gradeField.handleBlur}
-                  onChange={(e) => gradeField.handleChange(e.target.value)}
-                  placeholder="e.g. 7A"
-                  className="h-11 rounded-xl"
-                />
-              </Field>
-            )}
+            children={(gradeField) => {
+              const isInvalid = gradeField.state.meta.isTouched && !gradeField.state.meta.isValid;
+              return (
+                <Field>
+                  <FieldLabel
+                    htmlFor={`${uniqueId}-grade`}
+                    className="text-xs font-bold uppercase tracking-wide"
+                  >
+                    Grade <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    id={`${uniqueId}-grade`}
+                    name={gradeField.name}
+                    value={gradeField.state.value}
+                    onBlur={gradeField.handleBlur}
+                    onChange={(e) => gradeField.handleChange(e.target.value)}
+                    placeholder="e.g. 7A"
+                    className="h-11 rounded-xl"
+                    aria-invalid={isInvalid}
+                    aria-describedby={isInvalid ? `${uniqueId}-grade-error` : undefined}
+                  />
+                  {isInvalid && (
+                    <FieldError id={`${uniqueId}-grade-error`} errors={gradeField.state.meta.errors} />
+                  )}
+                </Field>
+              );
+            }}
           />
         </div>
       </div>
@@ -287,7 +285,7 @@ export function StudentForm({
       {/* ===== SECTION 2: Proficiency Levels ===== */}
       <div className="space-y-5 rounded-2xl border bg-secondary/30 p-5">
         <h4 className="flex items-center gap-2 text-sm font-bold text-primary">
-          <Languages className="size-4" />
+          <Languages className="size-4" aria-hidden="true" />
           Proficiency Levels
         </h4>
 
@@ -333,7 +331,7 @@ export function StudentForm({
                 Interests
               </FieldLabel>
               <div className="relative">
-                <Heart className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Heart className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
                 <Input
                   id={`${uniqueId}-hobby`}
                   name={field.name}
@@ -384,6 +382,8 @@ export function StudentForm({
                   variant="outline"
                   role="combobox"
                   type="button"
+                  aria-expanded={false}
+                  aria-label="Select special needs accommodations"
                   className={cn(
                     "h-auto min-h-11 w-full justify-between rounded-xl text-left font-normal",
                     !field.state.value.length && "text-muted-foreground",
@@ -403,7 +403,7 @@ export function StudentForm({
                   ) : (
                     "Select accommodations..."
                   )}
-                  <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                  <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" aria-hidden="true" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent
@@ -437,6 +437,7 @@ export function StudentForm({
                                 ? "opacity-100"
                                 : "opacity-0",
                             )}
+                            aria-hidden="true"
                           />
                           {option}
                         </CommandItem>
@@ -465,8 +466,9 @@ export function StudentForm({
           type="submit"
           className="h-12 flex-2 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] active:scale-95"
           disabled={isSubmitting}
+          aria-busy={isSubmitting}
         >
-          {isSubmitting ? <Spinner /> : <Save />}
+          {isSubmitting ? <Spinner aria-hidden="true" /> : <Save aria-hidden="true" />}
           {isEditMode ? "Save Changes" : "Create Student"}
         </Button>
       </div>
