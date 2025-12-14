@@ -8,7 +8,8 @@
     "save": "保存",
     "delete": "削除",
     "edit": "編集",
-    "loading": "読み込み中..."
+    "loading": "読み込み中...",
+    "backToLogin": "ログインに戻る"
   },
   "sidebar": {
     "groups": {
@@ -110,7 +111,6 @@
     "title": "パスワードをお忘れですか？",
     "subtitle": "ご心配なく。リセット手順をお送りします。",
     "subtitleSent": "パスワードリセットの手順をメールでお送りしました。",
-    "backToLogin": "ログインに戻る",
     "emailLabel": "メールアドレス",
     "submit": "リセットリンクを送信",
     "sending": "送信中...",
@@ -123,6 +123,29 @@
     "validation": {
       "emailInvalid": "有効なメールアドレスを入力してください"
     }
+  },
+  "passwordChange": {
+    "title": "新しいパスワードの設定",
+    "subtitle": "新しいパスワードは、以前使用したパスワードと異なる必要があります。",
+    "newPassword": "新しいパスワード",
+    "newPasswordPlaceholder": "新しいパスワードを入力してください",
+    "confirmPassword": "パスワードの確認",
+    "confirmPasswordPlaceholder": "パスワードを再入力してください",
+    "submit": "パスワードをリセット",
+    "submitting": "リセット中...",
+    "success": "パスワードが正常に更新されました！",
+    "error": "パスワードのリセットに失敗しました",
+    "invalidLink": "無効なリンク",
+    "validation": {
+      "passwordMin": "パスワードは6文字以上である必要があります",
+      "missingHash": "無効なリセットリンク",
+      "match": "パスワードが一致しません"
+    }
+  },
+  "confirmEmail": {
+    "verifying": "メールを確認中...",
+    "successTitle": "メール確認完了！",
+    "successDesc": "メールアドレスの確認が完了しました。"
   },
   "dashboard": {
     "placeholder": "ダッシュボードのコンテンツは近日公開予定です。"
@@ -213,6 +236,7 @@
     "needLoginViaProvider": {
       "google": "このメールはGoogleと連携されています。Googleでログインしてください。",
       "facebook": "このメールはFacebookと連携されています。Facebookでログインしてください。"
-    }
+    },
+    "invalidHash": "リンクが無効か、有効期限が切れています。"
   }
 }

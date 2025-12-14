@@ -3,7 +3,7 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import * as z from "zod";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { authService } from "@/services/auth-service";
@@ -61,7 +61,7 @@ export default function ForgotPassword() {
   });
 
   return (
-    <div className="h-screen w-full relative overflow-hidden font-sans text-slate-900">
+    <div className="h-screen w-full relative overflow-hidden">
       {/* Global Styles & Animations */}
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -105,16 +105,18 @@ export default function ForgotPassword() {
           <CardHeader className="text-center space-y-2">
             <Button
               variant="outline"
-              onClick={() => navigate({ to: "/login" })}
+              onClick={() => navigate({ to: "/auth/login" })}
               className="w-fit"
             >
               <ArrowLeft />
-              {t("forgotPassword.backToLogin")}
+              {t("common.backToLogin")}
             </Button>
-            <CardTitle className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <Key />
+            <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+              <Key className="w-8 h-8 text-primary" />
+            </div>
+            <CardTitle className="text-2xl font-bold">
+              {t("forgotPassword.title")}
             </CardTitle>
-            <h2 className="text-3xl font-bold ">{t("forgotPassword.title")}</h2>
             <CardDescription>
               {emailSent
                 ? t("forgotPassword.subtitleSent")
@@ -182,8 +184,8 @@ export default function ForgotPassword() {
                 </form>
               </>
             ) : (
-              <div className="space-y-6">
-                <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary">
+              <div className="flex flex-col items-center justify-center space-y-6 text-center">
+                <div className="text-start bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary">
                   <p className="font-medium mb-1">
                     {t("forgotPassword.successBox.title")}
                   </p>
@@ -192,13 +194,22 @@ export default function ForgotPassword() {
                   </p>
                 </div>
 
-                <Button onClick={() => navigate({ to: "/login" })}>
-                  {t("forgotPassword.backToLogin").toUpperCase()}
-                </Button>
+                <div className="w-full space-y-3">
+                  <Button
+                    onClick={() => navigate({ to: "/auth/login" })}
+                    className="w-full"
+                  >
+                    {t("common.backToLogin")}
+                  </Button>
 
-                <Button onClick={() => setEmailSent(false)} variant="secondary">
-                  {t("forgotPassword.retry")}
-                </Button>
+                  <Button
+                    onClick={() => setEmailSent(false)}
+                    variant="ghost"
+                    className="w-full text-muted-foreground hover:text-foreground"
+                  >
+                    {t("forgotPassword.retry")}
+                  </Button>
+                </div>
               </div>
             )}
           </CardContent>

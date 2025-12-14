@@ -22,7 +22,7 @@ export function useAuth() {
 
   const logout = useCallback(() => {
     authActions.logout();
-    navigate({ to: "/login" });
+    navigate({ to: "/auth/login" });
   }, [navigate]);
 
   const setUser = useCallback((newUser: User) => {

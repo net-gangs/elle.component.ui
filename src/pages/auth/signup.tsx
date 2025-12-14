@@ -91,9 +91,7 @@ export default function Signup() {
     },
     onSuccess: () => {
       toast.success(t("signup.successMessage"));
-      setTimeout(() => {
-        navigate({ to: "/login" });
-      }, 2000);
+      navigate({ to: "/auth/login" });
     },
   });
 
@@ -136,7 +134,7 @@ export default function Signup() {
   }, [currentSlide]);
 
   return (
-    <div className="h-screen w-full relative overflow-hidden font-sans text-slate-900">
+    <div className="h-screen w-full relative overflow-hidden">
       {/* Global Styles & Animations */}
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -384,14 +382,7 @@ export default function Signup() {
             <CardFooter className="justify-center">
               <div className="text-center text-sm text-muted-foreground mt-6">
                 {t("signup.existingUser")}{" "}
-                <a
-                  href="/login"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate({ to: "/login" });
-                  }}
-                  className="font-bold hover:underline"
-                >
+                <a href="/auth/login" className="font-bold hover:underline">
                   {t("signup.signInLink")}
                 </a>
               </div>
