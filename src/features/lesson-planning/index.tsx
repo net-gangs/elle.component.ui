@@ -354,7 +354,8 @@ export default function LessonPlanning() {
                     {selectedChat.durationMinutes && (
                       <span className="flex items-center gap-1 text-muted-foreground">
                         <Clock className="size-3.5" />
-                        {selectedChat.durationMinutes} min
+                        {selectedChat.durationMinutes}{" "}
+                        {t("lessonDetails.min", "min")}
                       </span>
                     )}
                     {selectedChat.assessmentType && (

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LessonDetailsSheet } from "@/components/ui/lesson-details-dialog";
@@ -78,6 +79,7 @@ const MyClassPage = () => {
   const [isLessonDetailsOpen, setIsLessonDetailsOpen] = useState(false);
 
   const debouncedSearchQuery = useDebounce(searchQuery, SEARCH_DEBOUNCE_MS);
+  const { t } = useTranslation();
 
   const {
     data: classroomsData,
@@ -97,8 +99,6 @@ const MyClassPage = () => {
     }
     return classrooms[0];
   }, [classrooms, selectedClassId]);
-
-  // no router state-based selection: keep local selection logic
 
   const { data: studentsData, isLoading: isLoadingStudents } = useStudents(
     selectedClassroom?.id,
@@ -204,6 +204,11 @@ const MyClassPage = () => {
   };
 
   const handleAddStudent = () => {
+    if (!selectedClassroom) {
+      toast.info(t("lessonPlanning.classes.empty"));
+      return;
+    }
+
     setEditingStudent(null);
     setIsStudentDrawerOpen(true);
   };
@@ -276,7 +281,7 @@ const MyClassPage = () => {
             </>
           ) : classroomsError ? (
             <div className="flex items-center gap-2 text-destructive">
-              <span>Failed to load</span>
+              <span>{t("common.failedToLoad", "Failed to load")}</span>
             </div>
           ) : (
             <>
@@ -303,7 +308,7 @@ const MyClassPage = () => {
             disabled={!selectedClassroom}
           >
             <Pencil className="mr-2 size-4" />
-            Edit Class
+            {t("myClass.editClass")}
           </Button>
           {/* <Button className="rounded-full shadow-md">
             <Settings className="mr-2 size-4" />
@@ -323,7 +328,9 @@ const MyClassPage = () => {
             className="mb-6 flex flex-col items-center justify-between gap-4 md:flex-row"
           >
             <div className="flex items-center gap-3">
-              <h2 className="text-xl font-bold">Students</h2>
+              <h2 className="text-xl font-bold">
+                {t("myClass.studentsTitle")}
+              </h2>
               <span className="rounded-full border border-border bg-secondary px-2.5 py-0.5 text-xs font-bold text-secondary-foreground">
                 {studentsMeta?.itemCount ?? students.length}
               </span>
@@ -334,7 +341,7 @@ const MyClassPage = () => {
                 <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Search students..."
+                  placeholder={t("myClass.searchStudentsPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
@@ -406,9 +413,9 @@ const MyClassPage = () => {
             className="mb-6 flex flex-col items-center justify-between gap-4 border-t border-border/50 pt-6 md:flex-row"
           >
             <div className="flex items-center gap-3">
-              <h2 className="text-xl font-bold">Lessons</h2>
+              <h2 className="text-xl font-bold">{t("myClass.lessonsTitle")}</h2>
               <span className="rounded-full border border-border bg-secondary px-2.5 py-0.5 text-xs font-bold text-secondary-foreground">
-                Upcoming
+                {t("myClass.upcoming")}
               </span>
             </div>
 

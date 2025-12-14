@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { X, Pencil } from "lucide-react";
 import { StudentForm } from "@/components/forms/student-form";
+import { useTranslation } from "react-i18next";
 import { type StudentFormData } from "./student-schema";
 import { type Student } from "@/types/classroom";
 
@@ -26,14 +27,15 @@ function getAvatarUrl(student?: Student | null): string {
   const encodedSeed = encodeURIComponent(seed);
   const colors = ["a855f7", "e9d5ff", "fbcfe8", "c4b5fd", "bae6fd", "ddd6fe"];
   const colorIndex =
-    seed.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
-    colors.length;
+    String(seed)
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
   return `https://api.dicebear.com/7.x/bottts/svg?seed=${encodedSeed}&backgroundColor=${colors[colorIndex]}`;
 }
 
 function getInitials(name?: string): string {
   if (!name) return "?";
-  return name
+  return String(name)
     .split(" ")
     .map((n) => n[0])
     .join("")
@@ -49,6 +51,7 @@ export function StudentDrawer({
   isSubmitting = false,
 }: StudentDrawerProps) {
   const isEditMode = !!student;
+  const { t } = useTranslation();
 
   const initialData = student
     ? {
@@ -95,12 +98,14 @@ export function StudentDrawer({
 
             <div>
               <SheetTitle className="text-lg font-bold">
-                {isEditMode ? "Edit Student" : "Add New Student"}
+                {isEditMode
+                  ? t("studentDrawer.title.edit")
+                  : t("studentDrawer.title.add")}
               </SheetTitle>
               <SheetDescription className="text-xs">
                 {isEditMode
-                  ? "Update profile details"
-                  : "Create a new student profile"}
+                  ? t("studentDrawer.description.edit")
+                  : t("studentDrawer.description.add")}
               </SheetDescription>
             </div>
           </div>

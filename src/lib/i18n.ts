@@ -24,6 +24,41 @@ const loadTranslation = async (lang: string) => {
   }
 };
 
+const resourceLoaders = new Map<string, Promise<void>>();
+
+export const ensureLanguageResources = async (lang: string) => {
+  if (lang === "en" || i18n.hasResourceBundle(lang, "translation")) {
+    return;
+  }
+
+  if (resourceLoaders.has(lang)) {
+    return resourceLoaders.get(lang);
+  }
+
+  const loadPromise = (async () => {
+    const translation = await loadTranslation(lang);
+    if (translation?.default) {
+      i18n.addResourceBundle(
+        lang,
+        "translation",
+        translation.default,
+        true,
+        true,
+      );
+    }
+  })().finally(() => {
+    resourceLoaders.delete(lang);
+  });
+
+  resourceLoaders.set(lang, loadPromise);
+  return loadPromise;
+};
+
+export const changeAppLanguage = async (lang: string) => {
+  await ensureLanguageResources(lang);
+  await i18n.changeLanguage(lang);
+};
+
 void i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -45,13 +80,8 @@ void i18n
     },
   });
 
-i18n.on("languageChanged", async (lng) => {
-  if (lng !== "en" && !i18n.hasResourceBundle(lng, "translation")) {
-    const translation = await loadTranslation(lng);
-    if (translation) {
-      i18n.addResourceBundle(lng, "translation", translation.default);
-    }
-  }
+i18n.on("languageChanged", (lng) => {
+  void ensureLanguageResources(lng);
 });
 
 export default i18n;

@@ -85,7 +85,7 @@ export function NavLessonPlanning() {
       classId: classItem.id,
       className: classItem.name,
       chat,
-    }))
+    })),
   );
 
   const searchResults = useMemo(() => {
@@ -99,7 +99,7 @@ export function NavLessonPlanning() {
     }[] = [];
     for (const { classId, className, chat } of flattenedChats) {
       const matchedMessages = chat.messages.filter((msg) =>
-        msg.content.toLowerCase().includes(term)
+        msg.content.toLowerCase().includes(term),
       );
       const matchesChat =
         className.toLowerCase().includes(term) ||
@@ -162,7 +162,7 @@ export function NavLessonPlanning() {
               updatedAt: classroom.updatedAt,
             };
           }
-        })
+        }),
       );
       setClasses(classesWithChats);
     } catch (error) {
@@ -178,7 +178,7 @@ export function NavLessonPlanning() {
 
   const selectedClass = classes.find((c) => c.id === selectedClassId);
   const selectedChat = selectedClass?.chats.find(
-    (c) => c.id === selectedChatId
+    (c) => c.id === selectedChatId,
   );
 
   const handleToggleChatPin = async (classId: string, chat: LessonChat) => {
@@ -196,7 +196,7 @@ export function NavLessonPlanning() {
 
   const handleDragOver = (
     event: React.DragEvent<HTMLLIElement>,
-    targetId: string
+    targetId: string,
   ) => {
     event.preventDefault();
     if (!draggingClassId || draggingClassId === targetId) return;
@@ -326,7 +326,7 @@ export function NavLessonPlanning() {
                     className={cn(
                       "w-full rounded-md border transition",
                       classItem.id === selectedClassId &&
-                        "border-primary/50 bg-sidebar-accent/50"
+                        "border-primary/50 bg-sidebar-accent/50",
                     )}
                   >
                     <div className="flex items-center gap-2 px-2 pt-2 pb-1">
@@ -347,8 +347,15 @@ export function NavLessonPlanning() {
                           {classItem.grade && (
                             <p className="truncate text-xs text-muted-foreground">
                               {classItem.grade}
-                              {classItem.totalStudents !== undefined &&
-                                ` · ${classItem.totalStudents} students`}
+                              {classItem.totalStudents !== undefined && (
+                                <>
+                                  {" "}
+                                  · {classItem.totalStudents}{" "}
+                                  {t("lessonPlanning.snapshot.studentsCount", {
+                                    current: classItem.totalStudents,
+                                  })}
+                                </>
+                              )}
                             </p>
                           )}
                         </div>
@@ -365,7 +372,7 @@ export function NavLessonPlanning() {
                             className={cn(
                               "flex items-center gap-2 rounded-md px-2 py-1.5 text-left transition hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                               chat.id === selectedChat?.id &&
-                                "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                                "bg-sidebar-accent text-sidebar-accent-foreground font-medium",
                             )}
                           >
                             <button
@@ -386,7 +393,7 @@ export function NavLessonPlanning() {
                               size="icon"
                               className={cn(
                                 "h-7 w-7",
-                                chat.pinned && "text-amber-500"
+                                chat.pinned && "text-amber-500",
                               )}
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -425,7 +432,7 @@ export function NavLessonPlanning() {
       </SidebarGroup>
 
       <Dialog open={isNewChatDialogOpen} onOpenChange={setIsNewChatDialogOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[500px]">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[500px] scrollbar-hide">
           <DialogHeader>
             <DialogTitle>{t("lessonPlanning.chats.newChatTitle")}</DialogTitle>
             <DialogDescription>
@@ -524,7 +531,7 @@ export function NavLessonPlanning() {
                 value={learningObjectives}
                 onChange={(e) => setLearningObjectives(e.target.value)}
                 placeholder={t(
-                  "lessonPlanning.chats.learningObjectivesPlaceholder"
+                  "lessonPlanning.chats.learningObjectivesPlaceholder",
                 )}
                 rows={3}
               />
@@ -540,7 +547,7 @@ export function NavLessonPlanning() {
                 value={teachingActivities}
                 onChange={(e) => setTeachingActivities(e.target.value)}
                 placeholder={t(
-                  "lessonPlanning.chats.teachingActivitiesPlaceholder"
+                  "lessonPlanning.chats.teachingActivitiesPlaceholder",
                 )}
                 rows={3}
               />
@@ -556,7 +563,7 @@ export function NavLessonPlanning() {
                 value={assessmentType}
                 onChange={(e) => setAssessmentType(e.target.value)}
                 placeholder={t(
-                  "lessonPlanning.chats.assessmentTypePlaceholder"
+                  "lessonPlanning.chats.assessmentTypePlaceholder",
                 )}
               />
             </div>
@@ -592,7 +599,7 @@ export function NavLessonPlanning() {
             <DialogDescription>
               {t(
                 "lessonPlanning.chats.searchPlaceholder",
-                "Search chats and classes"
+                "Search chats and classes",
               )}
             </DialogDescription>
           </DialogHeader>
@@ -601,7 +608,7 @@ export function NavLessonPlanning() {
               autoFocus
               placeholder={t(
                 "lessonPlanning.chats.searchPlaceholder",
-                "Search by title or class"
+                "Search by title or class",
               )}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -653,7 +660,7 @@ export function NavLessonPlanning() {
                       </div>
                     )}
                   </button>
-                )
+                ),
               )}
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useForm } from "@tanstack/react-form";
 import { useCallback, useId } from "react";
 
@@ -112,6 +113,8 @@ export function StudentForm({
     [form],
   );
 
+  const { t } = useTranslation();
+
   return (
     <form
       id={uniqueId}
@@ -157,14 +160,20 @@ export function StudentForm({
                     />
                   ) : (
                     <div className="flex size-full items-center justify-center rounded-full bg-muted">
-                      <Camera className="size-6 text-muted-foreground" aria-hidden="true" />
+                      <Camera
+                        className="size-6 text-muted-foreground"
+                        aria-hidden="true"
+                      />
                     </div>
                   )}
                   {/* Hover Overlay */}
-                  <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true">
+                  <div
+                    className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                    aria-hidden="true"
+                  >
                     <Camera className="size-5" />
                     <span className="mt-0.5 text-[8px] font-bold uppercase">
-                      Upload
+                      {t("studentForm.upload")}
                     </span>
                   </div>
                 </div>
@@ -183,7 +192,7 @@ export function StudentForm({
                   type="button"
                   onClick={handleRandomize}
                   className="absolute -bottom-1 -right-1 z-10 flex size-7 items-center justify-center rounded-full bg-primary text-white shadow-md transition-transform hover:scale-110"
-                  aria-label="Generate random avatar"
+                  title={t("studentForm.randomizeAvatar")}
                 >
                   <Dices className="size-4" aria-hidden="true" />
                 </button>
@@ -197,14 +206,16 @@ export function StudentForm({
           <form.Field
             name="fullName"
             children={(nameField) => {
-              const isInvalid = nameField.state.meta.isTouched && !nameField.state.meta.isValid;
+              const isInvalid =
+                nameField.state.meta.isTouched && !nameField.state.meta.isValid;
               return (
                 <Field>
                   <FieldLabel
                     htmlFor={`${uniqueId}-name`}
                     className="text-xs font-bold uppercase tracking-wide"
                   >
-                    Full Name <span className="text-destructive">*</span>
+                    {t("studentForm.labels.fullName")}{" "}
+                    <span className="text-destructive">*</span>
                   </FieldLabel>
                   <Input
                     id={`${uniqueId}-name`}
@@ -212,13 +223,18 @@ export function StudentForm({
                     value={nameField.state.value}
                     onBlur={nameField.handleBlur}
                     onChange={(e) => nameField.handleChange(e.target.value)}
-                    placeholder="Enter student name"
+                    placeholder={t("studentForm.placeholders.name")}
                     className="h-11 rounded-xl"
                     aria-invalid={isInvalid}
-                    aria-describedby={isInvalid ? `${uniqueId}-name-error` : undefined}
+                    aria-describedby={
+                      isInvalid ? `${uniqueId}-name-error` : undefined
+                    }
                   />
                   {isInvalid && (
-                    <FieldError id={`${uniqueId}-name-error`} errors={nameField.state.meta.errors} />
+                    <FieldError
+                      id={`${uniqueId}-name-error`}
+                      errors={nameField.state.meta.errors}
+                    />
                   )}
                 </Field>
               );
@@ -228,14 +244,17 @@ export function StudentForm({
           <form.Field
             name="grade"
             children={(gradeField) => {
-              const isInvalid = gradeField.state.meta.isTouched && !gradeField.state.meta.isValid;
+              const isInvalid =
+                gradeField.state.meta.isTouched &&
+                !gradeField.state.meta.isValid;
               return (
                 <Field>
                   <FieldLabel
                     htmlFor={`${uniqueId}-grade`}
                     className="text-xs font-bold uppercase tracking-wide"
                   >
-                    Grade <span className="text-destructive">*</span>
+                    {t("studentForm.labels.grade")}{" "}
+                    <span className="text-destructive">*</span>
                   </FieldLabel>
                   <Input
                     id={`${uniqueId}-grade`}
@@ -243,13 +262,18 @@ export function StudentForm({
                     value={gradeField.state.value}
                     onBlur={gradeField.handleBlur}
                     onChange={(e) => gradeField.handleChange(e.target.value)}
-                    placeholder="e.g. 7A"
+                    placeholder={t("studentForm.placeholders.grade")}
                     className="h-11 rounded-xl"
                     aria-invalid={isInvalid}
-                    aria-describedby={isInvalid ? `${uniqueId}-grade-error` : undefined}
+                    aria-describedby={
+                      isInvalid ? `${uniqueId}-grade-error` : undefined
+                    }
                   />
                   {isInvalid && (
-                    <FieldError id={`${uniqueId}-grade-error`} errors={gradeField.state.meta.errors} />
+                    <FieldError
+                      id={`${uniqueId}-grade-error`}
+                      errors={gradeField.state.meta.errors}
+                    />
                   )}
                 </Field>
               );
@@ -262,7 +286,7 @@ export function StudentForm({
       <div className="space-y-5 rounded-2xl border bg-secondary/30 p-5">
         <h4 className="flex items-center gap-2 text-sm font-bold text-primary">
           <Languages className="size-4" aria-hidden="true" />
-          Proficiency Levels
+          {t("studentForm.proficiencyTitle")}
         </h4>
 
         <div className="space-y-4">
@@ -274,7 +298,7 @@ export function StudentForm({
                 children={(field) => (
                   <div>
                     <label className="mb-2 block text-[10px] font-bold uppercase text-muted-foreground">
-                      {skill}
+                      {t(`studentForm.labels.${skill}`)}
                     </label>
                     <div className="flex flex-wrap gap-2">
                       {CEFR_LEVEL_VALUES.map((level) => (
@@ -304,16 +328,19 @@ export function StudentForm({
                 htmlFor={`${uniqueId}-hobby`}
                 className="text-xs font-bold uppercase tracking-wide"
               >
-                Interests
+                {t("studentForm.labels.interests")}
               </FieldLabel>
               <div className="relative">
-                <Heart className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                <Heart
+                  className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden="true"
+                />
                 <Input
                   id={`${uniqueId}-hobby`}
                   name={field.name}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Robotics, Chess..."
+                  placeholder={t("studentForm.placeholders.hobby")}
                   className="h-11 rounded-xl pl-10"
                 />
               </div>
@@ -329,14 +356,14 @@ export function StudentForm({
                 htmlFor={`${uniqueId}-notes`}
                 className="text-xs font-bold uppercase tracking-wide"
               >
-                Notes
+                {t("studentForm.labels.notes")}
               </FieldLabel>
               <Textarea
                 id={`${uniqueId}-notes`}
                 name={field.name}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="Add private notes..."
+                placeholder={t("studentForm.placeholders.notes")}
                 className="min-h-24 resize-none rounded-xl"
               />
             </Field>
@@ -350,7 +377,7 @@ export function StudentForm({
         children={(field) => (
           <Field>
             <FieldLabel className="text-xs font-bold uppercase tracking-wide">
-              Accommodations
+              {t("studentForm.accommodations.title")}
             </FieldLabel>
             <Popover>
               <PopoverTrigger asChild>
@@ -377,9 +404,12 @@ export function StudentForm({
                       ))}
                     </div>
                   ) : (
-                    "Select accommodations..."
+                    t("studentForm.placeholders.accommodations")
                   )}
-                  <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" aria-hidden="true" />
+                  <ChevronsUpDown
+                    className="ml-2 size-4 shrink-0 opacity-50"
+                    aria-hidden="true"
+                  />
                 </Button>
               </PopoverTrigger>
               <PopoverContent
@@ -387,9 +417,13 @@ export function StudentForm({
                 align="start"
               >
                 <Command>
-                  <CommandInput placeholder="Search conditions..." />
+                  <CommandInput
+                    placeholder={t("studentForm.placeholders.searchConditions")}
+                  />
                   <CommandList>
-                    <CommandEmpty>No condition found.</CommandEmpty>
+                    <CommandEmpty>
+                      {t("studentForm.noConditionFound")}
+                    </CommandEmpty>
                     <CommandGroup>
                       {SPECIAL_NEED_VALUES.map((option) => (
                         <CommandItem
@@ -427,8 +461,7 @@ export function StudentForm({
         )}
       />
 
-      {/* ===== Footer Buttons ===== */}
-      <div className="flex gap-3 pt-2">
+      <div className="flex gap-2">
         <Button
           type="button"
           variant="outline"
@@ -436,7 +469,7 @@ export function StudentForm({
           onClick={() => form.reset()}
           disabled={isSubmitting}
         >
-          Reset
+          {t("studentForm.buttons.reset")}
         </Button>
         <Button
           type="submit"
@@ -444,8 +477,14 @@ export function StudentForm({
           disabled={isSubmitting}
           aria-busy={isSubmitting}
         >
-          {isSubmitting ? <Spinner aria-hidden="true" /> : <Save aria-hidden="true" />}
-          {isEditMode ? "Save Changes" : "Create Student"}
+          {isSubmitting ? (
+            <Spinner aria-hidden="true" />
+          ) : (
+            <Save aria-hidden="true" />
+          )}
+          {isEditMode
+            ? t("studentForm.buttons.saveChanges")
+            : t("studentForm.buttons.create")}
         </Button>
       </div>
     </form>

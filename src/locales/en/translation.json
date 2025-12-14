@@ -9,7 +9,11 @@
     "delete": "Delete",
     "edit": "Edit",
     "loading": "Loading...",
-    "backToLogin": "Back to Login"
+    "backToLogin": "Back to Login",
+    "goHome": "Go to Home",
+    "sidebarTitle": "Sidebar",
+    "sidebarDescription": "Displays the mobile sidebar.",
+    "failedToLoad": "Failed to load"
   },
   "sidebar": {
     "groups": {
@@ -24,6 +28,12 @@
       "rewards": "Rewards",
       "interestingArticles": "Interesting Articles",
       "filesLibrary": "Files & Library"
+    },
+    "projects": {
+      "viewProject": "View Project",
+      "shareProject": "Share Project",
+      "deleteProject": "Delete Project",
+      "more": "More"
     }
   },
   "team": {
@@ -53,7 +63,9 @@
     "loading": "Loading...",
     "orDivider": "Or",
     "social": {
-      "google": "Sign in with Google"
+      "google": "Sign in with Google",
+      "facebook": "Sign in with Facebook",
+      "apple": "Sign in with Apple"
     },
     "newUser": "New User?",
     "signUpLink": "Sign up here",
@@ -151,7 +163,7 @@
     "placeholder": "Dashboard content coming soon."
   },
   "lessonPlanning": {
-    "title": "Lesson Planning Workspace",
+    "title": "Lesson Planning",
     "subtitle": "Keep project chats tidy so every class starts with a clear plan.",
     "actions": {
       "newClass": "New class",
@@ -164,6 +176,7 @@
       "toggle": "Toggle classes list"
     },
     "chats": {
+      "currentClass": "Current Class",
       "title": "Chats",
       "description": "Each chat captures a different idea or draft.",
       "empty": "Select a class and chat to start planning.",
@@ -195,7 +208,7 @@
       "className": "Class Name",
       "grade": "Grade",
       "students": "Students",
-      "studentsCount": "students",
+      "studentsCount": "{{current}} students",
       "notSet": "Not set",
       "empty": "Select a class to see its information.",
       "toggle": "Toggle class information"
@@ -206,6 +219,7 @@
       "subtitle": "Draft objectives, centers, or exit tickets with Ella.",
       "waiting": "Choose a chat to keep planning with Ella.",
       "placeholder": "Type a request for Ella to plan, remix, or extend your lesson...",
+      "verifySave": "Do you want to save this AI response as a lesson?",
       "send": "Generate lesson",
       "promptGenerateHook": "Draft a culturally responsive hook",
       "promptRemix": "Differentiate for emerging readers",
@@ -218,6 +232,155 @@
       "verifySave": "Do you want to save this AI response as a lesson?",
       "lessonSaved": "Lesson saved successfully",
       "lessonRemoved": "Lesson removed successfully"
+    }
+  },
+  "lessonDetails": {
+    "minutes": "minutes",
+    "min": "min",
+    "notFound": "Lesson not found"
+  },
+  "classForm": {
+    "titleEdit": "Edit Class",
+    "titleCreate": "Create New Class",
+    "descriptionEdit": "Update the details of this classroom.",
+    "descriptionCreate": "Enter the details below to set up a new classroom.",
+    "labels": {
+      "name": "Class Name",
+      "grade": "Grade / Level",
+      "gradeOptional": "(Optional)"
+    },
+    "placeholders": {
+      "name": "e.g. Advanced English A",
+      "grade": "e.g. Grade 5"
+    },
+    "buttons": {
+      "reset": "Reset",
+      "saveChanges": "Save Changes",
+      "createClass": "Create Class"
+    }
+  },
+  "myClass": {
+    "studentsTitle": "Students",
+    "searchStudentsPlaceholder": "Search students...",
+    "lessonsTitle": "Lessons",
+    "upcoming": "Upcoming",
+    "editClass": "Edit Class"
+  },
+  "studentForm": {
+    "placeholders": {
+      "name": "Enter student name",
+      "grade": "e.g. 7A",
+      "hobby": "Robotics, Chess...",
+      "notes": "Add private notes...",
+      "searchConditions": "Search conditions...",
+      "accommodations": "Select accommodations..."
+    },
+    "buttons": {
+      "reset": "Reset",
+      "saveChanges": "Save Changes",
+      "create": "Create Student"
+    },
+    "upload": "Upload",
+    "randomizeAvatar": "Randomize Avatar",
+    "labels": {
+      "fullName": "Full Name",
+      "grade": "Grade / Level",
+      "reading": "Reading",
+      "writing": "Writing",
+      "listening": "Listening",
+      "speaking": "Speaking",
+      "interests": "Interests",
+      "notes": "Notes"
+    },
+    "proficiencyTitle": "Proficiency Levels",
+    "accommodations": {
+      "title": "Accommodations",
+      "noConditionFound": "No condition found."
+    }
+  },
+  "addStudentCard": {
+    "title": "Add Student",
+    "cta": "Click to add"
+  },
+  "studentDrawer": {
+    "title": {
+      "add": "Add New Student",
+      "edit": "Edit Student"
+    },
+    "description": {
+      "add": "Create a new student profile",
+      "edit": "Update profile details"
+    }
+  },
+  "pagination": {
+    "pageOf": "Page {{current}} of {{total}}"
+  },
+  "addLessonCard": {
+    "title": "Add Lesson",
+    "cta": "Click to add"
+  },
+  "lessonDetails": {
+    "minutes": "minutes",
+    "min": "min",
+    "notFound": "Lesson not found"
+  },
+  "classForm": {
+    "titleEdit": "Edit Class",
+    "titleCreate": "Create New Class",
+    "descriptionEdit": "Update the details of this classroom.",
+    "descriptionCreate": "Enter the details below to set up a new classroom.",
+    "labels": {
+      "name": "Class Name",
+      "grade": "Grade / Level",
+      "gradeOptional": "(Optional)"
+    },
+    "placeholders": {
+      "name": "e.g. Advanced English A",
+      "grade": "e.g. Grade 5"
+    },
+    "buttons": {
+      "reset": "Reset",
+      "saveChanges": "Save Changes",
+      "createClass": "Create Class"
+    }
+  },
+  "myClass": {
+    "studentsTitle": "Students",
+    "searchStudentsPlaceholder": "Search students...",
+    "lessonsTitle": "Lessons",
+    "upcoming": "Upcoming",
+    "editClass": "Edit Class"
+  },
+  "studentForm": {
+    "placeholders": {
+      "name": "Enter student name",
+      "grade": "e.g. 7A",
+      "hobby": "Robotics, Chess...",
+      "notes": "Add private notes...",
+      "searchConditions": "Search conditions...",
+      "accommodations": "Select accommodations..."
+    },
+    "buttons": {
+      "reset": "Reset",
+      "saveChanges": "Save Changes",
+      "create": "Create Student"
+    },
+    "upload": "Upload",
+    "randomizeAvatar": "Randomize Avatar",
+    "labels": {
+      "fullName": "Full Name",
+      "grade": "Grade / Level",
+      "reading": "Reading",
+      "writing": "Writing",
+      "listening": "Listening",
+      "speaking": "Speaking",
+      "interests": "Interests",
+      "notes": "Notes"
+    },
+    "proficiencyTitle": "Proficiency Levels",
+    "accommodations": {
+      "title": "Accommodations",
+      "noConditionFound": "No condition found."
     }
   },
   "languageSwitcher": {

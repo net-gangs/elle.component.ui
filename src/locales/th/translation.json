@@ -9,7 +9,11 @@
     "delete": "ลบ",
     "edit": "แก้ไข",
     "loading": "กำลังโหลด...",
-    "backToLogin": "กลับไปหน้าเข้าสู่ระบบ"
+    "backToLogin": "กลับไปหน้าเข้าสู่ระบบ",
+    "goHome": "ไปยังหน้าหลัก",
+    "sidebarTitle": "แถบด้านข้าง",
+    "sidebarDescription": "แสดงแถบด้านข้างสำหรับมือถือ",
+    "failedToLoad": "ไม่สามารถโหลดได้"
   },
   "sidebar": {
     "groups": {
@@ -24,6 +28,12 @@
       "rewards": "รางวัล",
       "interestingArticles": "บทความที่น่าสนใจ",
       "filesLibrary": "ไฟล์และคลังข้อมูล"
+    },
+    "projects": {
+      "viewProject": "ดูโปรเจกต์",
+      "shareProject": "แชร์โปรเจกต์",
+      "deleteProject": "ลบโปรเจกต์",
+      "more": "อื่นๆ"
     }
   },
   "team": {
@@ -53,7 +63,9 @@
     "loading": "กำลังโหลด...",
     "orDivider": "หรือ",
     "social": {
-      "google": "เข้าสู่ระบบด้วย Google"
+      "google": "เข้าสู่ระบบด้วย Google",
+      "facebook": "เข้าสู่ระบบด้วย Facebook",
+      "apple": "เข้าสู่ระบบด้วย Apple"
     },
     "newUser": "ผู้ใช้ใหม่?",
     "signUpLink": "ลงทะเบียนที่นี่",
@@ -151,7 +163,7 @@
     "placeholder": "เนื้อหาแดชบอร์ดจะพร้อมใช้งานเร็วๆ นี้"
   },
   "lessonPlanning": {
-    "title": "พื้นที่ทำงานการวางแผนบทเรียน",
+    "title": "การวางแผนบทเรียน",
     "subtitle": "จัดระเบียบแชทโปรเจกต์เพื่อให้ทุกชั้นเรียนเริ่มต้นด้วยแผนที่ชัดเจน",
     "actions": {
       "newClass": "ชั้นเรียนใหม่",
@@ -164,6 +176,7 @@
       "toggle": "สลับรายการชั้นเรียน"
     },
     "chats": {
+      "currentClass": "ชั้นเรียนปัจจุบัน",
       "title": "แชท",
       "description": "แต่ละแชทบันทึกความคิดหรือแบบร่างที่แตกต่างกัน",
       "empty": "เลือกชั้นเรียนและแชทเพื่อเริ่มวางแผน",
@@ -195,7 +208,7 @@
       "className": "ชื่อชั้นเรียน",
       "grade": "ระดับชั้น",
       "students": "นักเรียน",
-      "studentsCount": "คน",
+      "studentsCount": "{{current}} คน",
       "notSet": "ยังไม่ได้ตั้ง",
       "empty": "เลือกชั้นเรียนเพื่อดูข้อมูล",
       "toggle": "สลับข้อมูลชั้นเรียน"
@@ -218,6 +231,91 @@
       "verifySave": "คุณต้องการบันทึกการตอบกลับของ AI นี้เป็นบทเรียนหรือไม่?",
       "lessonSaved": "บันทึกบทเรียนเรียบร้อยแล้ว",
       "lessonRemoved": "ลบบทเรียนเรียบร้อยแล้ว"
+    }
+  },
+  "lessonDetails": {
+    "minutes": "นาที",
+    "min": "นาที",
+    "notFound": "ไม่พบบทเรียน"
+  },
+  "myClass": {
+    "studentsTitle": "นักเรียน",
+    "searchStudentsPlaceholder": "ค้นหานักเรียน...",
+    "lessonsTitle": "บทเรียน",
+    "upcoming": "กำลังจะมาถึง",
+    "editClass": "แก้ไขชั้นเรียน"
+  },
+  "studentForm": {
+    "placeholders": {
+      "name": "ป้อนชื่อนักเรียน",
+      "grade": "เช่น 7A",
+      "hobby": "เช่น หุ่นยนต์, หมากรุก...",
+      "notes": "เพิ่มบันทึกส่วนตัว...",
+      "searchConditions": "ค้นหาเงื่อนไข...",
+      "accommodations": "เลือกความช่วยเหลือ..."
+    },
+    "buttons": {
+      "reset": "รีเซ็ต",
+      "saveChanges": "บันทึกการเปลี่ยนแปลง",
+      "create": "สร้างนักเรียน"
+    },
+    "upload": "อัปโหลด",
+    "randomizeAvatar": "สร้างอวาตาร์แบบสุ่ม",
+    "labels": {
+      "fullName": "ชื่อ-สกุล",
+      "grade": "ระดับ / ชั้นเรียน",
+      "reading": "การอ่าน",
+      "writing": "การเขียน",
+      "listening": "การฟัง",
+      "speaking": "การพูด",
+      "interests": "ความสนใจ",
+      "notes": "บันทึก"
+    },
+    "proficiencyTitle": "ระดับความชำนาญ",
+    "accommodations": {
+      "title": "ความช่วยเหลือในการเรียน",
+      "noConditionFound": "ไม่พบเงื่อนไขใดๆ"
+    }
+  },
+  "addStudentCard": {
+    "title": "เพิ่มนักเรียน",
+    "cta": "คลิกเพื่อเพิ่ม"
+  },
+  "studentDrawer": {
+    "title": {
+      "add": "เพิ่มนักเรียนใหม่",
+      "edit": "แก้ไขข้อมูลนักเรียน"
+    },
+    "description": {
+      "add": "สร้างโปรไฟล์นักเรียนใหม่",
+      "edit": "อัปเดตข้อมูลโปรไฟล์"
+    }
+  },
+  "pagination": {
+    "pageOf": "หน้า {{current}} จาก {{total}}"
+  },
+  "addLessonCard": {
+    "title": "เพิ่มบทเรียน",
+    "cta": "คลิกเพื่อเพิ่ม"
+  },
+  "classForm": {
+    "titleEdit": "แก้ไขชั้นเรียน",
+    "titleCreate": "สร้างชั้นเรียนใหม่",
+    "descriptionEdit": "อัปเดตรายละเอียดของชั้นเรียนนี้",
+    "descriptionCreate": "ป้อนรายละเอียดด้านล่างเพื่อสร้างชั้นเรียนใหม่",
+    "labels": {
+      "name": "ชื่อชั้นเรียน",
+      "grade": "ระดับ / ชั้นเรียน",
+      "gradeOptional": "(ไม่บังคับ)"
+    },
+    "placeholders": {
+      "name": "เช่น Advanced English A",
+      "grade": "เช่น ป.5"
+    },
+    "buttons": {
+      "reset": "รีเซ็ต",
+      "saveChanges": "บันทึกการเปลี่ยนแปลง",
+      "createClass": "สร้างชั้นเรียน"
     }
   },
   "languageSwitcher": {

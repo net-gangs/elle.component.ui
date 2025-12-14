@@ -1,8 +1,9 @@
 import { CEFR_LEVEL_VALUES, SPECIAL_NEED_VALUES } from "@/types/classroom";
 import z from "zod";
+import i18n from "@/lib/i18n";
 
 export const studentSchema = z.object({
-  fullName: z.string().min(2, "Name is required"),
+  fullName: z.string().min(2, i18n.t("studentForm.validation.nameRequired")),
   grade: z.string(),
   hobby: z.string(),
   notes: z.string(),

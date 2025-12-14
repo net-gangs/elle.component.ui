@@ -40,7 +40,8 @@ const signupSchema = z.object({
 export default function Signup() {
   const { t } = useTranslation();
 
-  const { showPassword, togglePasswordVisibility, signupMutation } = useSignup();
+  const { showPassword, togglePasswordVisibility, signupMutation } =
+    useSignup();
   const { currentSlide, setApi, goToSlide } = useCarousel();
 
   const slides = [
@@ -81,7 +82,10 @@ export default function Signup() {
           alt="Nature Background"
           className="w-full h-full object-cover opacity-90 animate-ken-burns"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent" aria-hidden="true"></div>
+        <div
+          className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"
+          aria-hidden="true"
+        ></div>
       </div>
 
       <div className="absolute z-50 top-4 right-4 md:top-8 md:right-8">
@@ -261,7 +265,11 @@ export default function Signup() {
                               type="button"
                               onClick={togglePasswordVisibility}
                               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                              aria-label={showPassword ? t("signup.hidePassword") : t("signup.showPassword")}
+                              aria-label={
+                                showPassword
+                                  ? t("signup.hidePassword")
+                                  : t("signup.showPassword")
+                              }
                             >
                               {showPassword ? (
                                 <EyeOff size={20} aria-hidden="true" />
@@ -278,8 +286,8 @@ export default function Signup() {
                     }}
                   />
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     disabled={signupMutation.isPending}
                     className="w-full h-12 rounded-xl text-base font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
                     aria-busy={signupMutation.isPending}

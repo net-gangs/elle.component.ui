@@ -1,10 +1,13 @@
 import { Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface AddLessonCardProps {
   onClick?: () => void;
 }
 
 function AddLessonCard({ onClick }: AddLessonCardProps) {
+  const { t } = useTranslation();
+
   const handleClick = () => {
     console.log("Add lesson clicked");
     onClick?.();
@@ -21,13 +24,12 @@ function AddLessonCard({ onClick }: AddLessonCardProps) {
         </div>
       </div>
 
-
       <h3 className="w-full truncate text-sm font-semibold text-primary/80 transition-colors group-hover:text-primary">
-        Add Lesson
+        {t("addLessonCard.title")}
       </h3>
 
       <p className="mt-1 font-mono text-xs text-muted-foreground/50">
-        Click to add
+        {t("addLessonCard.cta")}
       </p>
     </button>
   );
