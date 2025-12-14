@@ -1,67 +1,34 @@
-<<<<<<< HEAD:src/pages/class/my-class-page.tsx
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Pencil, Search, Filter, LayoutGrid, List, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { LessonDetailsSheet } from "@/components/ui/lesson-details-dialog";
 import { Pagination } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import { StudentCard } from "./components/student-card";
-import { LessonCard } from "./components/lesson-card";
-import { LessonGridCard } from "./components/lesson-grid-card";
-import { AddStudentCard } from "./components/add-student-card";
-import { ClassCard } from "./components/class-card";
-import { AddClassCard } from "./components/add-class-card";
-import { StudentDrawer } from "./components/student-drawer";
-import { ClassDialog, type ClassFormData } from "./components/class-dialog";
-import { LessonDetailsSheet } from "@/components/ui/lesson-details-dialog";
 import {
   useClassrooms,
   useCreateClassroom,
   useUpdateClassroom,
-} from "@/hooks/use-classrooms";
-import {
-  useStudents,
-  useCreateStudent,
-  useUpdateStudent,
-} from "@/hooks/use-students";
-import { useLessons } from "@/hooks/use-lessons";
-import { toast } from "sonner";
-import { useDebounce } from "@/hooks/use-debounce";
-import type { Classroom, Student, Lesson } from "@/types/classroom";
-import { type StudentFormData } from "./components/student-schema";
-=======
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { LessonDetailsSheet } from "@/components/ui/lesson-details-dialog";
-import { Pagination } from "@/components/ui/pagination";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useClassrooms, useCreateClassroom, useUpdateClassroom } from "@/hooks/@ella/use-classrooms";
-import { useDebounce } from "@/hooks/common/use-debounce";
+} from "@/hooks/@ella/use-classrooms";
 import { useLessons } from "@/hooks/@ella/use-lessons";
-import { useCreateStudent, useStudents, useUpdateStudent } from "@/hooks/@ella/use-students";
+import {
+  useCreateStudent,
+  useStudents,
+  useUpdateStudent,
+} from "@/hooks/@ella/use-students";
+import { useDebounce } from "@/hooks/common/use-debounce";
 import type { Classroom, Lesson, Student } from "@/types/classroom";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  Filter,
-  LayoutGrid,
-  List,
-  Pencil,
-  Search,
-  X,
-} from "lucide-react";
+import { Filter, LayoutGrid, List, Pencil, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AddClassCard } from "./components/add-class-card";
-import { AddLessonCard } from "./components/add-lesson-card";
 import { AddStudentCard } from "./components/add-student-card";
 import { ClassCard } from "./components/class-card";
 import { ClassDialog, type ClassFormData } from "./components/class-dialog";
 import { LessonCard } from "./components/lesson-card";
 import { LessonGridCard } from "./components/lesson-grid-card";
 import { StudentCard } from "./components/student-card";
-import { StudentDrawer, type StudentFormData } from "./components/student-drawer";
->>>>>>> 641e2e9 (fear: improve folder structure, improve sidebar):src/features/my-class/index.tsx
+import { StudentDrawer } from "./components/student-drawer";
+import { type StudentFormData } from "./components/student-schema";
 
 // Animation variants
 const containerVariants = {

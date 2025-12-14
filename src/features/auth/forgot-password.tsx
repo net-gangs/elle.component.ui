@@ -30,7 +30,7 @@ const forgotPasswordSchema = z.object({
 export default function ForgotPassword() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { emailSent, forgotPasswordMutation } = useForgotPassword();
+  const { emailSent, forgotPasswordMutation, setEmailSent } = useForgotPassword();
 
   const form = useForm({
     defaultValues: {

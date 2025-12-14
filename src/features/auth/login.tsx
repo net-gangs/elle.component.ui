@@ -35,6 +35,7 @@ import { useCarousel } from "@/hooks/common/use-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Fade from "embla-carousel-fade";
 import { LanguageSwitcher } from "./components/language-switcher";
+import { loginRoute } from "@/app/router";
 
 const loginSchema = z.object({
   email: z.email("login.validation.emailInvalid"),
@@ -44,6 +45,7 @@ const loginSchema = z.object({
 export default function Login() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const search = loginRoute.useSearch();
 
   const {
     showPassword,
@@ -53,7 +55,7 @@ export default function Login() {
     loginMutation,
     googleLoginMutation,
     performGoogleLogin,
-  } = useLogin();
+  } = useLogin(search.redirect);
 
   const { currentSlide, setApi, goToSlide } = useCarousel();
 

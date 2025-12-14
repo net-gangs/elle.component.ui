@@ -1,20 +1,7 @@
-import { useId, useCallback } from "react";
 import { useForm } from "@tanstack/react-form";
+import { useCallback, useId } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Check,
-  ChevronsUpDown,
-  Camera,
-  Dices,
-  Heart,
-  Languages,
-  Save,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 import {
   Command,
   CommandEmpty,
@@ -23,19 +10,32 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Spinner } from "../ui/spinner";
-import { useAvatarUpload } from "@/hooks/@ella/use-avatar-upload";
-import { ProficiencyPill } from "./proficiency-pill";
-import { CEFR_LEVEL_VALUES, SPECIAL_NEED_VALUES } from "@/types/classroom";
+import { Textarea } from "@/components/ui/textarea";
 import {
   studentSchema,
   type StudentFormData,
-} from "@/pages/class/components/student-schema";
+} from "@/features/my-class/components/student-schema";
+import { useAvatarUpload } from "@/hooks/@ella/use-avatar-upload";
+import { cn } from "@/lib/utils";
+import { CEFR_LEVEL_VALUES, SPECIAL_NEED_VALUES } from "@/types/classroom";
+import {
+  Camera,
+  Check,
+  ChevronsUpDown,
+  Dices,
+  Heart,
+  Languages,
+  Save,
+} from "lucide-react";
+import { Spinner } from "../ui/spinner";
+import { ProficiencyPill } from "./proficiency-pill";
 
 interface StudentFormProps {
   initialData?: StudentFormData;
@@ -58,30 +58,6 @@ function generateRandomAvatar(): string {
   ];
   const color = colors[Math.floor(Math.random() * colors.length)];
   return `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}&backgroundColor=${color}`;
-}
-
-// Proficiency Pill Component (mockup style)
-interface ProficiencyPillProps {
-  level: string;
-  isSelected: boolean;
-  onClick: () => void;
-}
-
-function ProficiencyPill({ level, isSelected, onClick }: ProficiencyPillProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "flex size-9 items-center justify-center rounded-full border text-xs font-medium transition-all",
-        isSelected
-          ? "border-primary bg-primary text-primary-foreground shadow-md"
-          : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary",
-      )}
-    >
-      {level}
-    </button>
-  );
 }
 
 const defaultFormValues: StudentFormData = {
