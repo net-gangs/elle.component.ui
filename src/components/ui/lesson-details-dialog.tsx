@@ -53,7 +53,10 @@ export function LessonDetailsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent size="xl" className="max-h-[90vh] overflow-y-auto scrollbar-hide">
+      <DialogContent
+        size="xl"
+        className="max-h-[90vh] overflow-y-auto scrollbar-hide"
+      >
         {isLoading ? (
           <LessonDetailsSkeleton />
         ) : lesson ? (
@@ -64,7 +67,7 @@ export function LessonDetailsDialog({
           />
         ) : (
           <div className="py-8 text-center text-muted-foreground">
-            {t("lessonDetails.notFound", "Lesson not found")}
+            {t("lessonDetails.notFound")}
           </div>
         )}
       </DialogContent>
@@ -98,67 +101,69 @@ export function LessonDetailsBody({
     <>
       {!suppressHeader && (
         <DialogHeader>
-        <div className="flex items-start gap-3">
-          <div
-            className={cn(
-              "flex size-12 shrink-0 items-center justify-center rounded-lg border-2",
-              lesson.generated
-                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                : "border-primary/20 bg-primary/10 text-primary"
-            )}
-          >
-            {lesson.generated ? (
-              <Sparkles className="size-6" />
-            ) : (
-              <BookOpen className="size-6" />
-            )}
-          </div>
-          <div className="flex-1">
-            <DialogTitle className="text-left text-xl">
-              {lesson.title}
-            </DialogTitle>
-            {lesson.topic && (
-              <DialogDescription className="mt-1 text-left">
-                {lesson.topic}
-              </DialogDescription>
-            )}
-          </div>
-        </div>
-
-        {/* Classroom info */}
-        {displayedClassName && (
-          <div className="mt-2 flex items-center gap-2">
-            <Users className="size-4 text-muted-foreground" />
-            <div className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">{displayedClassName}</span>
-            </div>
-            {/* no navigation button - dialog is presentational */}
-          </div>
-        )}
-
-        {/* Status Badge */}
-        {lesson.status && (
-          <div className="flex justify-start">
-            <span
+          <div className="flex items-start gap-3">
+            <div
               className={cn(
-                "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium capitalize",
-                lesson.status === "scheduled" &&
-                  "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-                lesson.status === "completed" &&
-                  "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-                lesson.status === "in_progress" &&
-                  "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-                lesson.status === "draft" &&
-                  "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400",
-                lesson.status === "cancelled" &&
-                  "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                "flex size-12 shrink-0 items-center justify-center rounded-lg border-2",
+                lesson.generated
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "border-primary/20 bg-primary/10 text-primary",
               )}
             >
-              {lesson.status.replace("_", " ")}
-            </span>
+              {lesson.generated ? (
+                <Sparkles className="size-6" />
+              ) : (
+                <BookOpen className="size-6" />
+              )}
+            </div>
+            <div className="flex-1">
+              <DialogTitle className="text-left text-xl">
+                {lesson.title}
+              </DialogTitle>
+              {lesson.topic && (
+                <DialogDescription className="mt-1 text-left">
+                  {lesson.topic}
+                </DialogDescription>
+              )}
+            </div>
           </div>
-        )}
-      </DialogHeader>
+
+          {/* Classroom info */}
+          {displayedClassName && (
+            <div className="mt-2 flex items-center gap-2">
+              <Users className="size-4 text-muted-foreground" />
+              <div className="text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">
+                  {displayedClassName}
+                </span>
+              </div>
+              {/* no navigation button - dialog is presentational */}
+            </div>
+          )}
+
+          {/* Status Badge */}
+          {lesson.status && (
+            <div className="flex justify-start">
+              <span
+                className={cn(
+                  "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium capitalize",
+                  lesson.status === "scheduled" &&
+                    "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+                  lesson.status === "completed" &&
+                    "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+                  lesson.status === "in_progress" &&
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+                  lesson.status === "draft" &&
+                    "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400",
+                  lesson.status === "cancelled" &&
+                    "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+                )}
+              >
+                {t(`lessons.status.${lesson.status}`)}
+              </span>
+            </div>
+          )}
+        </DialogHeader>
       )}
 
       <div className="space-y-6">
@@ -167,28 +172,28 @@ export function LessonDetailsBody({
           {scheduledDate && (
             <MetadataItem
               icon={<Calendar className="size-4" />}
-              label={t("lessonDetails.scheduledOn", "Scheduled On")}
+              label={t("lessonDetails.scheduledOn")}
               value={format(scheduledDate, "PPP")}
             />
           )}
           {lesson.durationMinutes && (
             <MetadataItem
               icon={<Clock className="size-4" />}
-              label={t("lessonDetails.duration", "Duration")}
-              value={`${lesson.durationMinutes} ${t("lessonDetails.minutes", "minutes")}`}
+              label={t("lessonDetails.duration")}
+              value={`${lesson.durationMinutes} ${t("lessonDetails.minutes")}`}
             />
           )}
           {lesson.gradeYear && (
             <MetadataItem
               icon={<GraduationCap className="size-4" />}
-              label={t("lessonDetails.grade", "Grade")}
+              label={t("lessonDetails.grade")}
               value={lesson.gradeYear}
             />
           )}
           {lesson.targetLanguage && (
             <MetadataItem
               icon={<BookOpen className="size-4" />}
-              label={t("lessonDetails.targetLanguage", "Target Language")}
+              label={t("lessonDetails.targetLanguage")}
               value={lesson.targetLanguage}
             />
           )}
@@ -202,30 +207,30 @@ export function LessonDetailsBody({
           <div className="space-y-2">
             <h3 className="flex items-center gap-2 font-semibold text-sm">
               <Target className="size-4" />
-              {t("lessonDetails.cefrLevels", "CEFR Levels")}
+              {t("lessonDetails.cefrLevels")}
             </h3>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {lesson.cefrReading && (
                 <CefrBadge
-                  label={t("lessonDetails.reading", "Reading")}
+                  label={t("lessonDetails.reading")}
                   level={lesson.cefrReading}
                 />
               )}
               {lesson.cefrWriting && (
                 <CefrBadge
-                  label={t("lessonDetails.writing", "Writing")}
+                  label={t("lessonDetails.writing")}
                   level={lesson.cefrWriting}
                 />
               )}
               {lesson.cefrSpeaking && (
                 <CefrBadge
-                  label={t("lessonDetails.speaking", "Speaking")}
+                  label={t("lessonDetails.speaking")}
                   level={lesson.cefrSpeaking}
                 />
               )}
               {lesson.cefrListening && (
                 <CefrBadge
-                  label={t("lessonDetails.listening", "Listening")}
+                  label={t("lessonDetails.listening")}
                   level={lesson.cefrListening}
                 />
               )}
@@ -236,7 +241,7 @@ export function LessonDetailsBody({
         {/* Learning Objectives */}
         {lesson.learningObjectives && (
           <ContentSection
-            title={t("lessonDetails.learningObjectives", "Learning Objectives")}
+            title={t("lessonDetails.learningObjectives")}
             content={lesson.learningObjectives}
           />
         )}
@@ -244,7 +249,7 @@ export function LessonDetailsBody({
         {/* Teaching Activities */}
         {lesson.teachingActivities && (
           <ContentSection
-            title={t("lessonDetails.teachingActivities", "Teaching Activities")}
+            title={t("lessonDetails.teachingActivities")}
             content={lesson.teachingActivities}
           />
         )}
@@ -253,7 +258,7 @@ export function LessonDetailsBody({
         {showContent && lesson.contentMd && (
           <div className="space-y-2">
             <h3 className="font-semibold text-sm">
-              {t("lessonDetails.lessonContent", "Lesson Content")}
+              {t("lessonDetails.lessonContent")}
             </h3>
             <div className="rounded-lg border bg-muted/50 p-4">
               <Markdown
@@ -264,10 +269,7 @@ export function LessonDetailsBody({
             {lesson.generated && (
               <p className="flex items-center gap-2 text-xs text-muted-foreground italic">
                 <Sparkles className="size-3" />
-                {t(
-                  "lessonDetails.aiGenerated",
-                  "This content was generated by AI"
-                )}
+                {t("lessonDetails.aiGenerated")}
               </p>
             )}
           </div>
@@ -278,7 +280,7 @@ export function LessonDetailsBody({
           lesson.structuredContent.sections.length > 0 && (
             <div className="space-y-2">
               <h3 className="font-semibold text-sm">
-                {t("lessonDetails.lessonStructure", "Lesson Structure")}
+                {t("lessonDetails.lessonStructure")}
               </h3>
               <div className="space-y-2">
                 {lesson.structuredContent.sections.map((section, index) => (
@@ -293,7 +295,7 @@ export function LessonDetailsBody({
                       <div className="flex items-center justify-between gap-2">
                         <h4 className="font-medium text-sm">{section.title}</h4>
                         <span className="text-xs text-muted-foreground">
-                          {section.duration} {t("lessonDetails.min", "min")}
+                          {section.duration} {t("lessonDetails.min")}
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground">
@@ -310,7 +312,7 @@ export function LessonDetailsBody({
         {lesson.prompt && lesson.generated && (
           <details className="group">
             <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
-              {t("lessonDetails.viewPrompt", "View generation prompt")}
+              {t("lessonDetails.viewPrompt")}
             </summary>
             <div className="mt-2 rounded-lg border bg-muted/50 p-3 text-xs">
               {lesson.prompt}
@@ -321,12 +323,12 @@ export function LessonDetailsBody({
         {/* Timestamps */}
         <div className="flex flex-wrap gap-4 border-t pt-4 text-xs text-muted-foreground">
           <span>
-            {t("lessonDetails.created", "Created")}:{" "}
+            {t("lessonDetails.created")}:{" "}
             {format(new Date(lesson.createdAt), "PPp")}
           </span>
           {lesson.updatedAt !== lesson.createdAt && (
             <span>
-              {t("lessonDetails.updated", "Updated")}:{" "}
+              {t("lessonDetails.updated")}:{" "}
               {format(new Date(lesson.updatedAt), "PPp")}
             </span>
           )}
@@ -357,7 +359,10 @@ export function LessonDetailsSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="flex h-full w-full flex-col gap-0 overflow-y-auto p-0 sm:max-w-xl">
+      <SheetContent
+        side="right"
+        className="flex h-full w-full flex-col gap-0 overflow-y-auto p-0 sm:max-w-xl"
+      >
         <SheetHeader className="sticky top-0 z-10 flex-row items-center justify-between gap-3 border-b bg-background/80 p-6 backdrop-blur-sm">
           {lesson ? (
             <div className="flex items-center gap-3 w-full">
@@ -366,7 +371,7 @@ export function LessonDetailsSheet({
                   "flex size-12 shrink-0 items-center justify-center rounded-lg border-2",
                   lesson.generated
                     ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                    : "border-primary/20 bg-primary/10 text-primary"
+                    : "border-primary/20 bg-primary/10 text-primary",
                 )}
               >
                 {lesson.generated ? (
@@ -378,7 +383,9 @@ export function LessonDetailsSheet({
               <div className="flex-1">
                 <h3 className="text-lg font-bold">{lesson.title}</h3>
                 {lesson.topic && (
-                  <p className="text-xs text-muted-foreground mt-0.5">{lesson.topic}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {lesson.topic}
+                  </p>
                 )}
               </div>
               {displayedClassName && (
@@ -386,7 +393,12 @@ export function LessonDetailsSheet({
                   {displayedClassName}
                 </span>
               )}
-              <Button variant="ghost" size="icon" className="size-8" onClick={() => onOpenChange(false)}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-8"
+                onClick={() => onOpenChange(false)}
+              >
                 <XIcon className="size-4" />
               </Button>
             </div>
@@ -396,9 +408,16 @@ export function LessonDetailsSheet({
           {isLoading ? (
             <LessonDetailsSkeleton />
           ) : lesson ? (
-            <LessonDetailsBody lesson={lesson} showContent={showContent} classroomName={classroomName ?? undefined} suppressHeader={true} />
+            <LessonDetailsBody
+              lesson={lesson}
+              showContent={showContent}
+              classroomName={classroomName ?? undefined}
+              suppressHeader={true}
+            />
           ) : (
-            <div className="py-8 text-center text-muted-foreground">{t("lessonDetails.notFound", "Lesson not found")}</div>
+            <div className="py-8 text-center text-muted-foreground">
+              {t("lessonDetails.notFound")}
+            </div>
           )}
         </div>
       </SheetContent>
@@ -435,7 +454,13 @@ function CefrBadge({ label, level }: { label: string; level: string }) {
   );
 }
 
-function ContentSection({ title, content }: { title: string; content: string }) {
+function ContentSection({
+  title,
+  content,
+}: {
+  title: string;
+  content: string;
+}) {
   return (
     <div className="space-y-2">
       <h3 className="font-semibold text-sm">{title}</h3>

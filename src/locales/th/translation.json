@@ -201,7 +201,12 @@
       "assessmentTypeLabel": "ประเภทการประเมิน",
       "assessmentTypePlaceholder": "เช่น แบบทดสอบ, ข้อสอบเขียน, การนำเสนอ",
       "pin": "ปักหมุดบริบท",
-      "unpin": "เลิกปักหมุดบริบท"
+      "unpin": "เลิกปักหมุดบริบท",
+      "validation": {
+        "titleRequired": "กรุณาระบุหัวข้อสนทนา",
+        "topicRequired": "กรุณาระบุหัวข้อบทเรียน",
+        "durationMin": "ระยะเวลาต้องไม่ต่ำกว่า 1 นาที"
+      }
     },
     "snapshot": {
       "title": "ข้อมูลชั้นเรียน",
@@ -233,10 +238,37 @@
       "lessonRemoved": "ลบบทเรียนเรียบร้อยแล้ว"
     }
   },
+  "lessons": {
+    "status": {
+      "draft": "แบบร่าง",
+      "scheduled": "กำหนดเวลาแล้ว",
+      "in_progress": "กำลังดำเนินการ",
+      "completed": "เสร็จสิ้น",
+      "cancelled": "ยกเลิก"
+    }
+  },
   "lessonDetails": {
+    "notFound": "ไม่พบการสอน",
+    "scheduledOn": "กำหนดการ",
+    "duration": "ระยะเวลา",
     "minutes": "นาที",
+    "grade": "ระดับชั้น",
+    "noGrade": "ไม่ระบุระดับชั้น",
+    "targetLanguage": "ภาษาเป้าหมาย",
+    "cefrLevels": "ระดับ CEFR",
+    "reading": "การอ่าน",
+    "writing": "การเขียน",
+    "speaking": "การพูด",
+    "listening": "การฟัง",
+    "learningObjectives": "วัตถุประสงค์การเรียนรู้",
+    "teachingActivities": "กิจกรรมการสอน",
+    "lessonContent": "เนื้อหาบทเรียน",
+    "aiGenerated": "เนื้อหานี้สร้างโดย AI",
+    "lessonStructure": "โครงสร้างบทเรียน",
     "min": "นาที",
-    "notFound": "ไม่พบบทเรียน"
+    "viewPrompt": "ดูคำสั่งสร้าง (prompt)",
+    "created": "สร้างเมื่อ",
+    "updated": "อัปเดตเมื่อ"
   },
   "myClass": {
     "studentsTitle": "นักเรียน",

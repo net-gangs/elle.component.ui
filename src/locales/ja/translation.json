@@ -201,7 +201,12 @@
       "assessmentTypeLabel": "評価タイプ",
       "assessmentTypePlaceholder": "例: クイズ、筆記テスト、口頭発表",
       "pin": "コンテキストをピン留め",
-      "unpin": "コンテキストのピン留めを解除"
+      "unpin": "コンテキストのピン留めを解除",
+      "validation": {
+        "titleRequired": "タイトルを入力してください",
+        "topicRequired": "トピックを入力してください",
+        "durationMin": "所要時間は1分以上に設定してください"
+      }
     },
     "snapshot": {
       "title": "クラス情報",
@@ -233,10 +238,37 @@
       "lessonRemoved": "レッスンを削除しました"
     }
   },
+  "lessons": {
+    "status": {
+      "draft": "下書き",
+      "scheduled": "予定済み",
+      "in_progress": "進行中",
+      "completed": "完了",
+      "cancelled": "キャンセル"
+    }
+  },
   "lessonDetails": {
+    "notFound": "レッスンが見つかりません",
+    "scheduledOn": "予定日",
+    "duration": "所要時間",
     "minutes": "分",
+    "grade": "学年",
+    "noGrade": "学年なし",
+    "targetLanguage": "ターゲット言語",
+    "cefrLevels": "CEFRレベル",
+    "reading": "リーディング",
+    "writing": "ライティング",
+    "speaking": "スピーキング",
+    "listening": "リスニング",
+    "learningObjectives": "学習目標",
+    "teachingActivities": "指導活動",
+    "lessonContent": "レッスン内容",
+    "aiGenerated": "このコンテンツはAIによって生成されました",
+    "lessonStructure": "レッスン構成",
     "min": "分",
-    "notFound": "授業が見つかりません"
+    "viewPrompt": "生成プロンプトを表示",
+    "created": "作成日",
+    "updated": "更新日"
   },
   "classForm": {
     "titleEdit": "クラスを編集",

@@ -3,6 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 import type { Lesson, Student } from "@/types/classroom";
 
 interface LessonCardProps {
@@ -12,6 +13,7 @@ interface LessonCardProps {
 }
 
 function LessonCard({ lesson, participants = [], onClick }: LessonCardProps) {
+  const { t } = useTranslation();
   const scheduledDate = lesson.scheduledOn
     ? new Date(lesson.scheduledOn)
     : null;
@@ -20,11 +22,10 @@ function LessonCard({ lesson, participants = [], onClick }: LessonCardProps) {
     <div
       onClick={() => onClick?.(lesson)}
       className={cn(
-        "group flex cursor-pointer flex-col justify-between gap-4 rounded-[8px] border border-border bg-card p-4 shadow-sm transition-all hover:border-primary/50 hover:shadow-md md:flex-row md:items-center"
+        "group flex cursor-pointer flex-col justify-between gap-4 rounded-[8px] border border-border bg-card p-4 shadow-sm transition-all hover:border-primary/50 hover:shadow-md md:flex-row md:items-center",
       )}
     >
       <div className="flex items-center gap-4">
-
         {scheduledDate && (
           <div className="flex size-12 flex-col items-center justify-center rounded-full border border-border bg-secondary text-center leading-none">
             <span className="text-[10px] font-bold uppercase text-muted-foreground">
@@ -35,7 +36,6 @@ function LessonCard({ lesson, participants = [], onClick }: LessonCardProps) {
             </span>
           </div>
         )}
-
 
         <div>
           <h3 className="font-bold text-foreground transition-colors group-hover:text-primary">
@@ -67,30 +67,26 @@ function LessonCard({ lesson, participants = [], onClick }: LessonCardProps) {
                   lesson.status === "draft" &&
                     "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400",
                   lesson.status === "cancelled" &&
-                    "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                    "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
                 )}
               >
-                {lesson.status.replace("_", " ")}
+                {t(`lessons.status.${lesson.status}`)}
               </span>
             )}
           </div>
         </div>
       </div>
 
-
       <div className="flex items-center gap-3 md:mt-0">
         {participants.length > 0 && (
           <div className="flex -space-x-2">
             {participants.slice(0, 3).map((student) => (
-              <Avatar
-                key={student.id}
-                className="size-6 border-2 border-card"
-              >
+              <Avatar key={student.id} className="size-6 border-2 border-card">
                 <AvatarImage
                   src={
                     student.avatarUrl ||
                     `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(
-                      student.fullName
+                      student.fullName,
                     )}`
                   }
                   alt={student.fullName}

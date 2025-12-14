@@ -27,15 +27,18 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { authStore, authActions, selectUser } from "@/stores/auth-store";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const storeUser = useStore(authStore, selectUser);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleLogout = () => {
     authActions.logout();
+    queryClient.clear();
     navigate({ to: "/auth/login" });
   };
 
@@ -44,10 +47,11 @@ export function NavUser() {
   }
 
   const displayName = storeUser
-    ? (`${storeUser.firstName} ${storeUser.lastName}`.trim() || storeUser.email)
+    ? `${storeUser.firstName} ${storeUser.lastName}`.trim() || storeUser.email
     : "N/A";
   const initials = storeUser
-    ? `${storeUser.firstName?.[0] || ""}${storeUser.lastName?.[0] || ""}`.toUpperCase() || "U"
+    ? `${storeUser.firstName?.[0] || ""}${storeUser.lastName?.[0] || ""}`.toUpperCase() ||
+      "U"
     : "U";
   const avatarUrl = storeUser ? storeUser.photo?.path || "" : "N/A";
   const email = storeUser ? storeUser.email : "N/A";
@@ -96,22 +100,22 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <Sparkles />
                 {t("userMenu.upgrade")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <BadgeCheck />
                 {t("userMenu.account")}
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <CreditCard />
                 {t("userMenu.billing")}
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <Bell />
                 {t("userMenu.notifications")}
               </DropdownMenuItem>

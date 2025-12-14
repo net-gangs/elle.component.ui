@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import type { Lesson } from "@/types/classroom";
 
 interface LessonGridCardProps {
@@ -14,6 +15,7 @@ function LessonGridCard({
   isSelected = false,
   onClick,
 }: LessonGridCardProps) {
+  const { t } = useTranslation();
   const scheduledDate = lesson.scheduledOn
     ? new Date(lesson.scheduledOn)
     : null;
@@ -23,7 +25,7 @@ function LessonGridCard({
       onClick={() => onClick?.(lesson)}
       className={cn(
         "group relative flex cursor-pointer flex-col items-center rounded-[8px] border bg-card p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-md",
-        isSelected && "border-2 border-primary shadow-md"
+        isSelected && "border-2 border-primary shadow-md",
       )}
     >
       {/* Date badge or icon */}
@@ -56,10 +58,10 @@ function LessonGridCard({
               lesson.status === "draft" &&
                 "border-gray-200 bg-gray-100 text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400",
               lesson.status === "cancelled" &&
-                "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400"
+                "border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400",
             )}
           >
-            {lesson.status.replace("_", " ")}
+            {t(`lessons.status.${lesson.status}`)}
           </div>
         )}
       </div>
@@ -68,7 +70,7 @@ function LessonGridCard({
       <h3
         className={cn(
           "line-clamp-2 w-full text-sm",
-          isSelected ? "font-bold" : "font-semibold"
+          isSelected ? "font-bold" : "font-semibold",
         )}
       >
         {lesson.title}

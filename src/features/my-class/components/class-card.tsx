@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { CheckCircle, Pencil } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import type { Classroom } from "@/types/classroom";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 interface ClassCardProps {
@@ -16,13 +17,8 @@ export function ClassCard({
   studentCount,
   isSelected,
   onClick,
-  onEdit,
 }: ClassCardProps) {
-  const handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onEdit?.(classroom);
-  };
-
+  const { t } = useTranslation();
   return (
     <motion.button
       whileHover={{ scale: 1.02 }}
@@ -32,7 +28,7 @@ export function ClassCard({
         "group relative min-w-[140px] px-2.5 py-2 rounded-[8px] flex items-center gap-2.5 transition-all cursor-pointer border",
         isSelected
           ? "bg-primary text-primary-foreground border-primary shadow-md"
-          : "bg-card border-border text-muted-foreground hover:border-primary/50 hover:bg-primary/5"
+          : "bg-card border-border text-muted-foreground hover:border-primary/50 hover:bg-primary/5",
       )}
     >
       <div
@@ -40,7 +36,7 @@ export function ClassCard({
           "flex size-8 shrink-0 items-center justify-center rounded-[8px] text-xs font-bold",
           isSelected
             ? "bg-primary-foreground/20 text-primary-foreground"
-            : "bg-secondary text-secondary-foreground"
+            : "bg-secondary text-secondary-foreground",
         )}
       >
         {studentCount}
@@ -50,20 +46,18 @@ export function ClassCard({
         <h3
           className={cn(
             "truncate text-sm font-bold leading-tight",
-            isSelected ? "text-primary-foreground" : "text-foreground"
+            isSelected ? "text-primary-foreground" : "text-foreground",
           )}
         >
           {classroom.name}
         </h3>
         <p className="truncate text-[10px] opacity-80">
-          {classroom.grade || "No grade"}
+          {classroom.grade || t("lessonDetails.noGrade")}
         </p>
       </div>
 
-      {isSelected && (
-        <CheckCircle className="ml-auto size-5 shrink-0" />
-      )}
-      {onEdit && !isSelected && (
+      {isSelected && <CheckCircle className="ml-auto size-5 shrink-0" />}
+      {/* {onEdit && !isSelected && (
         <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
           <button
             type="button"
@@ -73,7 +67,7 @@ export function ClassCard({
             <Pencil className="size-3" />
           </button>
         </div>
-      )}
+      )} */}
     </motion.button>
   );
 }

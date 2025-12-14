@@ -3,18 +3,18 @@ import { Mic, Plus, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Spinner } from "@/components/ui/spinner";
+import { useTranslation } from "react-i18next";
 
 export default function ChatInputArea({
   onSendMessage,
   isSendingMessage,
   placeholder,
-  t,
 }: {
   onSendMessage: (text: string) => void;
   isSendingMessage: boolean;
   placeholder: string;
-  t: any;
 }) {
+  const { t } = useTranslation();
   const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -49,7 +49,7 @@ export default function ChatInputArea({
           <Button
             variant="ghost"
             size="icon"
-            disabled={isSendingMessage}
+            disabled
             className="size-9 text-muted-foreground"
           >
             <Plus className="size-5" />
@@ -57,7 +57,7 @@ export default function ChatInputArea({
           <Button
             variant="ghost"
             size="icon"
-            disabled={isSendingMessage}
+            disabled
             className="size-9 text-muted-foreground"
           >
             <Mic className="size-5" />
@@ -68,7 +68,7 @@ export default function ChatInputArea({
           onClick={handleSend}
           disabled={!input.trim() || isSendingMessage}
         >
-          {isSendingMessage ? <Spinner /> : <Send className="size-4 mr-2" />}
+          {isSendingMessage ? <Spinner /> : <Send />}
           {t("lessonPlanning.conversation.send")}
         </Button>
       </div>

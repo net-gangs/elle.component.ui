@@ -29,10 +29,13 @@ import { Markdown } from "@/components/ui/markdown";
 import { Spinner } from "@/components/ui/spinner";
 import { chatService } from "@/services/chat-service";
 import { lessonStore, type LessonChatMessage } from "@/stores/lesson-store";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import ChatInputArea from "./components/chat-input-area";
 import MessageBubble from "./components/message-bubble";
+import { useChat } from "@/hooks/@ella/use-chats";
+import { useChatMessages } from "@/hooks/@ella/use-messages";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function LessonPlanning() {
   const { t } = useTranslation();
@@ -58,48 +61,22 @@ export default function LessonPlanning() {
     [classes, selectedClassId],
   );
 
-  const selectedChat = useMemo(
-    () => selectedClass?.chats.find((chat) => chat.id === selectedChatId),
-    [selectedClass, selectedChatId],
+  const { data: selectedChat, isLoading: isChatLoading } = useChat(
+    selectedClassId,
+    selectedChatId,
   );
 
-  const messagesQueryKey = useMemo(
-    () => ["class", selectedClassId, "chat", selectedChatId, "messages"],
-    [selectedClassId, selectedChatId],
+  const { data: messages = [], isLoading: isLoadingMessages } = useChatMessages(
+    selectedClassId,
+    selectedChatId,
   );
-
-  const { data: messages = [], isLoading: isLoadingMessages } = useQuery({
-    queryKey: messagesQueryKey,
-    enabled: !!selectedClassId && !!selectedChatId,
-    queryFn: async () => {
-      const response = await chatService.getMessages(
-        selectedClassId!,
-        selectedChatId!,
-        { limit: 100 },
-      );
-
-      return response.data.map((msg) => ({
-        id: msg.id,
-        role:
-          msg.role === "user" ? ("teacher" as const) : ("assistant" as const),
-        content: msg.content,
-        timestamp: new Date(msg.createdAt).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        createdAt: msg.createdAt,
-        lessonId: msg.lessonId ?? null,
-        lessonTitle: msg.lessonTitle ?? null,
-        lessonCreatedAt: msg.lessonCreatedAt ?? null,
-      }));
-    },
-  });
 
   const saveToLessonMutation = useMutation({
     mutationFn: (messageId: string) =>
       chatService.saveToLesson(selectedClassId!, selectedChatId!, messageId),
     onSuccess: (result, messageId) => {
-      queryClient.setQueryData<LessonChatMessage[]>(messagesQueryKey, (old) =>
+      const key = queryKeys.chats.messages(selectedClassId, selectedChatId);
+      queryClient.setQueryData<LessonChatMessage[]>(key, (old) =>
         old?.map((msg) =>
           msg.id === messageId
             ? {
@@ -125,7 +102,8 @@ export default function LessonPlanning() {
         messageId,
       ),
     onSuccess: (_, messageId) => {
-      queryClient.setQueryData<LessonChatMessage[]>(messagesQueryKey, (old) =>
+      const key = queryKeys.chats.messages(selectedClassId, selectedChatId);
+      queryClient.setQueryData<LessonChatMessage[]>(key, (old) =>
         old?.map((msg) =>
           msg.id === messageId
             ? {
@@ -176,7 +154,8 @@ export default function LessonPlanning() {
         }),
       };
 
-      queryClient.setQueryData<LessonChatMessage[]>(messagesQueryKey, (old) => [
+      const key = queryKeys.chats.messages(selectedClassId, selectedChatId);
+      queryClient.setQueryData<LessonChatMessage[]>(key, (old) => [
         ...(old || []),
         userMessage,
       ]);
@@ -205,10 +184,11 @@ export default function LessonPlanning() {
             }),
           };
 
-          queryClient.setQueryData<LessonChatMessage[]>(
-            messagesQueryKey,
-            (old) => [...(old || []), assistantMsg],
-          );
+          const key = queryKeys.chats.messages(selectedClassId, selectedChatId);
+          queryClient.setQueryData<LessonChatMessage[]>(key, (old) => [
+            ...(old || []),
+            assistantMsg,
+          ]);
 
           setStreamingContent(null);
           setIsSendingMessage(false);
@@ -228,13 +208,7 @@ export default function LessonPlanning() {
         },
       );
     },
-    [
-      selectedClassId,
-      selectedChatId,
-      isSendingMessage,
-      messagesQueryKey,
-      queryClient,
-    ],
+    [selectedClassId, selectedChatId, isSendingMessage, queryClient],
   );
 
   const handleRequestSaveToLesson = (message: LessonChatMessage) => {
@@ -248,6 +222,14 @@ export default function LessonPlanning() {
   };
 
   // removed handleViewLesson - opening dialog from message bubble is disabled
+
+  if (isChatLoading) {
+    return (
+      <div className="flex h-full items-center justify-center bg-white">
+        <Spinner />
+      </div>
+    );
+  }
 
   if (!selectedChat) {
     return (
@@ -409,7 +391,6 @@ export default function LessonPlanning() {
               onSendMessage={handleSendMessage}
               isSendingMessage={isSendingMessage}
               placeholder={t("lessonPlanning.conversation.placeholder")}
-              t={t}
             />
           </div>
         </div>

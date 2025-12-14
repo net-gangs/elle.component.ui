@@ -1,8 +1,7 @@
 import { Outlet, useRouterState } from "@tanstack/react-router";
 import { AppSidebar } from "./sidebar/app-sidebar";
-import { LessonSidebar } from "./sidebar/lesson-sidebar";
+import { LessonSidebar } from "../../features/lesson-planning/components/sidebar/lesson-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "../ui/sonner";
 
 export function MainLayout() {
   return (
@@ -35,7 +34,6 @@ function MainLayoutContent() {
           </div>
         </SidebarProvider>
       </SidebarInset>
-      <Toaster />
     </>
   );
 }

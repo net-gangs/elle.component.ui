@@ -202,7 +202,12 @@
       "assessmentTypeLabel": "Loại đánh giá",
       "assessmentTypePlaceholder": "VD: Kiểm tra, Bài viết, Trình bày miệng",
       "pin": "Ghim ngữ cảnh",
-      "unpin": "Bỏ ghim ngữ cảnh"
+      "unpin": "Bỏ ghim ngữ cảnh",
+      "validation": {
+        "titleRequired": "Vui lòng nhập tiêu đề",
+        "topicRequired": "Vui lòng nhập chủ đề bài học",
+        "durationMin": "Thời lượng phải ít nhất 1 phút"
+      }
     },
     "snapshot": {
       "title": "Thông tin lớp học",
@@ -233,27 +238,37 @@
       "lessonRemoved": "Đã xóa bài học thành công"
     }
   },
+  "lessons": {
+    "status": {
+      "draft": "Nháp",
+      "scheduled": "Đã lên lịch",
+      "in_progress": "Đang diễn ra",
+      "completed": "Đã hoàn thành",
+      "cancelled": "Đã hủy"
+    }
+  },
   "lessonDetails": {
-    "minutes": "phút",
-    "min": "phút",
     "notFound": "Không tìm thấy bài học",
-    "scheduledOn": "Lên lịch",
+    "scheduledOn": "Lên lịch vào",
     "duration": "Thời lượng",
-    "lessonContent": "Nội dung bài học",
-    "aiGenerated": "Nội dung này được tạo bởi AI",
-    "created": "Tạo lúc",
-    "updated": "Cập nhật",
-    "grade": "Cấp",
+    "minutes": "phút",
+    "grade": "Khối lớp",
+    "noGrade": "Không có khối lớp",
     "targetLanguage": "Ngôn ngữ mục tiêu",
-    "learningObjectives": "Mục tiêu học tập",
-    "teachingActivities": "Hoạt động dạy học",
-    "lessonStructure": "Cấu trúc bài học",
-    "viewPrompt": "Xem lời nhắc tạo",
-    "cefrLevels": "Mức độ CEFR",
+    "cefrLevels": "Cấp độ CEFR",
     "reading": "Đọc",
     "writing": "Viết",
     "speaking": "Nói",
-    "listening": "Nghe"
+    "listening": "Nghe",
+    "learningObjectives": "Mục tiêu bài học",
+    "teachingActivities": "Hoạt động giảng dạy",
+    "lessonContent": "Nội dung bài học",
+    "aiGenerated": "Nội dung này được tạo bởi AI",
+    "lessonStructure": "Cấu trúc bài học",
+    "min": "phút",
+    "viewPrompt": "Xem gợi ý tạo bài (prompt)",
+    "created": "Đã tạo",
+    "updated": "Đã cập nhật"
   },
   "classForm": {
     "titleEdit": "Sửa lớp",

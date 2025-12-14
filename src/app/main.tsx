@@ -11,7 +11,7 @@ const ReactQueryDevtools = import.meta.env.DEV
   ? lazy(() =>
       import("@tanstack/react-query-devtools").then((module) => ({
         default: module.ReactQueryDevtools,
-      }))
+      })),
     )
   : null;
 
@@ -34,7 +34,7 @@ createRoot(document.getElementById("root")!).render(
         clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}
       >
         <App />
-        <Toaster position="top-right" richColors />
+        <Toaster richColors />
         {ReactQueryDevtools && (
           <Suspense fallback={null}>
             <ReactQueryDevtools initialIsOpen={false} />

@@ -1,4 +1,5 @@
-import { Store } from '@tanstack/react-store';
+import type { Classroom } from "@/types";
+import { Store } from "@tanstack/react-store";
 
 export interface LessonChatMessage {
   id: string;
@@ -61,14 +62,18 @@ export const lessonStore = new Store<LessonState>({
   isLoadingChats: false,
 });
 
-const dateOrNow = (value?: string) => (value ? new Date(value).getTime() : Date.now());
+const dateOrNow = (value?: string) =>
+  value ? new Date(value).getTime() : Date.now();
 
 const sortChats = (chats: LessonChat[]) =>
   [...chats].sort((a, b) => {
     const aPinned = !!a.pinned;
     const bPinned = !!b.pinned;
     if (aPinned !== bPinned) return aPinned ? -1 : 1;
-    return dateOrNow(b.updatedAt || b.createdAt) - dateOrNow(a.updatedAt || a.createdAt);
+    return (
+      dateOrNow(b.updatedAt || b.createdAt) -
+      dateOrNow(a.updatedAt || a.createdAt)
+    );
   });
 
 export const setSelectedClassId = (id: string | null) => {
@@ -164,7 +169,7 @@ export const updateClassChats = (classId: string, chats: LessonChat[]) => {
   lessonStore.setState((state) => ({
     ...state,
     classes: state.classes.map((c) =>
-      c.id === classId ? { ...c, chats: sortChats(chats) } : c
+      c.id === classId ? { ...c, chats: sortChats(chats) } : c,
     ),
   }));
 };
@@ -173,39 +178,61 @@ export const addChatToClass = (classId: string, chat: LessonChat) => {
   lessonStore.setState((state) => ({
     ...state,
     classes: state.classes.map((c) =>
-      c.id === classId ? { ...c, chats: sortChats([...c.chats, chat]) } : c
+      c.id === classId ? { ...c, chats: sortChats([...c.chats, chat]) } : c,
     ),
   }));
 };
 
-export const updateChatInClass = (classId: string, chatId: string, updates: Partial<LessonChat>) => {
+export const updateChatInClass = (
+  classId: string,
+  chatId: string,
+  updates: Partial<LessonChat>,
+) => {
   lessonStore.setState((state) => ({
     ...state,
     classes: state.classes.map((c) =>
       c.id === classId
         ? {
-          ...c,
-          chats: sortChats(
-            c.chats.map((chat) =>
-              chat.id === chatId ? { ...chat, ...updates } : chat
-            )
-          ),
-        }
-        : c
+            ...c,
+            chats: sortChats(
+              c.chats.map((chat) =>
+                chat.id === chatId ? { ...chat, ...updates } : chat,
+              ),
+            ),
+          }
+        : c,
     ),
   }));
 };
 
-export const updateClassInStore = (classId: string, updates: Partial<LessonClass>) => {
+export const updateClassInStore = (
+  classId: string,
+  updates: Partial<LessonClass>,
+) => {
   lessonStore.setState((state) => ({
     ...state,
-    classes: state.classes.map((c) => (c.id === classId ? { ...c, ...updates } : c)),
+    classes: state.classes.map((c) =>
+      c.id === classId ? { ...c, ...updates } : c,
+    ),
   }));
 };
 
-export const reorderClasses = (classOrder: LessonClass[]) => {
-  lessonStore.setState((state) => ({
-    ...state,
-    classes: classOrder.map((c) => ({ ...c, chats: sortChats(c.chats) })),
-  }));
+export const reorderClasses = (classOrder: Classroom[]) => {
+  lessonStore.setState((state) => {
+    const existingClassesMap = new Map(state.classes.map((c) => [c.id, c]));
+
+    const reorderedClasses = classOrder.map((incomingClass) => {
+      const existingClass = existingClassesMap.get(incomingClass.id);
+
+      return {
+        ...incomingClass,
+        chats: existingClass ? existingClass.chats : [],
+      };
+    });
+
+    return {
+      ...state,
+      classes: reorderedClasses,
+    };
+  });
 };
