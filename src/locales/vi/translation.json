@@ -14,7 +14,7 @@
   "sidebar": {
     "groups": {
       "preparation": "Chuẩn bị",
-      "tools": "Công cụ"
+      "tool": "Công cụ"
     },
     "items": {
       "myClass": "Lớp học của tôi",

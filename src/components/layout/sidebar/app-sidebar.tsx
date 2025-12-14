@@ -1,14 +1,4 @@
 import type { ComponentProps } from "react";
-import {
-  GalleryVerticalEnd,
-  GraduationCap,
-  NotebookPen,
-  ScanLine,
-  Lightbulb,
-  Trophy,
-  Newspaper,
-  Folder,
-} from "lucide-react";
 
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
@@ -23,81 +13,30 @@ import {
 import { NavMain } from "./nav-main";
 import { LanguageSwitcher } from "./language-switcher";
 
-// This is sample data.
-const data: any = {
-  teams: [
-    {
-      name: "ELLA AI",
-      logo: GalleryVerticalEnd,
-      planKey: "team.plan.enterprise",
-    },
-  ],
-  navigation: {
-    preparation: [
-      {
-        titleKey: "sidebar.items.myClass",
-        url: "/",
-        icon: GraduationCap,
-      },
-      {
-        titleKey: "sidebar.items.lessonPlanning",
-        url: "/lesson-planning",
-        icon: NotebookPen,
-      },
-      {
-        titleKey: "sidebar.items.scanYourFile",
-        url: "#",
-        icon: ScanLine,
-      },
-    ],
-    tools: [
-      {
-        titleKey: "sidebar.items.tipsAndTricks",
-        url: "#",
-        icon: Lightbulb,
-        isActive: true,
-      },
-      {
-        titleKey: "sidebar.items.rewards",
-        url: "#",
-        icon: Trophy,
-      },
-      {
-        titleKey: "sidebar.items.interestingArticles",
-        url: "#",
-        icon: Newspaper,
-      },
-      {
-        titleKey: "sidebar.items.filesLibrary",
-        url: "#",
-        icon: Folder,
-      },
-    ],
-  },
-};
+import navItems from "@/app/nav-items";
+import heading from "@/app/heading";
 
-export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="flex-row items-center justify-between">
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={heading.teams} />
         <SidebarTrigger className="size-7" />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain
-          groupLabel="sidebar.groups.preparation"
-          items={data.navigation.preparation}
-        />
-        <NavMain
-          groupLabel="sidebar.groups.tools"
-          items={data.navigation.tools}
-        />
+        {navItems.map((group) => (
+          <NavMain
+            key={group.id}
+            groupLabel={group.title ? `sidebar.groups.${group.id}` : undefined}
+            items={group.children || []}
+          />
+        ))}
       </SidebarContent>
       <SidebarFooter>
         <LanguageSwitcher />
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
-}
+};

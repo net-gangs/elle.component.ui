@@ -1,21 +1,17 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useStore } from "@tanstack/react-store";
 import {
   ChevronDown,
   ChevronUp,
+  ClipboardCheck,
   Clock,
   GraduationCap,
   Save,
   Sparkles,
-  ClipboardCheck,
 } from "lucide-react";
-import { useStore } from "@tanstack/react-store";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
-import { lessonStore, type LessonChatMessage } from "@/stores/lesson-store";
-import { chatService } from "@/services/chat-service";
-import { Markdown } from "@/components/ui/markdown";
-import { toast } from "sonner";
 import {
   Collapsible,
   CollapsibleContent,
@@ -29,10 +25,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Markdown } from "@/components/ui/markdown";
+import { Spinner } from "@/components/ui/spinner";
+import { chatService } from "@/services/chat-service";
+import { lessonStore, type LessonChatMessage } from "@/stores/lesson-store";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import ChatInputArea from "./components/chat-input-area";
 import MessageBubble from "./components/message-bubble";
-import { Spinner } from "@/components/ui/spinner";
 
 export default function LessonPlanning() {
   const { t } = useTranslation();
