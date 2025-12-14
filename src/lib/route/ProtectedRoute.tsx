@@ -15,7 +15,10 @@ type Props = {
   allowedRoles?: string[];
 };
 
-const ProtectedRoute = ({ allowedRoles, children }: PropsWithChildren<Props>) => {
+const ProtectedRoute = ({
+  allowedRoles,
+  children,
+}: PropsWithChildren<Props>) => {
   const isAuthenticated = useStore(authStore, selectIsAuthenticated);
   const user = useStore(authStore, selectUser);
   const token = useStore(authStore, selectToken);
@@ -27,8 +30,7 @@ const ProtectedRoute = ({ allowedRoles, children }: PropsWithChildren<Props>) =>
     const verifyAuth = async () => {
       const currentPath = window.location.pathname;
 
-  
-      if (isAuthenticated && currentPath === "/login") {
+      if (isAuthenticated && currentPath === "/auth/login") {
         navigate({ to: "/" });
         return;
       }
@@ -41,14 +43,13 @@ const ProtectedRoute = ({ allowedRoles, children }: PropsWithChildren<Props>) =>
           setIsChecking(false);
           return;
         } catch {
-         
           authActions.logout();
-          navigate({ to: "/login" });
+          navigate({ to: "/auth/login" });
           return;
         }
       }
       if (!isAuthenticated && !token) {
-        navigate({ to: "/login" });
+        navigate({ to: "/auth/login" });
         return;
       }
 

@@ -75,7 +75,7 @@ apiClient.interceptors.response.use(
 
       if (!refreshToken) {
         authActions.logout();
-        window.location.href = "/login";
+        window.location.href = "/auth/login";
         return Promise.reject(error);
       }
 
@@ -106,7 +106,7 @@ apiClient.interceptors.response.use(
         toast.error("Session expired", {
           description: "Please login again",
         });
-        window.location.href = "/login";
+        window.location.href = "/auth/login";
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
@@ -133,6 +133,7 @@ apiClient.interceptors.response.use(
         description: i18n.t("errors.accessDeniedDesc"),
       });
     } else if (error.response?.status === 404) {
+      console.log(translatedMessage)
       toast.error(i18n.t("errors.notFound"), {
         description: translatedMessage,
       });

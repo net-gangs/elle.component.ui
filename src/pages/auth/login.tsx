@@ -383,11 +383,7 @@ export default function Login() {
                       </Label>
                     </div>
                     <a
-                      href="/forgot-password"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        navigate({ to: "/forgot-password" });
-                      }}
+                      href="/auth/forgot-password"
                       className="text-sm font-medium text-foreground hover:text-primary hover:underline transition-colors"
                     >
                       {t("login.forgotPassword")}
@@ -486,11 +482,7 @@ export default function Login() {
               <div className="text-center text-sm text-muted-foreground">
                 {t("login.newUser")}{" "}
                 <a
-                  href="/signup"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate({ to: "/signup" });
-                  }}
+                  href="/auth/signup"
                   className="font-bold text-foreground hover:text-primary hover:underline transition-colors"
                 >
                   {t("login.signUpLink")}

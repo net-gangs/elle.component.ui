@@ -44,16 +44,18 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
 
   const handleLogout = () => {
     authActions.logout();
-    navigate({ to: "/login" });
+    navigate({ to: "/auth/login" });
   };
 
   if (!storeUser && !fallbackUser) {
     return null;
   }
 
-  const fallbackDisplayName = fallbackUser?.name ?? fallbackUser?.email ?? "User";
+  const fallbackDisplayName =
+    fallbackUser?.name ?? fallbackUser?.email ?? "User";
   const fallbackInitials = fallbackUser?.name
-    ? fallbackUser.name.match(/\b\w/g)?.join("")?.slice(0, 2)?.toUpperCase() || "U"
+    ? fallbackUser.name.match(/\b\w/g)?.join("")?.slice(0, 2)?.toUpperCase() ||
+      "U"
     : fallbackDisplayName.slice(0, 2).toUpperCase() || "U";
   const fallbackAvatarUrl = fallbackUser?.avatar ?? "";
   const fallbackEmail = fallbackUser?.email ?? "";
@@ -62,7 +64,9 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
     ? `${storeUser.firstName} ${storeUser.lastName}`.trim() || storeUser.email
     : fallbackDisplayName;
   const initials = storeUser
-    ? `${storeUser.firstName?.[0] || ""}${storeUser.lastName?.[0] || ""}`.toUpperCase() || "U"
+    ? `${storeUser.firstName?.[0] || ""}${
+        storeUser.lastName?.[0] || ""
+      }`.toUpperCase() || "U"
     : fallbackInitials;
   const avatarUrl = storeUser ? storeUser.photo?.path || "" : fallbackAvatarUrl;
   const email = storeUser ? storeUser.email : fallbackEmail;
@@ -78,7 +82,9 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={avatarUrl} alt={displayName} />
-                <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {initials}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{displayName}</span>
@@ -97,7 +103,9 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={avatarUrl} alt={displayName} />
-                  <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{displayName}</span>

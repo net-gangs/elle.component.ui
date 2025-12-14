@@ -112,4 +112,9 @@ export const authService = {
     const response = await apiClient.get<never, ApiResponse<User>>("/auth/me");
     return response.data;
   },
+
+  confirmEmail: async (data: { hash: string }) => {
+    const response = await apiClient.post<never, ApiResponse<null>>("/auth/email/confirm", data);
+    return response.data;
+  },
 };

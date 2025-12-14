@@ -17,6 +17,9 @@ import Signup from "./pages/auth/signup";
 import ForgotPassword from "./pages/auth/forgot-password";
 import MyClassPage from "./pages/class/my-class-page";
 import NoPermissionPage from "./lib/route/NoPermissionPage";
+import PasswordChange from "./pages/auth/password-change";
+import z from "zod";
+import ConfirmEmailAction from "./pages/auth/confirm-email-action";
 
 interface RouterContext {
   auth: {
@@ -24,8 +27,63 @@ interface RouterContext {
   };
 }
 
+const hashSchema = z.object({
+  hash: z.string().optional(),
+});
+
 const rootRoute = createRootRouteWithContext<RouterContext>()({
   component: () => <Outlet />,
+});
+
+const layoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: "layout",
+  component: MainLayout,
+  beforeLoad: ({ context, location }) => {
+    if (!context.auth.isAuthenticated) {
+      throw redirect({
+        to: "/auth/login",
+        search: {
+          redirect: location.href,
+        },
+      });
+    }
+  },
+});
+
+const authLayout = createRoute({
+  getParentRoute: () => rootRoute,
+  id: "auth",
+  beforeLoad: ({ context }) => {
+    if (context.auth.isAuthenticated) {
+      throw redirect({ to: "/" });
+    }
+  },
+  component: () => <Outlet />,
+});
+
+export const passwordChangeRoute = createRoute({
+  getParentRoute: () => authLayout,
+  path: "/auth/password-change",
+  component: PasswordChange,
+  validateSearch: (search) => hashSchema.parse(search),
+  beforeLoad: ({ search }) => {
+    if (!search.hash) {
+      throw redirect({ to: "/auth/forgot-password" });
+    }
+  },
+});
+
+export const confirmEmailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/auth/confirm-email",
+  validateSearch: (search) => hashSchema.parse(search),
+  beforeLoad: ({ search }) => {
+    if (!search.hash) {
+      throw redirect({ to: "/" });
+    }
+  },
+  component: ConfirmEmailAction,
 });
 
 const loginRoute = createRoute({
@@ -37,20 +95,20 @@ const loginRoute = createRoute({
       throw redirect({ to: search.redirect });
     }
   },
-  getParentRoute: () => rootRoute,
-  path: "/login",
+  getParentRoute: () => authLayout,
+  path: "/auth/login",
   component: Login,
 });
 
 const signupRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/signup",
+  getParentRoute: () => authLayout,
+  path: "/auth/signup",
   component: Signup,
 });
 
 const forgotPasswordRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/forgot-password",
+  getParentRoute: () => authLayout,
+  path: "/auth/forgot-password",
   component: ForgotPassword,
 });
 
@@ -58,22 +116,6 @@ const noPermissionRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/no-permission",
   component: NoPermissionPage,
-});
-
-const layoutRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  id: "layout",
-  component: MainLayout,
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
-  },
 });
 
 const dashboardRoute = createRoute({
@@ -95,11 +137,15 @@ const myClassRoute = createRoute({
 });
 
 const routeTree = rootRoute.addChildren([
-  loginRoute,
-  signupRoute,
-  forgotPasswordRoute,
-  noPermissionRoute,
+  authLayout.addChildren([
+    loginRoute,
+    signupRoute,
+    forgotPasswordRoute,
+    passwordChangeRoute,
+  ]),
   layoutRoute.addChildren([dashboardRoute, lessonPlanningRoute, myClassRoute]),
+  confirmEmailRoute,
+  noPermissionRoute,
 ]);
 
 const router = createRouter({

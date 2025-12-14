@@ -8,7 +8,8 @@
     "save": "Lưu",
     "delete": "Xóa",
     "edit": "Sửa",
-    "loading": "Đang tải..."
+    "loading": "Đang tải...",
+    "backToLogin": "Quay lại Đăng nhập"
   },
   "sidebar": {
     "groups": {
@@ -110,7 +111,6 @@
     "title": "Quên mật khẩu?",
     "subtitle": "Đừng lo, chúng tôi sẽ gửi hướng dẫn đặt lại cho bạn.",
     "subtitleSent": "Chúng tôi đã gửi hướng dẫn đặt lại mật khẩu đến email của bạn.",
-    "backToLogin": "Quay lại Đăng nhập",
     "emailLabel": "Địa chỉ Email",
     "submit": "GỬI LIÊN KẾT ĐẶT LẠI",
     "sending": "Đang gửi...",
@@ -123,6 +123,29 @@
     "validation": {
       "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ"
     }
+  },
+  "passwordChange": {
+    "title": "Đặt mật khẩu mới",
+    "subtitle": "Mật khẩu mới phải khác với mật khẩu đã sử dụng trước đó.",
+    "newPassword": "Mật khẩu mới",
+    "newPasswordPlaceholder": "Nhập mật khẩu mới của bạn",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
+    "submit": "ĐẶT LẠI MẬT KHẨU",
+    "submitting": "Đang xử lý...",
+    "success": "Cập nhật mật khẩu thành công!",
+    "error": "Không thể đặt lại mật khẩu",
+    "invalidLink": "Liên kết không hợp lệ",
+    "validation": {
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+      "missingHash": "Liên kết đặt lại không hợp lệ",
+      "match": "Mật khẩu không khớp"
+    }
+  },
+  "confirmEmail": {
+    "verifying": "Đang xác thực email...",
+    "successTitle": "Xác thực email thành công!",
+    "successDesc": "Email của bạn đã được xác thực thành công."
   },
   "dashboard": {
     "placeholder": "Nội dung bảng điều khiển sẽ sớm có mặt."
@@ -213,6 +236,7 @@
     "needLoginViaProvider": {
       "google": "Email này đã liên kết với Google. Vui lòng đăng nhập bằng Google.",
       "facebook": "Email này đã liên kết với Facebook. Vui lòng đăng nhập bằng Facebook."
-    }
+    },
+    "invalidHash": "Liên kết không hợp lệ hoặc đã hết hạn."
   }
 }

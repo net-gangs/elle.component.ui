@@ -8,7 +8,8 @@
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "backToLogin": "Back to Login"
   },
   "sidebar": {
     "groups": {
@@ -110,7 +111,6 @@
     "title": "Forgot Password?",
     "subtitle": "No worries, we'll send you reset instructions.",
     "subtitleSent": "We've sent password reset instructions to your email.",
-    "backToLogin": "Back to Login",
     "emailLabel": "Email Address",
     "submit": "SEND RESET LINK",
     "sending": "Sending...",
@@ -123,6 +123,29 @@
     "validation": {
       "emailInvalid": "Please enter a valid email address"
     }
+  },
+  "passwordChange": {
+    "title": "Set New Password",
+    "subtitle": "Your new password must be different from previously used passwords.",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "submit": "RESET PASSWORD",
+    "submitting": "Resetting...",
+    "success": "Password updated successfully!",
+    "error": "Failed to reset password",
+    "invalidLink": "Invalid Link",
+    "validation": {
+      "passwordMin": "Password must be at least 6 characters",
+      "missingHash": "Invalid reset link",
+      "match": "Passwords do not match"
+    }
+  },
+  "confirmEmail": {
+    "verifying": "Verifying your email...",
+    "successTitle": "Email Verified!",
+    "successDesc": "Your email has been successfully verified."
   },
   "dashboard": {
     "placeholder": "Dashboard content coming soon."
@@ -213,6 +236,7 @@
     "needLoginViaProvider": {
       "google": "This email is linked to Google. Please log in with Google.",
       "facebook": "This email is linked to Facebook. Please log in with Facebook."
-    }
+    },
+    "invalidHash": "The link is invalid or has expired."
   }
 }
