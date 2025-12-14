@@ -56,7 +56,7 @@
       "google": "Sign in with Google"
     },
     "newUser": "New User?",
-    "signUpLink": "SIGN UP HERE",
+    "signUpLink": "Sign up here",
     "slides": {
       "slide1": {
         "title": "Building the <br/>Future...",
@@ -85,7 +85,7 @@
     "submit": "CREATE ACCOUNT",
     "loading": "Creating Account...",
     "existingUser": "Already have an account?",
-    "signInLink": "SIGN IN HERE",
+    "signInLink": "Sign in here",
     "successMessage": "Account created! Please check your email to verify your account.",
     "slides": {
       "slide1": {

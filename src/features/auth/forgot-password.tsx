@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/field";
 import { LanguageSwitcher } from "./components/language-switcher";
 import { useForgotPassword } from "@/hooks/auth/use-forgot-password";
+import { loginRoute } from "@/app/router";
 
 const forgotPasswordSchema = z.object({
   email: z.email("forgotPassword.validation.emailInvalid"),
@@ -30,7 +31,8 @@ const forgotPasswordSchema = z.object({
 export default function ForgotPassword() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { emailSent, forgotPasswordMutation, setEmailSent } = useForgotPassword();
+  const { emailSent, forgotPasswordMutation, setEmailSent } =
+    useForgotPassword();
 
   const form = useForm({
     defaultValues: {
@@ -53,7 +55,10 @@ export default function ForgotPassword() {
           alt="Nature Background"
           className="w-full h-full object-cover opacity-90 animate-ken-burns"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent" aria-hidden="true"></div>
+        <div
+          className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"
+          aria-hidden="true"
+        ></div>
       </div>
 
       <div className="absolute z-50 top-4 right-4 md:top-8 md:right-8">
@@ -70,7 +75,7 @@ export default function ForgotPassword() {
           <CardHeader className="text-center space-y-2">
             <Button
               variant="outline"
-              onClick={() => navigate({ to: "/auth/login" })}
+              onClick={() => navigate({ to: loginRoute.fullPath })}
               className="w-fit"
               aria-label={t("forgotPassword.backToLogin")}
             >
@@ -122,7 +127,9 @@ export default function ForgotPassword() {
                                 field.handleChange(e.target.value)
                               }
                               aria-invalid={isInvalid}
-                              aria-describedby={isInvalid ? `${field.name}-error` : undefined}
+                              aria-describedby={
+                                isInvalid ? `${field.name}-error` : undefined
+                              }
                             />
                             {isInvalid && (
                               <FieldError errors={field.state.meta.errors} />
@@ -152,7 +159,11 @@ export default function ForgotPassword() {
               </>
             ) : (
               <div className="space-y-6">
-                <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary" role="status" aria-live="polite">
+                <div
+                  className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary"
+                  role="status"
+                  aria-live="polite"
+                >
                   <p className="font-medium mb-1">
                     {t("forgotPassword.successBox.title")}
                   </p>

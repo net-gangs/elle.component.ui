@@ -24,7 +24,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { passwordChangeRoute } from "@/app/router";
+import { passwordChangeRoute, loginRoute } from "@/app/router";
 import { LanguageSwitcher } from "./components/language-switcher";
 
 const passwordChangeSchema = z
@@ -53,7 +53,7 @@ export default function PasswordChange() {
     },
     onSuccess: () => {
       toast.success(t("passwordChange.success"));
-      navigate({ to: "/auth/login" });
+      navigate({ to: loginRoute.fullPath });
     },
   });
 
@@ -104,7 +104,7 @@ export default function PasswordChange() {
           <CardHeader className="text-center">
             <Button
               variant="outline"
-              onClick={() => navigate({ to: "/auth/login" })}
+              onClick={() => navigate({ to: loginRoute.fullPath })}
               className="w-fit"
             >
               <ArrowLeft />
