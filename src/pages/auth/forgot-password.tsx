@@ -3,7 +3,7 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import * as z from "zod";
-import { ArrowLeft, MailCheck } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 import { authService } from "@/services/auth-service";
