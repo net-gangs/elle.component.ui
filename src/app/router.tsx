@@ -3,19 +3,22 @@ import {
     createRoute,
     createRouter,
     Outlet,
-    redirect
+    redirect,
+    lazyRouteComponent
 } from "@tanstack/react-router";
 
 import { MainLayout } from "../components/layout/main-layout";
-import ForgotPassword from "../features/_auth/forgot-password";
-import Signup from "../features/_auth/signup";
-import MyClassPage from "../features/my-class/index";
-import Dashboard from "../features/dashboard";
-import LessonPlanning from "../features/lesson-planning";
-import NoPermissionPage from "../lib/route/NoPermissionPage";
-import PasswordChange from "../features/_auth/password-change";
 import z from "zod";
-import ConfirmEmailAction from "../features/_auth/confirm-email-action";
+const PasswordChange = lazyRouteComponent(() => import("../features/auth/password-change"));
+const ConfirmEmailAction = lazyRouteComponent(() => import("../features/auth/confirm-email-action"));
+
+const Login = lazyRouteComponent(() => import("../features/auth/login"));
+const Signup = lazyRouteComponent(() => import("../features/auth/signup"));
+const ForgotPassword = lazyRouteComponent(() => import("../features/auth/forgot-password"));
+const Dashboard = lazyRouteComponent(() => import("../features/dashboard"));
+const LessonPlanning = lazyRouteComponent(() => import("../features/lesson-planning"));
+const MyClassPage = lazyRouteComponent(() => import("../features/my-class/index"));
+const NoPermissionPage = lazyRouteComponent(() => import("../lib/route/NoPermissionPage"));
 
 
 export interface RouterContext {

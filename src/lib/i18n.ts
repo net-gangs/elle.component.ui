@@ -3,9 +3,6 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 
 import enTranslation from "@/locales/en/translation.json";
-import jaTranslation from "@/locales/ja/translation.json";
-import thTranslation from "@/locales/th/translation.json";
-import viTranslation from "@/locales/vi/translation.json";
 
 export const LANGUAGE_OPTIONS: { code: string; labelKey: string }[] = [
   { code: "en", labelKey: "languageSwitcher.languages.en" },
@@ -14,15 +11,25 @@ export const LANGUAGE_OPTIONS: { code: string; labelKey: string }[] = [
   { code: "th", labelKey: "languageSwitcher.languages.th" },
 ];
 
+const loadTranslation = async (lang: string) => {
+  switch (lang) {
+    case "vi":
+      return import("@/locales/vi/translation.json");
+    case "ja":
+      return import("@/locales/ja/translation.json");
+    case "th":
+      return import("@/locales/th/translation.json");
+    default:
+      return null;
+  }
+};
+
 void i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
       en: { translation: enTranslation },
-      vi: { translation: viTranslation },
-      ja: { translation: jaTranslation },
-      th: { translation: thTranslation },
     },
     fallbackLng: "en",
     supportedLngs: ["en", "vi", "ja", "th"],
@@ -37,5 +44,14 @@ void i18n
       useSuspense: false,
     },
   });
+
+i18n.on("languageChanged", async (lng) => {
+  if (lng !== "en" && !i18n.hasResourceBundle(lng, "translation")) {
+    const translation = await loadTranslation(lng);
+    if (translation) {
+      i18n.addResourceBundle(lng, "translation", translation.default);
+    }
+  }
+});
 
 export default i18n;

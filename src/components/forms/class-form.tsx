@@ -102,11 +102,12 @@ export function ClassForm({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
+                      aria-describedby={isInvalid ? `${field.name}-error` : undefined}
                       placeholder="e.g. Advanced English A"
                       autoComplete="off"
                     />
                     {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
+                      <FieldError id={`${field.name}-error`} errors={field.state.meta.errors} />
                     )}
                   </Field>
                 );
@@ -134,11 +135,12 @@ export function ClassForm({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
+                      aria-describedby={isInvalid ? `${field.name}-error` : undefined}
                       placeholder="e.g. Grade 5"
                       autoComplete="off"
                     />
                     {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
+                      <FieldError id={`${field.name}-error`} errors={field.state.meta.errors} />
                     )}
                   </Field>
                 );
@@ -164,8 +166,9 @@ export function ClassForm({
             className="w-full"
             form="class-form"
             disabled={isSubmitting}
+            aria-busy={isSubmitting}
           >
-            {isSubmitting && <Spinner />}
+            {isSubmitting && <Spinner aria-hidden="true" />}
             {isEditMode ? "Save Changes" : "Create Class"}
           </Button>
         </div>
@@ -230,7 +233,7 @@ export function ClassDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-primary/10">
-            <BookOpen className="size-6 text-primary" />
+            <BookOpen className="size-6 text-primary" aria-hidden="true" />
           </div>
           <DialogTitle className="text-center">
             {isEditMode ? "Edit Class" : "Create New Class"}
@@ -272,12 +275,13 @@ export function ClassDialog({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
+                      aria-describedby={isInvalid ? `${field.name}-dialog-error` : undefined}
                       placeholder="e.g. Advanced English A"
                       autoComplete="off"
                       className="h-11 rounded-xl"
                     />
                     {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
+                      <FieldError id={`${field.name}-dialog-error`} errors={field.state.meta.errors} />
                     )}
                   </Field>
                 );
@@ -307,12 +311,13 @@ export function ClassDialog({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
+                      aria-describedby={isInvalid ? `${field.name}-dialog-error` : undefined}
                       placeholder="e.g. Grade 5"
                       autoComplete="off"
                       className="h-11 rounded-xl"
                     />
                     {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
+                      <FieldError id={`${field.name}-dialog-error`} errors={field.state.meta.errors} />
                     )}
                   </Field>
                 );
@@ -336,8 +341,9 @@ export function ClassDialog({
             form="class-dialog-form"
             className="flex-1 rounded-xl shadow-lg shadow-primary/25"
             disabled={isSubmitting}
+            aria-busy={isSubmitting}
           >
-            {isSubmitting ? <Spinner /> : <Save className="mr-2 size-4" />}
+            {isSubmitting ? <Spinner aria-hidden="true" /> : <Save className="mr-2 size-4" aria-hidden="true" />}
             {isEditMode ? "Save Changes" : "Create Class"}
           </Button>
         </DialogFooter>
