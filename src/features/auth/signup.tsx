@@ -1,23 +1,9 @@
-import { useState, useEffect } from "react";
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
-import * as z from "zod";
 import { Eye, EyeOff } from "lucide-react";
-import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import * as z from "zod";
 
-import { authService } from "@/services/auth-service";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import Fade from "embla-carousel-fade";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -27,40 +13,36 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { useSignup } from "@/hooks/auth/use-signup";
+import { useCarousel } from "@/hooks/common/use-carousel";
+import Autoplay from "embla-carousel-autoplay";
+import Fade from "embla-carousel-fade";
 import { LanguageSwitcher } from "./components/language-switcher";
 
 const signupSchema = z.object({
-  name: z.string().min(1, "signup.validation.nameRequired"),
+  name: z.string().min(2, "signup.validation.nameRequired"),
   email: z.email("signup.validation.emailInvalid"),
-  password: z.string().min(6, "signup.validation.passwordMin"),
+  password: z.string().min(6, "signup.validation.passwordTooShort"),
 });
 
-type SignupPayload = z.infer<typeof signupSchema>;
-
 export default function Signup() {
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [api, setApi] = useState<CarouselApi>();
+  const { showPassword, togglePasswordVisibility, signupMutation } = useSignup();
+  const { currentSlide, setApi, goToSlide } = useCarousel();
 
-  useEffect(() => {
-    if (!api) return;
-
-    api.on("select", () => {
-      setCurrentSlide(api.selectedScrollSnap());
-    });
-  }, [api]);
-
-  // Carousel Data
   const slides = [
     {
       title: t("signup.slides.slide1.title"),
@@ -76,25 +58,6 @@ export default function Signup() {
     },
   ];
 
-  const signupMutation = useMutation({
-    mutationFn: async (data: SignupPayload) => {
-      const nameParts = data.name.trim().split(" ");
-      const firstName = nameParts[0] || "";
-      const lastName = nameParts.slice(1).join(" ") || firstName;
-
-      return await authService.register({
-        email: data.email,
-        password: data.password,
-        firstName,
-        lastName,
-      });
-    },
-    onSuccess: () => {
-      toast.success(t("signup.successMessage"));
-      navigate({ to: "/auth/login" });
-    },
-  });
-
   const form = useForm({
     defaultValues: {
       name: "",
@@ -109,62 +72,8 @@ export default function Signup() {
     },
   });
 
-  // Carousel Logic
-  const changeSlide = (index: number) => {
-    if (index === currentSlide || isTransitioning) return;
-
-    setIsTransitioning(true);
-
-    setTimeout(() => {
-      setCurrentSlide(index);
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, 50);
-    }, 500);
-  };
-
-  const nextSlide = () => {
-    const nextIndex = (currentSlide + 1) % slides.length;
-    changeSlide(nextIndex);
-  };
-
-  useEffect(() => {
-    const interval = setInterval(nextSlide, 5000);
-    return () => clearInterval(interval);
-  }, [currentSlide]);
-
   return (
-    <div className="h-screen w-full relative overflow-hidden">
-      {/* Global Styles & Animations */}
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes kenBurns { 0% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes slideUpFade {
-          0% { opacity: 0; transform: translateY(30px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-slide-up {
-          animation: slideUpFade 1s ease-out forwards;
-          animation-delay: 0.5s;
-          opacity: 0;
-        }
-
-        .animate-ken-burns { animation: kenBurns 10s ease-out forwards; }
-        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
-        .animate-slide-in { animation: slideIn 0.6s ease-out forwards; }
-        
-        .slide-enter { animation: fadeIn 0.5s ease-out forwards; }
-        .slide-exit { animation: fadeOut 0.5s ease-out forwards; }
-
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-       
-      `}</style>
-
+    <div className="h-screen w-full relative overflow-hidden font-sans text-slate-900">
       {/* FULL SCREEN BACKGROUND */}
       <div className="absolute inset-0 z-0 bg-black">
         <img
@@ -172,7 +81,7 @@ export default function Signup() {
           alt="Nature Background"
           className="w-full h-full object-cover opacity-90 animate-ken-burns"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent" aria-hidden="true"></div>
       </div>
 
       <div className="absolute z-50 top-4 right-4 md:top-8 md:right-8">
@@ -233,13 +142,15 @@ export default function Signup() {
               {slides.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => api?.scrollTo(index)}
+                  type="button"
+                  onClick={() => goToSlide(index)}
                   className={`h-1 rounded-full transition-all duration-300 ${
                     currentSlide === index
                       ? "w-8 bg-primary opacity-100 shadow-[0_0_10px_rgba(255,255,255,0.5)]"
                       : "w-4 bg-primary/40 hover:bg-primary/60"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
+                  aria-current={currentSlide === index ? "true" : "false"}
                 />
               ))}
             </div>
@@ -344,16 +255,18 @@ export default function Signup() {
                               onChange={(e) =>
                                 field.handleChange(e.target.value)
                               }
+                              aria-invalid={isInvalid}
                             />
                             <button
                               type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                              onClick={togglePasswordVisibility}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              aria-label={showPassword ? t("signup.hidePassword") : t("signup.showPassword")}
                             >
                               {showPassword ? (
-                                <EyeOff size={20} />
+                                <EyeOff size={20} aria-hidden="true" />
                               ) : (
-                                <Eye size={20} />
+                                <Eye size={20} aria-hidden="true" />
                               )}
                             </button>
                           </div>
@@ -365,11 +278,16 @@ export default function Signup() {
                     }}
                   />
 
-                  <Button type="submit" disabled={signupMutation.isPending}>
+                  <Button 
+                    type="submit" 
+                    disabled={signupMutation.isPending}
+                    className="w-full h-12 rounded-xl text-base font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                    aria-busy={signupMutation.isPending}
+                  >
                     {signupMutation.isPending ? (
                       <>
-                        <Spinner />
-                        {t("signup.loading")}
+                        <Spinner aria-hidden="true" />
+                        <span>{t("signup.loading")}</span>
                       </>
                     ) : (
                       t("signup.submit")

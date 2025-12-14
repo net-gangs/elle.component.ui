@@ -24,7 +24,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { passwordChangeRoute } from "@/router";
+import { passwordChangeRoute } from "@/app/router";
 import { LanguageSwitcher } from "./components/language-switcher";
 
 const passwordChangeSchema = z

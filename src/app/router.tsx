@@ -1,23 +1,25 @@
-// src/router.tsx
 import {
-  createRootRouteWithContext,
-  createRoute,
-  createRouter,
-  Outlet,
-  redirect,
+    createRootRouteWithContext,
+    createRoute,
+    createRouter,
+    Outlet,
+    redirect,
+    lazyRouteComponent
 } from "@tanstack/react-router";
-import z from "zod";
 
-import { MainLayout } from "./components/layout/main-layout";
-import Dashboard from "./pages/dashboard";
-import LessonPlanning from "./pages/lesson-planning/lesson-planning";
-import Login from "./pages/auth/login";
-import Signup from "./pages/auth/signup";
-import ForgotPassword from "./pages/auth/forgot-password";
-import MyClassPage from "./pages/class/my-class-page";
-import NoPermissionPage from "./lib/route/NoPermissionPage";
-import PasswordChange from "./pages/auth/password-change";
-import ConfirmEmailAction from "./pages/auth/confirm-email-action";
+import { MainLayout } from "../components/layout/main-layout";
+import z from "zod";
+const PasswordChange = lazyRouteComponent(() => import("../features/auth/password-change"));
+const ConfirmEmailAction = lazyRouteComponent(() => import("../features/auth/confirm-email-action"));
+
+const Login = lazyRouteComponent(() => import("../features/auth/login"));
+const Signup = lazyRouteComponent(() => import("../features/auth/signup"));
+const ForgotPassword = lazyRouteComponent(() => import("../features/auth/forgot-password"));
+const Dashboard = lazyRouteComponent(() => import("../features/dashboard"));
+const LessonPlanning = lazyRouteComponent(() => import("../features/lesson-planning"));
+const MyClassPage = lazyRouteComponent(() => import("../features/my-class/index"));
+const NoPermissionPage = lazyRouteComponent(() => import("../lib/route/NoPermissionPage"));
+
 
 export interface RouterContext {
   auth: {
@@ -50,14 +52,11 @@ const layoutRoute = createRoute({
 });
 
 const authLayout = createRoute({
-  id: "auth",
-  validateSearch: (search) => ({
-    redirect: (search.redirect as string) || "/",
-  }),
   getParentRoute: () => rootRoute,
-  beforeLoad: ({ context, search }) => {
+  id: "auth",
+  beforeLoad: ({ context }) => {
     if (context.auth.isAuthenticated) {
-      throw redirect({ to: search.redirect });
+      throw redirect({ to: "/" });
     }
   },
   component: () => <Outlet />,
@@ -137,17 +136,17 @@ const myClassRoute = createRoute({
   component: MyClassPage,
 });
 
-const routeTree = rootRoute.addChildren([
+    const routeTree = rootRoute.addChildren([
   authLayout.addChildren([
-    loginRoute,
-    signupRoute,
-    forgotPasswordRoute,
-    passwordChangeRoute,
+        loginRoute,
+        signupRoute,
+        forgotPasswordRoute,
+        passwordChangeRoute,
   ]),
-  layoutRoute.addChildren([dashboardRoute, lessonPlanningRoute, myClassRoute]),
+      layoutRoute.addChildren([dashboardRoute, lessonPlanningRoute, myClassRoute]),
   confirmEmailRoute,
   noPermissionRoute,
-]);
+    ]);
 
 export const router = createRouter({
   routeTree,

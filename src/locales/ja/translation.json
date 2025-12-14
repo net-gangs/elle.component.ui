@@ -14,7 +14,7 @@
   "sidebar": {
     "groups": {
       "preparation": "準備",
-      "tools": "ツール"
+      "tool": "ツール"
     },
     "items": {
       "myClass": "マイクラス",

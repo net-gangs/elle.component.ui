@@ -1,69 +1,63 @@
-import { useState, useEffect } from "react";
-import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
-import * as z from "zod";
-import { Eye, EyeOff } from "lucide-react";
-import { useGoogleLogin } from "@react-oauth/google";
 import { Spinner } from "@/components/ui/spinner";
+import { useForm } from "@tanstack/react-form";
+import { useNavigate } from "@tanstack/react-router";
+import { Eye, EyeOff } from "lucide-react";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import * as z from "zod";
 
-import { authService } from "@/services/auth-service";
-import { authActions } from "@/stores/auth-store";
-import type { LoginResponseDto } from "@/types/auth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "@/components/ui/carousel";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { useLogin } from "@/hooks/auth/use-login";
+import { useCarousel } from "@/hooks/common/use-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Fade from "embla-carousel-fade";
-import { useTranslation } from "react-i18next";
-import { Separator } from "@/components/ui/separator";
 import { LanguageSwitcher } from "./components/language-switcher";
-import { loginRoute } from "@/router";
+import { loginRoute } from "@/app/router";
 
 const loginSchema = z.object({
   email: z.email("login.validation.emailInvalid"),
   password: z.string().min(1, "login.validation.passwordRequired"),
 });
 
-type LoginPayload = z.infer<typeof loginSchema>;
-
 export default function Login() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const search = loginRoute.useSearch();
-  const navigate = loginRoute.useNavigate();
 
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [api, setApi] = useState<CarouselApi>();
+  const {
+    showPassword,
+    rememberMe,
+    togglePasswordVisibility,
+    toggleRememberMe,
+    loginMutation,
+    googleLoginMutation,
+    performGoogleLogin,
+  } = useLogin(search.redirect);
 
-  useEffect(() => {
-    if (!api) return;
-
-    api.on("select", () => {
-      setCurrentSlide(api.selectedScrollSnap());
-    });
-  }, [api]);
+  const { currentSlide, setApi, goToSlide } = useCarousel();
 
   // Carousel Data
   const slides = [
@@ -81,46 +75,6 @@ export default function Login() {
     },
   ];
 
-  const loginMutation = useMutation({
-    mutationFn: async (data: LoginPayload) => {
-      return await authService.login(data);
-    },
-    onSuccess: (response: LoginResponseDto) => {
-      authActions.login(response);
-      navigate({ to: search.redirect });
-    },
-  });
-
-  const googleLoginMutation = useMutation({
-    mutationFn: async (code: string) => {
-      return await authService.googleLogin({ code });
-    },
-    onSuccess: (response: LoginResponseDto) => {
-      authActions.login(response);
-      navigate({ to: search.redirect });
-    },
-  });
-
-  const performGoogleLogin = useGoogleLogin({
-    flow: "auth-code",
-    onSuccess: (codeResponse) => {
-      googleLoginMutation.mutate(codeResponse.code);
-    },
-  });
-
-  // const facebookLoginMutation = useMutation({
-  //   mutationFn: async (accessToken: string) => {
-  //     return await authService.facebookLogin({ accessToken });
-  //   },
-  //   onSuccess: (response: LoginResponseDto) => {
-  //     authActions.login(response);
-  //     navigate({ to: "/" });
-  //   },
-  //   onError: (error: any) => {
-  //     toast.error(error?.response?.data?.message || "Facebook login failed");
-  //   },
-  // });
-
   const form = useForm({
     defaultValues: {
       email: "",
@@ -134,61 +88,32 @@ export default function Login() {
     },
   });
 
-  // useEffect(() => {
-  //   const loadFacebookSDK = () => {
-  //     if ((window as any).FB) return;
+  useEffect(() => {
+    const loadFacebookSDK = () => {
+      if ((window as any).FB) return;
 
-  //     (window as any).fbAsyncInit = function () {
-  //       (window as any).FB.init({
-  //         appId: import.meta.env.VITE_FACEBOOK_APP_ID || "",
-  //         cookie: true,
-  //         xfbml: true,
-  //         version: "v18.0",
-  //       });
-  //     };
+      (window as any).fbAsyncInit = function () {
+        (window as any).FB.init({
+          appId: import.meta.env.VITE_FACEBOOK_APP_ID || "",
+          cookie: true,
+          xfbml: true,
+          version: "v18.0",
+        });
+      };
 
-  //     const script = document.createElement("script");
-  //     script.id = "facebook-jssdk";
-  //     script.src = "https://connect.facebook.net/en_US/sdk.js";
-  //     script.async = true;
-  //     script.defer = true;
-  //     document.body.appendChild(script);
-  //   };
+      const script = document.createElement("script");
+      script.id = "facebook-jssdk";
+      script.src = "https://connect.facebook.net/en_US/sdk.js";
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    };
 
-  //   loadFacebookSDK();
-  // }, []);
+    loadFacebookSDK();
+  }, []);
 
   return (
     <div className="h-screen w-full relative overflow-hidden">
-      {/* Global Styles & Animations */}
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes kenBurns { 0% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes slideUpFade {
-          0% { opacity: 0; transform: translateY(30px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-slide-up {
-          animation: slideUpFade 1s ease-out forwards;
-          animation-delay: 0.5s;
-          opacity: 0;
-        }
-
-        .animate-ken-burns { animation: kenBurns 10s ease-out forwards; }
-        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
-        .animate-slide-in { animation: slideIn 0.6s ease-out forwards; }
-        
-        .slide-enter { animation: fadeIn 0.5s ease-out forwards; }
-        .slide-exit { animation: fadeOut 0.5s ease-out forwards; }
-
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-       
-      `}</style>
       {/* FULL SCREEN BACKGROUND */}
       <div className="absolute inset-0 z-0 bg-black">
         <img
@@ -196,7 +121,7 @@ export default function Login() {
           alt="Nature Background"
           className="w-full h-full object-cover opacity-90 animate-ken-burns"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent" aria-hidden="true"></div>
       </div>
 
       <div className="absolute z-50 top-4 right-4 md:top-8 md:right-8">
@@ -257,13 +182,15 @@ export default function Login() {
               {slides.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => api?.scrollTo(index)}
+                  type="button"
+                  onClick={() => goToSlide(index)}
                   className={`h-1 rounded-full transition-all duration-300 ${
                     currentSlide === index
                       ? "w-8 bg-primary opacity-100 shadow-[0_0_10px_rgba(255,255,255,0.5)]"
                       : "w-4 bg-primary/40 hover:bg-primary/60"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
+                  aria-current={currentSlide === index ? "true" : "false"}
                 />
               ))}
             </div>
@@ -344,16 +271,18 @@ export default function Login() {
                               onChange={(e) =>
                                 field.handleChange(e.target.value)
                               }
+                              aria-invalid={isInvalid}
                             />
                             <button
                               type="button"
-                              onClick={() => setShowPassword(!showPassword)}
+                              onClick={togglePasswordVisibility}
                               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              aria-label={showPassword ? t("login.hidePassword") : t("login.showPassword")}
                             >
                               {showPassword ? (
-                                <EyeOff size={18} />
+                                <EyeOff size={18} aria-hidden="true" />
                               ) : (
-                                <Eye size={18} />
+                                <Eye size={18} aria-hidden="true" />
                               )}
                             </button>
                           </div>
@@ -371,12 +300,12 @@ export default function Login() {
                       <Checkbox
                         id="rememberMe"
                         checked={rememberMe}
-                        onCheckedChange={(checked) =>
-                          setRememberMe(checked as boolean)
-                        }
+                        onCheckedChange={toggleRememberMe}
                         className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                        aria-describedby="rememberMe-label"
                       />
                       <Label
+                        id="rememberMe-label"
                         htmlFor="rememberMe"
                         className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                       >
@@ -384,7 +313,11 @@ export default function Login() {
                       </Label>
                     </div>
                     <a
-                      href="/auth/forgot-password"
+                      href="/forgot-password"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate({ to: "/forgot-password" });
+                      }}
                       className="text-sm font-medium text-foreground hover:text-primary hover:underline transition-colors"
                     >
                       {t("login.forgotPassword")}
@@ -396,11 +329,12 @@ export default function Login() {
                     type="submit"
                     disabled={loginMutation.isPending}
                     className="w-full h-12 rounded-xl text-base font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                    aria-busy={loginMutation.isPending}
                   >
                     {loginMutation.isPending ? (
                       <>
-                        <Spinner />
-                        {t("login.loading")}
+                        <Spinner aria-hidden="true" />
+                        <span>{t("login.loading")}</span>
                       </>
                     ) : (
                       t("login.submit")
@@ -428,17 +362,19 @@ export default function Login() {
                   onClick={() => performGoogleLogin()}
                   disabled={googleLoginMutation.isPending}
                   className="w-full h-12"
+                  aria-busy={googleLoginMutation.isPending}
                 >
                   {googleLoginMutation.isPending ? (
-                    <Spinner />
+                    <Spinner aria-hidden="true" />
                   ) : (
                     <img
                       src="https://www.svgrepo.com/show/475656/google-color.svg"
                       className="w-5 h-5"
-                      alt="Google"
+                      alt=""
+                      aria-hidden="true"
                     />
                   )}
-                  {t("login.social.google")}
+                  <span>{t("login.social.google")}</span>
                 </Button>
 
                 {/* <button
@@ -483,7 +419,11 @@ export default function Login() {
               <div className="text-center text-sm text-muted-foreground">
                 {t("login.newUser")}{" "}
                 <a
-                  href="/auth/signup"
+                  href="/signup"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate({ to: "/signup" });
+                  }}
                   className="font-bold text-foreground hover:text-primary hover:underline transition-colors"
                 >
                   {t("login.signUpLink")}

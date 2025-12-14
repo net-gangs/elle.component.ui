@@ -28,15 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 import { authStore, authActions, selectUser } from "@/stores/auth-store";
 
-type NavUserProps = {
-  user?: {
-    name: string;
-    email: string;
-    avatar?: string;
-  };
-};
-
-export function NavUser({ user: fallbackUser }: NavUserProps) {
+export function NavUser() {
   const { isMobile } = useSidebar();
   const storeUser = useStore(authStore, selectUser);
   const { t } = useTranslation();
@@ -47,29 +39,18 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
     navigate({ to: "/auth/login" });
   };
 
-  if (!storeUser && !fallbackUser) {
+  if (!storeUser) {
     return null;
   }
 
-  const fallbackDisplayName =
-    fallbackUser?.name ?? fallbackUser?.email ?? "User";
-  const fallbackInitials = fallbackUser?.name
-    ? fallbackUser.name.match(/\b\w/g)?.join("")?.slice(0, 2)?.toUpperCase() ||
-      "U"
-    : fallbackDisplayName.slice(0, 2).toUpperCase() || "U";
-  const fallbackAvatarUrl = fallbackUser?.avatar ?? "";
-  const fallbackEmail = fallbackUser?.email ?? "";
-
   const displayName = storeUser
-    ? `${storeUser.firstName} ${storeUser.lastName}`.trim() || storeUser.email
-    : fallbackDisplayName;
+    ? (`${storeUser.firstName} ${storeUser.lastName}`.trim() || storeUser.email)
+    : "N/A";
   const initials = storeUser
-    ? `${storeUser.firstName?.[0] || ""}${
-        storeUser.lastName?.[0] || ""
-      }`.toUpperCase() || "U"
-    : fallbackInitials;
-  const avatarUrl = storeUser ? storeUser.photo?.path || "" : fallbackAvatarUrl;
-  const email = storeUser ? storeUser.email : fallbackEmail;
+    ? `${storeUser.firstName?.[0] || ""}${storeUser.lastName?.[0] || ""}`.toUpperCase() || "U"
+    : "U";
+  const avatarUrl = storeUser ? storeUser.photo?.path || "" : "N/A";
+  const email = storeUser ? storeUser.email : "N/A";
 
   return (
     <SidebarMenu>
