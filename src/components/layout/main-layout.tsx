@@ -4,12 +4,7 @@ import { LessonSidebar } from "./sidebar/lesson-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 
-interface MainLayoutProps {
-  showRightPanel?: boolean;
-  rightPanelProps?: unknown;
-}
-
-export function MainLayout({}: MainLayoutProps) {
+export function MainLayout() {
   return (
     <SidebarProvider>
       <MainLayoutContent />
@@ -19,13 +14,14 @@ export function MainLayout({}: MainLayoutProps) {
 
 function MainLayoutContent() {
   const router = useRouterState();
-  const isLessonPlanning = router.location.pathname.startsWith("/lesson-planning");
+  const isLessonPlanning =
+    router.location.pathname.startsWith("/lesson-planning");
 
   return (
     <>
       <AppSidebar />
       <SidebarInset>
-        <SidebarProvider className="min-h-[calc(100vh-theme(spacing.4))] h-full">
+        <SidebarProvider className="min-h-[calc(100vh-(--spacing(4)))] h-full">
           {isLessonPlanning && <LessonSidebar />}
           <div className="flex flex-1 flex-col">
             {/* Main content */}
