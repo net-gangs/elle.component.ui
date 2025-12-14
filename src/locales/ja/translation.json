@@ -202,6 +202,7 @@
     },
     "conversation": {
       "title": "アイデアボード",
+      "savedBadge": "保存済み",
       "subtitle": "Ellaと一緒に目標、センター、出口チケットを作成しましょう。",
       "waiting": "チャットを選択してEllaと計画を続けましょう。",
       "placeholder": "Ellaに授業の計画、リミックス、または拡張をリクエストしてください...",
@@ -212,7 +213,11 @@
       "teacherLabel": "あなた",
       "assistantLabel": "Ella",
       "startConversation": "下のメッセージを入力して会話を始めてください。",
-      "saveToLesson": "授業に保存"
+      "saveToLesson": "授業に保存",
+      "removeLesson": "削除",
+      "verifySave": "このAIの回答をレッスンとして保存しますか？",
+      "lessonSaved": "レッスンの保存が完了しました",
+      "lessonRemoved": "レッスンを削除しました"
     }
   },
   "languageSwitcher": {

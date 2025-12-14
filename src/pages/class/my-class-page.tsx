@@ -1,13 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Pencil,
-  Search,
-  Filter,
-  LayoutGrid,
-  List,
-  X,
-} from "lucide-react";
+import { Pencil, Search, Filter, LayoutGrid, List, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
@@ -16,18 +9,26 @@ import { StudentCard } from "./components/student-card";
 import { LessonCard } from "./components/lesson-card";
 import { LessonGridCard } from "./components/lesson-grid-card";
 import { AddStudentCard } from "./components/add-student-card";
-import { AddLessonCard } from "./components/add-lesson-card";
 import { ClassCard } from "./components/class-card";
 import { AddClassCard } from "./components/add-class-card";
-import { StudentDrawer, type StudentFormData } from "./components/student-drawer";
+import { StudentDrawer } from "./components/student-drawer";
 import { ClassDialog, type ClassFormData } from "./components/class-dialog";
 import { LessonDetailsSheet } from "@/components/ui/lesson-details-dialog";
-import { useClassrooms, useCreateClassroom, useUpdateClassroom } from "@/hooks/use-classrooms";
-import { useStudents, useCreateStudent, useUpdateStudent } from "@/hooks/use-students";
+import {
+  useClassrooms,
+  useCreateClassroom,
+  useUpdateClassroom,
+} from "@/hooks/use-classrooms";
+import {
+  useStudents,
+  useCreateStudent,
+  useUpdateStudent,
+} from "@/hooks/use-students";
 import { useLessons } from "@/hooks/use-lessons";
 import { toast } from "sonner";
 import { useDebounce } from "@/hooks/use-debounce";
 import type { Classroom, Student, Lesson } from "@/types/classroom";
+import { type StudentFormData } from "./components/student-schema";
 
 // Animation variants
 const containerVariants = {
@@ -69,7 +70,9 @@ const MyClassPage = () => {
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
 
   const [isClassDialogOpen, setIsClassDialogOpen] = useState(false);
-  const [editingClassroom, setEditingClassroom] = useState<Classroom | null>(null);
+  const [editingClassroom, setEditingClassroom] = useState<Classroom | null>(
+    null,
+  );
 
   const [viewingLessonId, setViewingLessonId] = useState<string | null>(null);
   const [isLessonDetailsOpen, setIsLessonDetailsOpen] = useState(false);
@@ -82,7 +85,10 @@ const MyClassPage = () => {
     error: classroomsError,
   } = useClassrooms({ page: classesPage, limit: 20 });
 
-  const classrooms = classroomsData?.data ?? [];
+  const classrooms = useMemo(
+    () => classroomsData?.data ?? [],
+    [classroomsData?.data],
+  );
 
   const selectedClassroom = useMemo(() => {
     if (!classrooms.length) return null;
@@ -94,26 +100,26 @@ const MyClassPage = () => {
 
   // no router state-based selection: keep local selection logic
 
-  const {
-    data: studentsData,
-    isLoading: isLoadingStudents,
-  } = useStudents(selectedClassroom?.id, {
-    page: studentsPage,
-    limit: STUDENTS_PER_PAGE,
-    search: debouncedSearchQuery || undefined,
-  });
+  const { data: studentsData, isLoading: isLoadingStudents } = useStudents(
+    selectedClassroom?.id,
+    {
+      page: studentsPage,
+      limit: STUDENTS_PER_PAGE,
+      search: debouncedSearchQuery || undefined,
+    },
+  );
 
   const students = studentsData?.data ?? [];
   const studentsMeta = studentsData?.meta;
   const totalStudentPages = studentsMeta?.pageCount ?? 1;
 
-  const {
-    data: lessonsData,
-    isLoading: isLoadingLessons,
-  } = useLessons(selectedClassroom?.id, {
-    page: lessonsPage,
-    limit: 10,
-  });
+  const { data: lessonsData, isLoading: isLoadingLessons } = useLessons(
+    selectedClassroom?.id,
+    {
+      page: lessonsPage,
+      limit: 10,
+    },
+  );
 
   const lessons = lessonsData?.data ?? [];
   const lessonsMeta = lessonsData?.meta;
@@ -191,7 +197,9 @@ const MyClassPage = () => {
       setEditingClassroom(null);
     } catch (error) {
       console.error("Failed to save classroom:", error);
-      toast.error(editingClassroom ? "Failed to update class" : "Failed to create class");
+      toast.error(
+        editingClassroom ? "Failed to update class" : "Failed to create class",
+      );
     }
   };
 
@@ -221,8 +229,8 @@ const MyClassPage = () => {
             hobby: data.hobby || undefined,
             notes: data.notes || undefined,
             avatarUrl: data.avatarUrl || undefined,
-            specialNeeds: data.specialNeeds as any,
-            cefrLevels: data.cefrLevels as any,
+            specialNeeds: data.specialNeeds,
+            cefrLevels: data.cefrLevels,
           },
         });
         toast.success("Student updated successfully");
@@ -234,8 +242,8 @@ const MyClassPage = () => {
           hobby: data.hobby || undefined,
           notes: data.notes || undefined,
           avatarUrl: data.avatarUrl || undefined,
-          specialNeeds: data.specialNeeds as any,
-          cefrLevels: data.cefrLevels as any,
+          specialNeeds: data.specialNeeds,
+          cefrLevels: data.cefrLevels,
         });
         toast.success("Student created successfully");
       }
@@ -243,18 +251,16 @@ const MyClassPage = () => {
       setEditingStudent(null);
     } catch (error) {
       console.error("Failed to save student:", error);
-      toast.error(editingStudent ? "Failed to update student" : "Failed to create student");
+      toast.error(
+        editingStudent
+          ? "Failed to update student"
+          : "Failed to create student",
+      );
     }
-  };
-
-  const handleAddLesson = () => {
-    console.log("Add lesson clicked");
-    // TODO: Open add lesson form/modal
   };
 
   return (
     <div className="min-h-screen bg-background p-4 font-sans text-foreground md:p-8">
-
       <motion.header
         variants={itemVariants}
         initial="hidden"
@@ -360,13 +366,10 @@ const MyClassPage = () => {
             </div>
           </motion.div>
 
-
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-
             <AddStudentCard onClick={handleAddStudent} />
 
             {isLoadingStudents ? (
-
               <>
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <Skeleton key={i} className="aspect-square rounded-[8px]" />
@@ -383,7 +386,6 @@ const MyClassPage = () => {
               ))
             )}
           </div>
-
 
           <motion.div variants={itemVariants} className="mt-4">
             <Pagination
@@ -411,7 +413,6 @@ const MyClassPage = () => {
             </div>
 
             <div className="flex items-center gap-2">
-
               <div className="flex rounded-full border border-border bg-card p-1 shadow-sm">
                 <Button
                   variant={lessonViewMode === "grid" ? "default" : "ghost"}
@@ -438,7 +439,6 @@ const MyClassPage = () => {
             </div>
           </motion.div>
 
-
           <AnimatePresence mode="wait">
             {lessonViewMode === "grid" && (
               <motion.div
@@ -449,14 +449,15 @@ const MyClassPage = () => {
                 transition={{ duration: 0.2 }}
                 className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"
               >
-
-                <AddLessonCard onClick={handleAddLesson} />
+                {/* <AddLessonCard onClick={handleAddLesson} /> */}
 
                 {isLoadingLessons ? (
-
                   <>
                     {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="aspect-square rounded-[8px]" />
+                      <Skeleton
+                        key={i}
+                        className="aspect-square rounded-[8px]"
+                      />
                     ))}
                   </>
                 ) : (
@@ -516,7 +517,9 @@ const MyClassPage = () => {
         onOpenChange={handleStudentDrawerClose}
         student={editingStudent}
         onSubmit={handleStudentSubmit}
-        isSubmitting={createStudentMutation.isPending || updateStudentMutation.isPending}
+        isSubmitting={
+          createStudentMutation.isPending || updateStudentMutation.isPending
+        }
       />
 
       {/* Class Dialog */}
@@ -525,7 +528,9 @@ const MyClassPage = () => {
         onOpenChange={handleClassDialogClose}
         classroom={editingClassroom}
         onSubmit={handleClassSubmit}
-        isSubmitting={createClassroomMutation.isPending || updateClassroomMutation.isPending}
+        isSubmitting={
+          createClassroomMutation.isPending || updateClassroomMutation.isPending
+        }
       />
 
       {/* Lesson Details Dialog */}

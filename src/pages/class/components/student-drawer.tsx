@@ -9,22 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { X, Pencil } from "lucide-react";
 import { StudentForm } from "@/components/forms/student-form";
-import type { Student } from "@/types/classroom";
-
-export type StudentFormData = {
-  fullName: string;
-  grade: string;
-  hobby: string;
-  notes: string;
-  avatarUrl?: string;
-  specialNeeds: string[];
-  cefrLevels: {
-    reading: string;
-    writing: string;
-    speaking: string;
-    listening: string;
-  };
-};
+import { type StudentFormData } from "./student-schema";
+import { type Student } from "@/types/classroom";
 
 interface StudentDrawerProps {
   open: boolean;
@@ -71,7 +57,7 @@ export function StudentDrawer({
         hobby: student.hobby || "",
         notes: student.notes || "",
         avatarUrl: student.avatarUrl || "",
-        specialNeeds: (student.specialNeeds as string[]) || [],
+        specialNeeds: student.specialNeeds || [],
         cefrLevels: {
           reading: student.cefrLevels?.reading || "A1",
           writing: student.cefrLevels?.writing || "A1",

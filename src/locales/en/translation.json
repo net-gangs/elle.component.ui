@@ -202,6 +202,7 @@
     },
     "conversation": {
       "title": "Idea board",
+      "savedBadge": "Saved",
       "subtitle": "Draft objectives, centers, or exit tickets with Ella.",
       "waiting": "Choose a chat to keep planning with Ella.",
       "placeholder": "Type a request for Ella to plan, remix, or extend your lesson...",
@@ -212,7 +213,11 @@
       "teacherLabel": "You",
       "assistantLabel": "Ella",
       "startConversation": "Start the conversation by typing a message below.",
-      "saveToLesson": "Save to Lesson"
+      "saveToLesson": "Save as a Lesson",
+      "removeLesson": "Remove",
+      "verifySave": "Do you want to save this AI response as a lesson?",
+      "lessonSaved": "Lesson saved successfully",
+      "lessonRemoved": "Lesson removed successfully"
     }
   },
   "languageSwitcher": {

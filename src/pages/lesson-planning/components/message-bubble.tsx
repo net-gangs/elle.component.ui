@@ -7,8 +7,6 @@ import { type LessonChatMessage } from "@/stores/lesson-store";
 import { Spinner } from "@/components/ui/spinner";
 
 interface MessageBubbleProps {
-
-
   message: LessonChatMessage;
   teacherLabel?: string;
   assistantLabel?: string;
@@ -52,7 +50,7 @@ export default function MessageBubble({
           "relative max-w-[85%] rounded-2xl px-4 py-3 shadow-sm transition-all",
           isTeacher
             ? "bg-primary text-primary-foreground"
-            : "bg-white border border-border"
+            : "bg-white border border-border",
         )}
       >
         <MessageHeader
@@ -62,17 +60,13 @@ export default function MessageBubble({
         />
 
         {!isTeacher && isSavedLesson && (
-          <SavedLessonBanner
-            lessonTitle={message.lessonTitle}
-            onRemove={onRemoveLesson}
-            isRemoving={isRemoving}
-          />
+          <SavedLessonBanner lessonTitle={message.lessonTitle} />
         )}
 
         <div
           className={cn(
             "text-sm",
-            isTeacher && "whitespace-pre-wrap leading-relaxed"
+            isTeacher && "whitespace-pre-wrap leading-relaxed",
           )}
         >
           {isTeacher ? (
@@ -119,50 +113,31 @@ function MessageHeader({
       <p
         className={cn(
           "text-xs font-semibold uppercase tracking-wide",
-          isTeacher ? "text-primary-foreground/90" : "text-primary"
+          isTeacher ? "text-primary-foreground/90" : "text-primary",
         )}
       >
         {label}
       </p>
       {!isTeacher && isSavedLesson && (
         <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 shadow-sm ring-1 ring-emerald-100">
-          {t("lessonPlanning.conversation.savedBadge", "Saved")}
+          {t("lessonPlanning.conversation.savedBadge")}
         </span>
       )}
     </div>
   );
 }
 
-function SavedLessonBanner({
-  lessonTitle,
-  onRemove,
-  isRemoving,
-}: {
-  lessonTitle?: string | null;
-  onRemove?: () => void;
-  isRemoving?: boolean;
-}) {
+function SavedLessonBanner({ lessonTitle }: { lessonTitle?: string | null }) {
   const { t } = useTranslation();
   return (
     <div className="mb-3 flex items-center justify-between gap-3 rounded-lg border border-emerald-100 bg-emerald-50/50 px-3 py-2 text-emerald-800">
       <div className="flex items-center gap-2 text-xs font-medium">
         <Sparkles className="size-3.5 shrink-0 text-emerald-600" />
         <span className="line-clamp-1 break-all">
-          {lessonTitle || t("lessonPlanning.conversation.savedLesson", "Saved as lesson")}
+          {lessonTitle ||
+            t("lessonPlanning.conversation.savedLesson", "Saved as lesson")}
         </span>
       </div>
-      {onRemove && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6 shrink-0 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-900"
-          onClick={onRemove}
-          disabled={isRemoving}
-          title={t("lessonPlanning.conversation.removeLesson", "Remove lesson")}
-        >
-          {isRemoving ? <Spinner /> : <Trash2 className="size-3" />}
-        </Button>
-      )}
     </div>
   );
 }
@@ -197,7 +172,7 @@ function MessageFooter({
       <p
         className={cn(
           "text-[10px] tabular-nums",
-          isTeacher ? "text-primary-foreground/70" : "text-muted-foreground"
+          isTeacher ? "text-primary-foreground/70" : "text-muted-foreground",
         )}
       >
         {timestamp}
@@ -215,7 +190,7 @@ function MessageFooter({
                   disabled={isRemoving}
                 >
                   {isRemoving ? <Spinner /> : <Trash2 className="size-3" />}
-                  {t("lessonPlanning.conversation.removeLesson", "Remove")}
+                  {t("lessonPlanning.conversation.removeLesson")}
                 </Button>
               )
             : onSave && (
@@ -229,7 +204,7 @@ function MessageFooter({
                   {isSaving ? <Spinner /> : <Save className="size-3" />}
                   {t(
                     "lessonPlanning.conversation.saveToLesson",
-                    "Save to Lesson"
+                    "Save to Lesson",
                   )}
                 </Button>
               )}
