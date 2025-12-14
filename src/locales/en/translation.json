@@ -112,7 +112,7 @@
     "subtitle": "No worries, we'll send you reset instructions.",
     "subtitleSent": "We've sent password reset instructions to your email.",
     "emailLabel": "Email Address",
-    "submit": "SEND RESET LINK",
+    "submit": "Send Reset Link",
     "sending": "Sending...",
     "toastSuccess": "Password reset email sent! Please check your inbox.",
     "successBox": {
