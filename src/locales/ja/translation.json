@@ -9,7 +9,11 @@
     "delete": "削除",
     "edit": "編集",
     "loading": "読み込み中...",
-    "backToLogin": "ログインに戻る"
+    "backToLogin": "ログインに戻る",
+    "goHome": "ホームへ移動",
+    "sidebarTitle": "サイドバー",
+    "sidebarDescription": "モバイル用サイドバーを表示します。",
+    "failedToLoad": "読み込みに失敗しました"
   },
   "sidebar": {
     "groups": {
@@ -24,6 +28,12 @@
       "rewards": "報酬",
       "interestingArticles": "興味深い記事",
       "filesLibrary": "ファイルとライブラリ"
+    },
+    "projects": {
+      "viewProject": "プロジェクトを見る",
+      "shareProject": "プロジェクトを共有",
+      "deleteProject": "プロジェクトを削除",
+      "more": "その他"
     }
   },
   "team": {
@@ -53,7 +63,9 @@
     "loading": "読み込み中...",
     "orDivider": "または",
     "social": {
-      "google": "Googleでログイン"
+      "google": "Googleでログイン",
+      "facebook": "Facebookでログイン",
+      "apple": "Appleでログイン"
     },
     "newUser": "アカウントをお持ちでないですか？",
     "signUpLink": "新規登録",
@@ -151,7 +163,7 @@
     "placeholder": "ダッシュボードのコンテンツは近日公開予定です。"
   },
   "lessonPlanning": {
-    "title": "授業計画ワークスペース",
+    "title": "授業計画",
     "subtitle": "プロジェクトチャットを整理して、各授業を明確な計画から始めましょう。",
     "actions": {
       "newClass": "新しいクラス",
@@ -164,6 +176,7 @@
       "toggle": "クラスリストの切り替え"
     },
     "chats": {
+      "currentClass": "現在のクラス",
       "title": "チャット",
       "description": "各チャットは異なるアイデアや下書きを記録します。",
       "empty": "クラスとチャットを選択して計画を始めましょう。",
@@ -195,7 +208,7 @@
       "className": "クラス名",
       "grade": "学年",
       "students": "生徒",
-      "studentsCount": "人",
+      "studentsCount": "{{current}}人",
       "notSet": "未設定",
       "empty": "クラスを選択して情報を表示します。",
       "toggle": "クラス情報の切り替え"
@@ -219,6 +232,91 @@
       "lessonSaved": "レッスンの保存が完了しました",
       "lessonRemoved": "レッスンを削除しました"
     }
+  },
+  "lessonDetails": {
+    "minutes": "分",
+    "min": "分",
+    "notFound": "授業が見つかりません"
+  },
+  "classForm": {
+    "titleEdit": "クラスを編集",
+    "titleCreate": "クラスを作成",
+    "descriptionEdit": "このクラスの詳細を更新します。",
+    "descriptionCreate": "以下の情報を入力して新しいクラスを作成します。",
+    "labels": {
+      "name": "クラス名",
+      "grade": "学年 / クラス",
+      "gradeOptional": "(オプション)"
+    },
+    "placeholders": {
+      "name": "例: Advanced English A",
+      "grade": "例: 5年生"
+    },
+    "buttons": {
+      "reset": "リセット",
+      "saveChanges": "変更を保存",
+      "createClass": "クラスを作成"
+    }
+  },
+  "myClass": {
+    "studentsTitle": "生徒",
+    "searchStudentsPlaceholder": "生徒を検索...",
+    "lessonsTitle": "授業",
+    "upcoming": "今後の",
+    "editClass": "クラスを編集"
+  },
+  "studentForm": {
+    "placeholders": {
+      "name": "生徒の名前を入力",
+      "grade": "例: 7A",
+      "hobby": "例: ロボティクス、チェス...",
+      "notes": "プライベートなメモを追加...",
+      "searchConditions": "条件を検索...",
+      "accommodations": "配慮事項を選択..."
+    },
+    "buttons": {
+      "reset": "リセット",
+      "saveChanges": "変更を保存",
+      "create": "生徒を作成"
+    },
+    "upload": "アップロード",
+    "randomizeAvatar": "ランダムなアバターを生成",
+    "labels": {
+      "fullName": "氏名",
+      "grade": "学年 / クラス",
+      "reading": "リーディング",
+      "writing": "ライティング",
+      "listening": "リスニング",
+      "speaking": "スピーキング",
+      "interests": "興味・関心",
+      "notes": "メモ"
+    },
+    "proficiencyTitle": "スキルレベル",
+    "accommodations": {
+      "title": "配慮事項",
+      "noConditionFound": "条件が見つかりません。"
+    }
+  },
+  "addStudentCard": {
+    "title": "生徒を追加",
+    "cta": "クリックして追加"
+  },
+  "studentDrawer": {
+    "title": {
+      "add": "新しい生徒を追加",
+      "edit": "生徒を編集"
+    },
+    "description": {
+      "add": "新しい生徒のプロフィールを作成",
+      "edit": "プロフィールを更新する"
+    }
+  },
+  "pagination": {
+    "pageOf": "ページ {{current}} / {{total}}"
+  },
+  "addLessonCard": {
+    "title": "レッスンを追加",
+    "cta": "クリックして追加"
   },
   "languageSwitcher": {
     "tooltip": "言語を変更",

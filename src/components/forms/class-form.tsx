@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import * as z from "zod";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -51,6 +52,7 @@ export function ClassForm({
   onSubmit,
   isSubmitting,
 }: ClassFormProps) {
+  const { t } = useTranslation();
   const isEditMode = !!initialData;
 
   const form = useForm({
@@ -69,11 +71,13 @@ export function ClassForm({
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader>
-        <CardTitle>{isEditMode ? "Edit Class" : "Create New Class"}</CardTitle>
+        <CardTitle>
+          {isEditMode ? t("classForm.titleEdit") : t("classForm.titleCreate")}
+        </CardTitle>
         <CardDescription>
           {isEditMode
-            ? "Update the details of this classroom."
-            : "Enter the details below to set up a new classroom."}
+            ? t("classForm.descriptionEdit")
+            : t("classForm.descriptionCreate")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -94,7 +98,9 @@ export function ClassForm({
                   field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Class Name</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t("classForm.labels.name")}
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -102,12 +108,17 @@ export function ClassForm({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      aria-describedby={isInvalid ? `${field.name}-error` : undefined}
-                      placeholder="e.g. Advanced English A"
+                      aria-describedby={
+                        isInvalid ? `${field.name}-error` : undefined
+                      }
+                      placeholder={t("classForm.placeholders.name")}
                       autoComplete="off"
                     />
                     {isInvalid && (
-                      <FieldError id={`${field.name}-error`} errors={field.state.meta.errors} />
+                      <FieldError
+                        id={`${field.name}-error`}
+                        errors={field.state.meta.errors}
+                      />
                     )}
                   </Field>
                 );
@@ -123,9 +134,9 @@ export function ClassForm({
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>
-                      Grade / Level{" "}
+                      {t("classForm.labels.grade")}{" "}
                       <span className="text-muted-foreground font-normal">
-                        (Optional)
+                        {t("classForm.labels.gradeOptional")}
                       </span>
                     </FieldLabel>
                     <Input
@@ -135,12 +146,17 @@ export function ClassForm({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      aria-describedby={isInvalid ? `${field.name}-error` : undefined}
-                      placeholder="e.g. Grade 5"
+                      aria-describedby={
+                        isInvalid ? `${field.name}-error` : undefined
+                      }
+                      placeholder={t("classForm.placeholders.grade")}
                       autoComplete="off"
                     />
                     {isInvalid && (
-                      <FieldError id={`${field.name}-error`} errors={field.state.meta.errors} />
+                      <FieldError
+                        id={`${field.name}-error`}
+                        errors={field.state.meta.errors}
+                      />
                     )}
                   </Field>
                 );
@@ -158,7 +174,7 @@ export function ClassForm({
             onClick={() => form.reset()}
             disabled={isSubmitting}
           >
-            Reset
+            {t("classForm.buttons.reset")}
           </Button>
 
           <Button
@@ -169,15 +185,15 @@ export function ClassForm({
             aria-busy={isSubmitting}
           >
             {isSubmitting && <Spinner aria-hidden="true" />}
-            {isEditMode ? "Save Changes" : "Create Class"}
+            {isEditMode
+              ? t("classForm.buttons.saveChanges")
+              : t("classForm.buttons.createClass")}
           </Button>
         </div>
       </CardFooter>
     </Card>
   );
 }
-
-// ============================================
 // CLASS DIALOG - Dialog wrapper for ClassForm
 // ============================================
 
@@ -228,6 +244,8 @@ export function ClassDialog({
     }
   }, [open, classroom, form]);
 
+  const { t } = useTranslation();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -236,12 +254,12 @@ export function ClassDialog({
             <BookOpen className="size-6 text-primary" aria-hidden="true" />
           </div>
           <DialogTitle className="text-center">
-            {isEditMode ? "Edit Class" : "Create New Class"}
+            {isEditMode ? t("classForm.titleEdit") : t("classForm.titleCreate")}
           </DialogTitle>
           <DialogDescription className="text-center">
             {isEditMode
-              ? "Update the details of this classroom."
-              : "Enter the details below to set up a new classroom."}
+              ? t("classForm.descriptionEdit")
+              : t("classForm.descriptionCreate")}
           </DialogDescription>
         </DialogHeader>
 
@@ -266,7 +284,8 @@ export function ClassDialog({
                       htmlFor={field.name}
                       className="text-xs font-bold uppercase tracking-wide"
                     >
-                      Class Name <span className="text-destructive">*</span>
+                      {t("classForm.labels.name")}{" "}
+                      <span className="text-destructive">*</span>
                     </FieldLabel>
                     <Input
                       id={field.name}
@@ -275,13 +294,18 @@ export function ClassDialog({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      aria-describedby={isInvalid ? `${field.name}-dialog-error` : undefined}
-                      placeholder="e.g. Advanced English A"
+                      aria-describedby={
+                        isInvalid ? `${field.name}-dialog-error` : undefined
+                      }
+                      placeholder={t("classForm.placeholders.name")}
                       autoComplete="off"
                       className="h-11 rounded-xl"
                     />
                     {isInvalid && (
-                      <FieldError id={`${field.name}-dialog-error`} errors={field.state.meta.errors} />
+                      <FieldError
+                        id={`${field.name}-dialog-error`}
+                        errors={field.state.meta.errors}
+                      />
                     )}
                   </Field>
                 );
@@ -299,9 +323,9 @@ export function ClassDialog({
                       htmlFor={field.name}
                       className="text-xs font-bold uppercase tracking-wide"
                     >
-                      Grade / Level{" "}
+                      {t("classForm.labels.grade")}{" "}
                       <span className="font-normal text-muted-foreground">
-                        (Optional)
+                        {t("classForm.labels.gradeOptional")}
                       </span>
                     </FieldLabel>
                     <Input
@@ -311,13 +335,18 @@ export function ClassDialog({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      aria-describedby={isInvalid ? `${field.name}-dialog-error` : undefined}
-                      placeholder="e.g. Grade 5"
+                      aria-describedby={
+                        isInvalid ? `${field.name}-dialog-error` : undefined
+                      }
+                      placeholder={t("classForm.placeholders.grade")}
                       autoComplete="off"
                       className="h-11 rounded-xl"
                     />
                     {isInvalid && (
-                      <FieldError id={`${field.name}-dialog-error`} errors={field.state.meta.errors} />
+                      <FieldError
+                        id={`${field.name}-dialog-error`}
+                        errors={field.state.meta.errors}
+                      />
                     )}
                   </Field>
                 );
@@ -334,7 +363,7 @@ export function ClassDialog({
             onClick={() => onOpenChange(false)}
             disabled={isSubmitting}
           >
-            Cancel
+            {t("common.cancel")}
           </Button>
           <Button
             type="submit"
@@ -343,8 +372,14 @@ export function ClassDialog({
             disabled={isSubmitting}
             aria-busy={isSubmitting}
           >
-            {isSubmitting ? <Spinner aria-hidden="true" /> : <Save className="mr-2 size-4" aria-hidden="true" />}
-            {isEditMode ? "Save Changes" : "Create Class"}
+            {isSubmitting ? (
+              <Spinner aria-hidden="true" />
+            ) : (
+              <Save className="mr-2 size-4" aria-hidden="true" />
+            )}
+            {isEditMode
+              ? t("classForm.buttons.saveChanges")
+              : t("classForm.buttons.createClass")}
           </Button>
         </DialogFooter>
       </DialogContent>

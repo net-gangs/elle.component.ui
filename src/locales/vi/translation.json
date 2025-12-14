@@ -9,7 +9,11 @@
     "delete": "Xóa",
     "edit": "Sửa",
     "loading": "Đang tải...",
-    "backToLogin": "Quay lại Đăng nhập"
+    "backToLogin": "Quay lại Đăng nhập",
+    "goHome": "Về trang chủ",
+    "sidebarTitle": "Sidebar",
+    "sidebarDescription": "Hiển thị thanh điều hướng cho thiết bị di động.",
+    "failedToLoad": "Tải thất bại"
   },
   "sidebar": {
     "groups": {
@@ -24,6 +28,12 @@
       "rewards": "Phần thưởng",
       "interestingArticles": "Bài viết hấp dẫn",
       "filesLibrary": "Tệp & Thư viện"
+    },
+    "projects": {
+      "viewProject": "Xem dự án",
+      "shareProject": "Chia sẻ dự án",
+      "deleteProject": "Xóa dự án",
+      "more": "Khác"
     }
   },
   "team": {
@@ -53,7 +63,9 @@
     "loading": "Đang tải...",
     "orDivider": "Hoặc",
     "social": {
-      "google": "Đăng nhập bằng Google"
+      "google": "Đăng nhập bằng Google",
+      "facebook": "Đăng nhập bằng Facebook",
+      "apple": "Đăng nhập bằng Apple"
     },
     "newUser": "Người dùng mới?",
     "signUpLink": "Đăng ký tại đây",
@@ -151,7 +163,7 @@
     "placeholder": "Nội dung bảng điều khiển sẽ sớm có mặt."
   },
   "lessonPlanning": {
-    "title": "Không gian Lập kế hoạch Bài học",
+    "title": "Lập kế hoạch Bài học",
     "subtitle": "Giữ các cuộc trò chuyện trong dự án gọn gàng để mỗi lớp học bắt đầu với một kế hoạch rõ ràng.",
     "actions": {
       "newClass": "Lớp mới",
@@ -164,6 +176,7 @@
       "toggle": "Bật/tắt danh sách lớp học"
     },
     "chats": {
+      "currentClass": "Lớp hiện tại",
       "title": "Cuộc trò chuyện",
       "savedBadge": "Đã lưu",
       "description": "Mỗi cuộc trò chuyện ghi lại một ý tưởng hoặc bản nháp khác nhau.",
@@ -218,6 +231,104 @@
       "verifySave": "Bạn có muốn lưu phản hồi này của AI thành bài học không?",
       "lessonSaved": "Đã lưu bài học thành công",
       "lessonRemoved": "Đã xóa bài học thành công"
+    }
+  },
+  "lessonDetails": {
+    "minutes": "phút",
+    "min": "phút",
+    "notFound": "Không tìm thấy bài học",
+    "scheduledOn": "Lên lịch",
+    "duration": "Thời lượng",
+    "lessonContent": "Nội dung bài học",
+    "aiGenerated": "Nội dung này được tạo bởi AI",
+    "created": "Tạo lúc",
+    "updated": "Cập nhật",
+    "grade": "Cấp",
+    "targetLanguage": "Ngôn ngữ mục tiêu",
+    "learningObjectives": "Mục tiêu học tập",
+    "teachingActivities": "Hoạt động dạy học",
+    "lessonStructure": "Cấu trúc bài học",
+    "viewPrompt": "Xem lời nhắc tạo",
+    "cefrLevels": "Mức độ CEFR",
+    "reading": "Đọc",
+    "writing": "Viết",
+    "speaking": "Nói",
+    "listening": "Nghe"
+  },
+  "classForm": {
+    "titleEdit": "Sửa lớp",
+    "titleCreate": "Tạo lớp mới",
+    "descriptionEdit": "Cập nhật thông tin lớp học này.",
+    "descriptionCreate": "Nhập thông tin dưới đây để tạo lớp mới.",
+    "labels": {
+      "name": "Tên lớp",
+      "grade": "Cấp / Lớp",
+      "gradeOptional": "(Tùy chọn)"
+    },
+    "placeholders": {
+      "name": "VD: Advanced English A",
+      "grade": "VD: Lớp 5"
+    },
+    "buttons": {
+      "reset": "Đặt lại",
+      "saveChanges": "Lưu thay đổi",
+      "createClass": "Tạo lớp"
+    }
+  },
+  "myClass": {
+    "studentsTitle": "Học sinh",
+    "searchStudentsPlaceholder": "Tìm học sinh...",
+    "lessonsTitle": "Bài học",
+    "upcoming": "Sắp tới",
+    "editClass": "Sửa lớp"
+  },
+  "addStudentCard": {
+    "title": "Thêm học sinh",
+    "cta": "Nhấn để thêm"
+  },
+  "addLessonCard": {
+    "title": "Thêm bài học",
+    "cta": "Nhấn để thêm"
+  },
+  "studentDrawer": {
+    "title": {
+      "add": "Thêm học sinh mới",
+      "edit": "Chỉnh sửa học sinh"
+    },
+    "description": {
+      "add": "Tạo hồ sơ học sinh mới",
+      "edit": "Cập nhật thông tin hồ sơ"
+    }
+  },
+  "studentForm": {
+    "placeholders": {
+      "name": "Nhập tên học sinh",
+      "grade": "VD: 7A",
+      "hobby": "VD: Robotics, Chess...",
+      "notes": "Thêm ghi chú riêng...",
+      "searchConditions": "Tìm điều kiện...",
+      "accommodations": "Chọn điều kiện..."
+    },
+    "buttons": {
+      "reset": "Đặt lại",
+      "saveChanges": "Lưu thay đổi",
+      "create": "Tạo học sinh"
+    },
+    "upload": "Tải lên",
+    "randomizeAvatar": "Tạo avatar ngẫu nhiên",
+    "labels": {
+      "fullName": "Họ và tên",
+      "grade": "Cấp / Lớp",
+      "interests": "Sở thích",
+      "notes": "Ghi chú"
+    },
+    "validation": {
+      "nameRequired": "Vui lòng nhập tên"
+    },
+    "proficiencyTitle": "Mức độ thành thạo",
+    "accommodations": {
+      "title": "Điều kiện học tập",
+      "noConditionFound": "Không tìm thấy điều kiện nào."
     }
   },
   "languageSwitcher": {

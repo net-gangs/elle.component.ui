@@ -18,7 +18,7 @@ export function useSignup() {
 
   const signupMutation = useMutation({
     mutationFn: async (data: SignupFormData) => {
-      const nameParts = data.name.trim().split(" ");
+      const nameParts = (data.name ?? "").trim().split(" ");
       const firstName = nameParts[0] || "";
       const lastName = nameParts.slice(1).join(" ") || firstName;
 
