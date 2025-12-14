@@ -8,12 +8,17 @@
     "save": "Lưu",
     "delete": "Xóa",
     "edit": "Sửa",
-    "loading": "Đang tải..."
+    "loading": "Đang tải...",
+    "backToLogin": "Quay lại Đăng nhập",
+    "goHome": "Về trang chủ",
+    "sidebarTitle": "Sidebar",
+    "sidebarDescription": "Hiển thị thanh điều hướng cho thiết bị di động.",
+    "failedToLoad": "Tải thất bại"
   },
   "sidebar": {
     "groups": {
       "preparation": "Chuẩn bị",
-      "tools": "Công cụ"
+      "tool": "Công cụ"
     },
     "items": {
       "myClass": "Lớp học của tôi",
@@ -23,6 +28,12 @@
       "rewards": "Phần thưởng",
       "interestingArticles": "Bài viết hấp dẫn",
       "filesLibrary": "Tệp & Thư viện"
+    },
+    "projects": {
+      "viewProject": "Xem dự án",
+      "shareProject": "Chia sẻ dự án",
+      "deleteProject": "Xóa dự án",
+      "more": "Khác"
     }
   },
   "team": {
@@ -42,14 +53,117 @@
     "section": "Lấy dữ liệu"
   },
   "login": {
-    "title": "Đăng nhập vào Ella AI",
-    "submit": "Đăng nhập"
+    "title": "Đăng nhập",
+    "subtitle": "Chào mừng trở lại",
+    "emailLabel": "Email",
+    "passwordLabel": "Mật khẩu",
+    "rememberMe": "Ghi nhớ tôi",
+    "forgotPassword": "Quên mật khẩu?",
+    "submit": "Tiếp tục",
+    "loading": "Đang tải...",
+    "orDivider": "Hoặc",
+    "social": {
+      "google": "Đăng nhập bằng Google",
+      "facebook": "Đăng nhập bằng Facebook",
+      "apple": "Đăng nhập bằng Apple"
+    },
+    "newUser": "Người dùng mới?",
+    "signUpLink": "Đăng ký tại đây",
+    "slides": {
+      "slide1": {
+        "title": "Xây dựng <br/>Tương lai...",
+        "desc": "Trải nghiệm thế hệ trí tuệ nhân tạo tiếp theo, được thiết kế để thích ứng với bản chất của bạn."
+      },
+      "slide2": {
+        "title": "Tích hợp <br/>Liền mạch",
+        "desc": "Kết nối quy trình làm việc của bạn dễ dàng với các plugin tiên tiến và hỗ trợ API của chúng tôi."
+      },
+      "slide3": {
+        "title": "Bảo mật <br/>Mặc định",
+        "desc": "Mã hóa cấp doanh nghiệp và kiểm soát quyền riêng tư để giữ an toàn tuyệt đối cho dữ liệu của bạn."
+      }
+    },
+    "validation": {
+      "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+      "passwordRequired": "Vui lòng nhập mật khẩu"
+    }
+  },
+  "signup": {
+    "title": "Bắt đầu ngay",
+    "subtitle": "Tạo tài khoản",
+    "nameLabel": "Tên",
+    "emailLabel": "Email",
+    "passwordLabel": "Mật khẩu",
+    "submit": "Tạo Tài Khoản",
+    "loading": "Đang tạo tài khoản...",
+    "existingUser": "Đã có tài khoản?",
+    "signInLink": "Đăng nhập tại đây",
+    "successMessage": "Tài khoản đã được tạo! Vui lòng kiểm tra email để xác minh tài khoản.",
+    "slides": {
+      "slide1": {
+        "title": "Tham gia <br/>Tương lai...",
+        "desc": "Tạo tài khoản của bạn và trải nghiệm thế hệ trí tuệ nhân tạo tiếp theo."
+      },
+      "slide2": {
+        "title": "Tính năng <br/>Mạnh mẽ",
+        "desc": "Truy cập các khả năng AI tiên tiến được thiết kế để nâng cao năng suất và sự sáng tạo của bạn."
+      },
+      "slide3": {
+        "title": "Dữ liệu của bạn, <br/>Được bảo vệ",
+        "desc": "Bảo mật cấp doanh nghiệp đảm bảo thông tin của bạn được an toàn và riêng tư."
+      }
+    },
+    "validation": {
+      "nameRequired": "Vui lòng nhập tên",
+      "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
+    }
+  },
+  "forgotPassword": {
+    "title": "Quên mật khẩu?",
+    "subtitle": "Đừng lo, chúng tôi sẽ gửi hướng dẫn đặt lại cho bạn.",
+    "subtitleSent": "Chúng tôi đã gửi hướng dẫn đặt lại mật khẩu đến email của bạn.",
+    "emailLabel": "Địa chỉ Email",
+    "submit": "Gửi Liên Kết Đặt Lại",
+    "sending": "Đang gửi...",
+    "toastSuccess": "Đã gửi email đặt lại mật khẩu! Vui lòng kiểm tra hộp thư đến.",
+    "successBox": {
+      "title": "Kiểm tra email của bạn",
+      "text": "Chúng tôi đã gửi liên kết đặt lại mật khẩu đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư đến và làm theo hướng dẫn."
+    },
+    "retry": "Không nhận được email? Thử lại",
+    "validation": {
+      "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ"
+    }
+  },
+  "passwordChange": {
+    "title": "Đặt mật khẩu mới",
+    "subtitle": "Mật khẩu mới phải khác với mật khẩu đã sử dụng trước đó.",
+    "newPassword": "Mật khẩu mới",
+    "newPasswordPlaceholder": "Nhập mật khẩu mới của bạn",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
+    "submit": "Đặt Lại Mật Khẩu",
+    "submitting": "Đang xử lý...",
+    "success": "Cập nhật mật khẩu thành công!",
+    "error": "Không thể đặt lại mật khẩu",
+    "invalidLink": "Liên kết không hợp lệ",
+    "validation": {
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+      "missingHash": "Liên kết đặt lại không hợp lệ",
+      "match": "Mật khẩu không khớp"
+    }
+  },
+  "confirmEmail": {
+    "verifying": "Đang xác thực email...",
+    "successTitle": "Xác thực email thành công!",
+    "successDesc": "Email của bạn đã được xác thực thành công."
   },
   "dashboard": {
     "placeholder": "Nội dung bảng điều khiển sẽ sớm có mặt."
   },
   "lessonPlanning": {
-    "title": "Không gian Lập kế hoạch Bài học",
+    "title": "Lập kế hoạch Bài học",
     "subtitle": "Giữ các cuộc trò chuyện trong dự án gọn gàng để mỗi lớp học bắt đầu với một kế hoạch rõ ràng.",
     "actions": {
       "newClass": "Lớp mới",
@@ -62,7 +176,9 @@
       "toggle": "Bật/tắt danh sách lớp học"
     },
     "chats": {
+      "currentClass": "Lớp hiện tại",
       "title": "Cuộc trò chuyện",
+      "savedBadge": "Đã lưu",
       "description": "Mỗi cuộc trò chuyện ghi lại một ý tưởng hoặc bản nháp khác nhau.",
       "empty": "Chọn lớp và cuộc trò chuyện để bắt đầu lập kế hoạch.",
       "newChat": "Cuộc trò chuyện mới",
@@ -86,7 +202,12 @@
       "assessmentTypeLabel": "Loại đánh giá",
       "assessmentTypePlaceholder": "VD: Kiểm tra, Bài viết, Trình bày miệng",
       "pin": "Ghim ngữ cảnh",
-      "unpin": "Bỏ ghim ngữ cảnh"
+      "unpin": "Bỏ ghim ngữ cảnh",
+      "validation": {
+        "titleRequired": "Vui lòng nhập tiêu đề",
+        "topicRequired": "Vui lòng nhập chủ đề bài học",
+        "durationMin": "Thời lượng phải ít nhất 1 phút"
+      }
     },
     "snapshot": {
       "title": "Thông tin lớp học",
@@ -110,7 +231,119 @@
       "teacherLabel": "Bạn",
       "assistantLabel": "Ella",
       "startConversation": "Bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới.",
-      "saveToLesson": "Lưu vào bài học"
+      "saveToLesson": "Lưu thành bài học",
+      "removeLesson": "Xóa",
+      "verifySave": "Bạn có muốn lưu phản hồi này của AI thành bài học không?",
+      "lessonSaved": "Đã lưu bài học thành công",
+      "lessonRemoved": "Đã xóa bài học thành công"
+    }
+  },
+  "lessons": {
+    "status": {
+      "draft": "Nháp",
+      "scheduled": "Đã lên lịch",
+      "in_progress": "Đang diễn ra",
+      "completed": "Đã hoàn thành",
+      "cancelled": "Đã hủy"
+    }
+  },
+  "lessonDetails": {
+    "notFound": "Không tìm thấy bài học",
+    "scheduledOn": "Lên lịch vào",
+    "duration": "Thời lượng",
+    "minutes": "phút",
+    "grade": "Khối lớp",
+    "noGrade": "Không có khối lớp",
+    "targetLanguage": "Ngôn ngữ mục tiêu",
+    "cefrLevels": "Cấp độ CEFR",
+    "reading": "Đọc",
+    "writing": "Viết",
+    "speaking": "Nói",
+    "listening": "Nghe",
+    "learningObjectives": "Mục tiêu bài học",
+    "teachingActivities": "Hoạt động giảng dạy",
+    "lessonContent": "Nội dung bài học",
+    "aiGenerated": "Nội dung này được tạo bởi AI",
+    "lessonStructure": "Cấu trúc bài học",
+    "min": "phút",
+    "viewPrompt": "Xem gợi ý tạo bài (prompt)",
+    "created": "Đã tạo",
+    "updated": "Đã cập nhật"
+  },
+  "classForm": {
+    "titleEdit": "Sửa lớp",
+    "titleCreate": "Tạo lớp mới",
+    "descriptionEdit": "Cập nhật thông tin lớp học này.",
+    "descriptionCreate": "Nhập thông tin dưới đây để tạo lớp mới.",
+    "labels": {
+      "name": "Tên lớp",
+      "grade": "Cấp / Lớp",
+      "gradeOptional": "(Tùy chọn)"
+    },
+    "placeholders": {
+      "name": "VD: Advanced English A",
+      "grade": "VD: Lớp 5"
+    },
+    "buttons": {
+      "reset": "Đặt lại",
+      "saveChanges": "Lưu thay đổi",
+      "createClass": "Tạo lớp"
+    }
+  },
+  "myClass": {
+    "studentsTitle": "Học sinh",
+    "searchStudentsPlaceholder": "Tìm học sinh...",
+    "lessonsTitle": "Bài học",
+    "upcoming": "Sắp tới",
+    "editClass": "Sửa lớp"
+  },
+  "addStudentCard": {
+    "title": "Thêm học sinh",
+    "cta": "Nhấn để thêm"
+  },
+  "addLessonCard": {
+    "title": "Thêm bài học",
+    "cta": "Nhấn để thêm"
+  },
+  "studentDrawer": {
+    "title": {
+      "add": "Thêm học sinh mới",
+      "edit": "Chỉnh sửa học sinh"
+    },
+    "description": {
+      "add": "Tạo hồ sơ học sinh mới",
+      "edit": "Cập nhật thông tin hồ sơ"
+    }
+  },
+  "studentForm": {
+    "placeholders": {
+      "name": "Nhập tên học sinh",
+      "grade": "VD: 7A",
+      "hobby": "VD: Robotics, Chess...",
+      "notes": "Thêm ghi chú riêng...",
+      "searchConditions": "Tìm điều kiện...",
+      "accommodations": "Chọn điều kiện..."
+    },
+    "buttons": {
+      "reset": "Đặt lại",
+      "saveChanges": "Lưu thay đổi",
+      "create": "Tạo học sinh"
+    },
+    "upload": "Tải lên",
+    "randomizeAvatar": "Tạo avatar ngẫu nhiên",
+    "labels": {
+      "fullName": "Họ và tên",
+      "grade": "Cấp / Lớp",
+      "interests": "Sở thích",
+      "notes": "Ghi chú"
+    },
+    "validation": {
+      "nameRequired": "Vui lòng nhập tên"
+    },
+    "proficiencyTitle": "Mức độ thành thạo",
+    "accommodations": {
+      "title": "Điều kiện học tập",
+      "noConditionFound": "Không tìm thấy điều kiện nào."
     }
   },
   "languageSwitcher": {
@@ -122,5 +355,19 @@
       "ja": "Tiếng Nhật",
       "th": "Tiếng Thái"
     }
+  },
+  "errors": {
+    "errorTitle": "Lỗi",
+    "accessDenied": "Truy cập bị từ chối",
+    "accessDeniedDesc": "Bạn không có quyền truy cập vào tài nguyên này.",
+    "notFound": "Không tìm thấy",
+    "serverErrorDesc": "Đã xảy ra sự cố. Vui lòng thử lại sau.",
+    "emailAlreadyExists": "Địa chỉ email này đã được sử dụng.",
+    "emailNotExists": "Địa chỉ email này chưa được đăng ký.",
+    "needLoginViaProvider": {
+      "google": "Email này đã liên kết với Google. Vui lòng đăng nhập bằng Google.",
+      "facebook": "Email này đã liên kết với Facebook. Vui lòng đăng nhập bằng Facebook."
+    },
+    "invalidHash": "Liên kết không hợp lệ hoặc đã hết hạn."
   }
 }

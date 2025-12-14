@@ -25,17 +25,21 @@ export interface UpdateClassroomDto {
   pinned?: boolean;
 }
 
-export type CefrLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+export const CEFR_LEVEL_VALUES = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 
-export type SpecialNeed =
-  | "ADHD"
-  | "ODD"
-  | "ASD"
-  | "Depression"
-  | "ACEs"
-  | "Dysgraphia"
-  | "Dyslexia"
-  | "Anxiety Disorders";
+export const SPECIAL_NEED_VALUES = [
+  "ADHD",
+  "ODD",
+  "ASD",
+  "Depression",
+  "ACEs",
+  "Dysgraphia",
+  "Dyslexia",
+  "Anxiety Disorders",
+] as const;
+
+export type CefrLevel = (typeof CEFR_LEVEL_VALUES)[number];
+export type SpecialNeed = (typeof SPECIAL_NEED_VALUES)[number];
 
 export interface CefrLevels {
   reading?: CefrLevel;
@@ -100,7 +104,7 @@ export interface LessonStructuredContent {
 export interface Lesson {
   id: string;
   classroomId: string;
-  messageId: string;
+  messageId?: string | null;
   title: string;
   topic?: string;
   targetLanguage?: string;

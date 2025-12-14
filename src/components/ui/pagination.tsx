@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { Button } from "./button";
 
 interface PaginationProps {
@@ -15,6 +16,7 @@ function Pagination({
   onPageChange,
   className,
 }: PaginationProps) {
+  const { t } = useTranslation();
   const canGoPrevious = currentPage > 1;
   const canGoNext = currentPage < totalPages;
 
@@ -42,7 +44,7 @@ function Pagination({
         <ChevronLeft className="size-4" />
       </Button>
       <span className="text-xs font-medium text-muted-foreground">
-        Page {currentPage} of {totalPages}
+        {t("pagination.pageOf", { current: currentPage, total: totalPages })}
       </span>
       <Button
         variant="outline"

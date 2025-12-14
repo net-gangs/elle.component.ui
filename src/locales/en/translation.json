@@ -8,12 +8,17 @@
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "backToLogin": "Back to Login",
+    "goHome": "Go to Home",
+    "sidebarTitle": "Sidebar",
+    "sidebarDescription": "Displays the mobile sidebar.",
+    "failedToLoad": "Failed to load"
   },
   "sidebar": {
     "groups": {
       "preparation": "Preparation",
-      "tools": "Tools"
+      "tool": "Tools"
     },
     "items": {
       "myClass": "My Class",
@@ -23,6 +28,12 @@
       "rewards": "Rewards",
       "interestingArticles": "Interesting Articles",
       "filesLibrary": "Files & Library"
+    },
+    "projects": {
+      "viewProject": "View Project",
+      "shareProject": "Share Project",
+      "deleteProject": "Delete Project",
+      "more": "More"
     }
   },
   "team": {
@@ -42,14 +53,117 @@
     "section": "Data Fetching"
   },
   "login": {
-    "title": "Login to Ella AI",
-    "submit": "Log In"
+    "title": "Log In",
+    "subtitle": "Welcome Back",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot Password?",
+    "submit": "Continue",
+    "loading": "Loading...",
+    "orDivider": "Or",
+    "social": {
+      "google": "Sign in with Google",
+      "facebook": "Sign in with Facebook",
+      "apple": "Sign in with Apple"
+    },
+    "newUser": "New User?",
+    "signUpLink": "Sign up here",
+    "slides": {
+      "slide1": {
+        "title": "Building the <br/>Future...",
+        "desc": "Experience the next generation of artificial intelligence, designed to adapt to your nature."
+      },
+      "slide2": {
+        "title": "Seamless <br/>Integration",
+        "desc": "Connect your workflow effortlessly with our advanced plugins and API support."
+      },
+      "slide3": {
+        "title": "Secure by <br/>Default",
+        "desc": "Enterprise-grade encryption and privacy controls to keep your data safe and sound."
+      }
+    },
+    "validation": {
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required"
+    }
+  },
+  "signup": {
+    "title": "Get Started",
+    "subtitle": "Create Account",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submit": "CREATE ACCOUNT",
+    "loading": "Creating Account...",
+    "existingUser": "Already have an account?",
+    "signInLink": "Sign in here",
+    "successMessage": "Account created! Please check your email to verify your account.",
+    "slides": {
+      "slide1": {
+        "title": "Join the <br/>Future...",
+        "desc": "Create your account and experience the next generation of artificial intelligence."
+      },
+      "slide2": {
+        "title": "Powerful <br/>Features",
+        "desc": "Access advanced AI capabilities designed to enhance your productivity and creativity."
+      },
+      "slide3": {
+        "title": "Your Data, <br/>Protected",
+        "desc": "Enterprise-grade security ensures your information is safe and private."
+      }
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordMin": "Password must be at least 6 characters"
+    }
+  },
+  "forgotPassword": {
+    "title": "Forgot Password?",
+    "subtitle": "No worries, we'll send you reset instructions.",
+    "subtitleSent": "We've sent password reset instructions to your email.",
+    "emailLabel": "Email Address",
+    "submit": "Send Reset Link",
+    "sending": "Sending...",
+    "toastSuccess": "Password reset email sent! Please check your inbox.",
+    "successBox": {
+      "title": "Check your email",
+      "text": "We've sent a password reset link to your email address. Please check your inbox and follow the instructions."
+    },
+    "retry": "Didn't receive the email? Try again",
+    "validation": {
+      "emailInvalid": "Please enter a valid email address"
+    }
+  },
+  "passwordChange": {
+    "title": "Set New Password",
+    "subtitle": "Your new password must be different from previously used passwords.",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "submit": "RESET PASSWORD",
+    "submitting": "Resetting...",
+    "success": "Password updated successfully!",
+    "error": "Failed to reset password",
+    "invalidLink": "Invalid Link",
+    "validation": {
+      "passwordMin": "Password must be at least 6 characters",
+      "missingHash": "Invalid reset link",
+      "match": "Passwords do not match"
+    }
+  },
+  "confirmEmail": {
+    "verifying": "Verifying your email...",
+    "successTitle": "Email Verified!",
+    "successDesc": "Your email has been successfully verified."
   },
   "dashboard": {
     "placeholder": "Dashboard content coming soon."
   },
   "lessonPlanning": {
-    "title": "Lesson Planning Workspace",
+    "title": "Lesson Planning",
     "subtitle": "Keep project chats tidy so every class starts with a clear plan.",
     "actions": {
       "newClass": "New class",
@@ -62,6 +176,7 @@
       "toggle": "Toggle classes list"
     },
     "chats": {
+      "currentClass": "Current Class",
       "title": "Chats",
       "description": "Each chat captures a different idea or draft.",
       "empty": "Select a class and chat to start planning.",
@@ -86,20 +201,26 @@
       "assessmentTypeLabel": "Assessment Type",
       "assessmentTypePlaceholder": "e.g., Quiz, Written Test, Oral Presentation",
       "pin": "Pin context",
-      "unpin": "Unpin context"
+      "unpin": "Unpin context",
+      "validation": {
+        "titleRequired": "Title is required",
+        "topicRequired": "Topic is required",
+        "durationMin": "Duration must be at least 1 minute"
+      }
     },
     "snapshot": {
       "title": "Class Information",
       "className": "Class Name",
       "grade": "Grade",
       "students": "Students",
-      "studentsCount": "students",
+      "studentsCount": "{{current}} students",
       "notSet": "Not set",
       "empty": "Select a class to see its information.",
       "toggle": "Toggle class information"
     },
     "conversation": {
       "title": "Idea board",
+      "savedBadge": "Saved",
       "subtitle": "Draft objectives, centers, or exit tickets with Ella.",
       "waiting": "Choose a chat to keep planning with Ella.",
       "placeholder": "Type a request for Ella to plan, remix, or extend your lesson...",
@@ -110,7 +231,123 @@
       "teacherLabel": "You",
       "assistantLabel": "Ella",
       "startConversation": "Start the conversation by typing a message below.",
-      "saveToLesson": "Save to Lesson"
+      "saveToLesson": "Save as a Lesson",
+      "removeLesson": "Remove",
+      "verifySave": "Do you want to save this AI response as a lesson?",
+      "lessonSaved": "Lesson saved successfully",
+      "lessonRemoved": "Lesson removed successfully"
+    }
+  },
+  "addStudentCard": {
+    "title": "Add Student",
+    "cta": "Click to add"
+  },
+  "studentDrawer": {
+    "title": {
+      "add": "Add New Student",
+      "edit": "Edit Student"
+    },
+    "description": {
+      "add": "Create a new student profile",
+      "edit": "Update profile details"
+    }
+  },
+  "pagination": {
+    "pageOf": "Page {{current}} of {{total}}"
+  },
+  "addLessonCard": {
+    "title": "Add Lesson",
+    "cta": "Click to add"
+  },
+  "lessons": {
+    "status": {
+      "draft": "Draft",
+      "scheduled": "Scheduled",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "lessonDetails": {
+    "notFound": "Lesson not found",
+    "scheduledOn": "Scheduled On",
+    "duration": "Duration",
+    "minutes": "minutes",
+    "grade": "Grade",
+    "noGrade": "No grade",
+    "targetLanguage": "Target Language",
+    "cefrLevels": "CEFR Levels",
+    "reading": "Reading",
+    "writing": "Writing",
+    "speaking": "Speaking",
+    "listening": "Listening",
+    "learningObjectives": "Learning Objectives",
+    "teachingActivities": "Teaching Activities",
+    "lessonContent": "Lesson Content",
+    "aiGenerated": "This content was generated by AI",
+    "lessonStructure": "Lesson Structure",
+    "min": "min",
+    "viewPrompt": "View generation prompt",
+    "created": "Created",
+    "updated": "Updated"
+  },
+  "classForm": {
+    "titleEdit": "Edit Class",
+    "titleCreate": "Create New Class",
+    "descriptionEdit": "Update the details of this classroom.",
+    "descriptionCreate": "Enter the details below to set up a new classroom.",
+    "labels": {
+      "name": "Class Name",
+      "grade": "Grade / Level",
+      "gradeOptional": "(Optional)"
+    },
+    "placeholders": {
+      "name": "e.g. Advanced English A",
+      "grade": "e.g. Grade 5"
+    },
+    "buttons": {
+      "reset": "Reset",
+      "saveChanges": "Save Changes",
+      "createClass": "Create Class"
+    }
+  },
+  "myClass": {
+    "studentsTitle": "Students",
+    "searchStudentsPlaceholder": "Search students...",
+    "lessonsTitle": "Lessons",
+    "upcoming": "Upcoming",
+    "editClass": "Edit Class"
+  },
+  "studentForm": {
+    "placeholders": {
+      "name": "Enter student name",
+      "grade": "e.g. 7A",
+      "hobby": "Robotics, Chess...",
+      "notes": "Add private notes...",
+      "searchConditions": "Search conditions...",
+      "accommodations": "Select accommodations..."
+    },
+    "buttons": {
+      "reset": "Reset",
+      "saveChanges": "Save Changes",
+      "create": "Create Student"
+    },
+    "upload": "Upload",
+    "randomizeAvatar": "Randomize Avatar",
+    "labels": {
+      "fullName": "Full Name",
+      "grade": "Grade / Level",
+      "reading": "Reading",
+      "writing": "Writing",
+      "listening": "Listening",
+      "speaking": "Speaking",
+      "interests": "Interests",
+      "notes": "Notes"
+    },
+    "proficiencyTitle": "Proficiency Levels",
+    "accommodations": {
+      "title": "Accommodations",
+      "noConditionFound": "No condition found."
     }
   },
   "languageSwitcher": {
@@ -122,5 +359,19 @@
       "ja": "Japanese",
       "th": "Thai"
     }
+  },
+  "errors": {
+    "errorTitle": "Error",
+    "accessDenied": "Access Denied",
+    "accessDeniedDesc": "You don't have permission to access this resource.",
+    "notFound": "Not Found",
+    "serverErrorDesc": "Something went wrong. Please try again later.",
+    "emailAlreadyExists": "This email address is already in use.",
+    "emailNotExists": "This email address is not registered.",
+    "needLoginViaProvider": {
+      "google": "This email is linked to Google. Please log in with Google.",
+      "facebook": "This email is linked to Facebook. Please log in with Facebook."
+    },
+    "invalidHash": "The link is invalid or has expired."
   }
 }

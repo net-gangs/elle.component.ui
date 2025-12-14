@@ -1,6 +1,12 @@
 import { apiClient } from "@/lib/api-client";
 import type {
   AuthEmailLoginDto,
+  AuthRegisterDto,
+  AuthForgotPasswordDto,
+  AuthResetPasswordDto,
+  AuthGoogleLoginDto,
+  AuthFacebookLoginDto,
+  AuthAppleLoginDto,
   LoginResponseDto,
   RefreshResponseDto,
   User,
@@ -15,6 +21,69 @@ export const authService = {
     const response = await apiClient.post<never, ApiResponse<LoginResponseDto>>(
       "/auth/email/login",
       credentials
+    );
+    return response.data;
+  },
+
+  /**
+   * Register a new user
+   */
+  register: async (data: AuthRegisterDto): Promise<void> => {
+    await apiClient.post<never, ApiResponse<void>>(
+      "/auth/email/register",
+      data
+    );
+  },
+
+  /**
+   * Request password reset
+   */
+  forgotPassword: async (data: AuthForgotPasswordDto): Promise<void> => {
+    await apiClient.post<never, ApiResponse<void>>(
+      "/auth/forgot/password",
+      data
+    );
+  },
+
+  /**
+   * Reset password with token
+   */
+  resetPassword: async (data: AuthResetPasswordDto): Promise<void> => {
+    await apiClient.post<never, ApiResponse<void>>(
+      "/auth/reset/password",
+      data
+    );
+  },
+
+  /**
+   * Login with Google OAuth
+   */
+  googleLogin: async (data: AuthGoogleLoginDto): Promise<LoginResponseDto> => {
+    const response = await apiClient.post<never, ApiResponse<LoginResponseDto>>(
+      "/auth/google/login",
+      data
+    );
+    return response.data;
+  },
+
+  /**
+   * Login with Facebook OAuth
+   */
+  facebookLogin: async (data: AuthFacebookLoginDto): Promise<LoginResponseDto> => {
+    const response = await apiClient.post<never, ApiResponse<LoginResponseDto>>(
+      "/auth/facebook/login",
+      data
+    );
+    return response.data;
+  },
+
+  /**
+   * Login with Apple OAuth
+   */
+  appleLogin: async (data: AuthAppleLoginDto): Promise<LoginResponseDto> => {
+    const response = await apiClient.post<never, ApiResponse<LoginResponseDto>>(
+      "/auth/apple/login",
+      data
     );
     return response.data;
   },
@@ -41,6 +110,11 @@ export const authService = {
    */
   me: async (): Promise<User> => {
     const response = await apiClient.get<never, ApiResponse<User>>("/auth/me");
+    return response.data;
+  },
+
+  confirmEmail: async (data: { hash: string }) => {
+    const response = await apiClient.post<never, ApiResponse<null>>("/auth/email/confirm", data);
     return response.data;
   },
 };

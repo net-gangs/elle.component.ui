@@ -27,45 +27,34 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { authStore, authActions, selectUser } from "@/stores/auth-store";
+import { useQueryClient } from "@tanstack/react-query";
 
-type NavUserProps = {
-  user?: {
-    name: string;
-    email: string;
-    avatar?: string;
-  };
-};
-
-export function NavUser({ user: fallbackUser }: NavUserProps) {
+export function NavUser() {
   const { isMobile } = useSidebar();
   const storeUser = useStore(authStore, selectUser);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleLogout = () => {
     authActions.logout();
-    navigate({ to: "/login" });
+    queryClient.clear();
+    navigate({ to: "/auth/login" });
   };
 
-  if (!storeUser && !fallbackUser) {
+  if (!storeUser) {
     return null;
   }
 
-  const fallbackDisplayName = fallbackUser?.name ?? fallbackUser?.email ?? "User";
-  const fallbackInitials = fallbackUser?.name
-    ? fallbackUser.name.match(/\b\w/g)?.join("")?.slice(0, 2)?.toUpperCase() || "U"
-    : fallbackDisplayName.slice(0, 2).toUpperCase() || "U";
-  const fallbackAvatarUrl = fallbackUser?.avatar ?? "";
-  const fallbackEmail = fallbackUser?.email ?? "";
-
   const displayName = storeUser
     ? `${storeUser.firstName} ${storeUser.lastName}`.trim() || storeUser.email
-    : fallbackDisplayName;
+    : "N/A";
   const initials = storeUser
-    ? `${storeUser.firstName?.[0] || ""}${storeUser.lastName?.[0] || ""}`.toUpperCase() || "U"
-    : fallbackInitials;
-  const avatarUrl = storeUser ? storeUser.photo?.path || "" : fallbackAvatarUrl;
-  const email = storeUser ? storeUser.email : fallbackEmail;
+    ? `${storeUser.firstName?.[0] || ""}${storeUser.lastName?.[0] || ""}`.toUpperCase() ||
+      "U"
+    : "U";
+  const avatarUrl = storeUser ? storeUser.photo?.path || "" : "N/A";
+  const email = storeUser ? storeUser.email : "N/A";
 
   return (
     <SidebarMenu>
@@ -78,7 +67,9 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={avatarUrl} alt={displayName} />
-                <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {initials}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{displayName}</span>
@@ -97,7 +88,9 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={avatarUrl} alt={displayName} />
-                  <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{displayName}</span>
@@ -107,22 +100,22 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <Sparkles />
                 {t("userMenu.upgrade")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <BadgeCheck />
                 {t("userMenu.account")}
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <CreditCard />
                 {t("userMenu.billing")}
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <Bell />
                 {t("userMenu.notifications")}
               </DropdownMenuItem>

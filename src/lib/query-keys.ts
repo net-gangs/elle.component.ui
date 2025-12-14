@@ -42,9 +42,27 @@ export const queryKeys = {
     all: ["assessments"] as const,
     lists: () => [...queryKeys.assessments.all, "list"] as const,
     list: (classroomId: string, studentId: string, params?: PaginationParams) =>
-      [...queryKeys.assessments.lists(), classroomId, studentId, params] as const,
+      [
+        ...queryKeys.assessments.lists(),
+        classroomId,
+        studentId,
+        params,
+      ] as const,
     details: () => [...queryKeys.assessments.all, "detail"] as const,
     detail: (classroomId: string, studentId: string, id: string) =>
       [...queryKeys.assessments.details(), classroomId, studentId, id] as const,
+  },
+
+  // Chats
+  chats: {
+    all: ["chats"] as const,
+    lists: () => [...queryKeys.chats.all, "list"] as const,
+    list: (classroomId: string, params?: PaginationParams) =>
+      [...queryKeys.chats.lists(), classroomId, params] as const,
+    details: () => [...queryKeys.chats.all, "detail"] as const,
+    detail: (classroomId: string, id: string) =>
+      [...queryKeys.chats.details(), classroomId, id] as const,
+    messages: (classId?: string | null, chatId?: string | null) =>
+      ["class", classId, "chat", chatId, "messages"] as const,
   },
 };

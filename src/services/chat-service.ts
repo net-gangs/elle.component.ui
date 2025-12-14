@@ -1,41 +1,16 @@
 import { apiClient } from "@/lib/api-client";
-import type { ApiResponse, PageResponseDto, PaginationParams } from "@/types/api";
-
-export interface Chat {
-  id: string;
-  classroomId: string;
-  title: string;
-  focus?: string;
-  tone?: string;
-  pinned: boolean;
-  // Lesson context fields
-  lessonTopic?: string;
-  gradeYear?: string;
-  durationMinutes?: number;
-  learningObjectives?: string;
-  teachingActivities?: string;
-  assessmentType?: string;
-  targetCefrLevel?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ChatMessage {
-  id: string;
-  chatId: string;
-  role: "user" | "assistant";
-  content: string;
-  createdAt: string;
-  lessonId?: string | null;
-  lessonTitle?: string | null;
-  lessonCreatedAt?: string | null;
-}
+import type {
+  ApiResponse,
+  PageResponseDto,
+  PaginationParams,
+} from "@/types/api";
+import type { Chat } from "@/types/chat";
+import type { Message, ChatWithMessages } from "@/types/chat";
 
 export interface CreateChatDto {
   title: string;
   focus?: string;
   tone?: string;
-  // Lesson context fields
   lessonTopic?: string;
   gradeYear?: string;
   durationMinutes?: number;
@@ -50,7 +25,6 @@ export interface UpdateChatDto {
   focus?: string;
   tone?: string;
   pinned?: boolean;
-  // Lesson context fields
   lessonTopic?: string;
   gradeYear?: string;
   durationMinutes?: number;
@@ -64,9 +38,20 @@ export interface SendMessageDto {
   content: string;
 }
 
-export interface ChatWithMessages extends Chat {
-  messages: ChatMessage[];
-}
+export type StreamEvent =
+  | {
+      type: "chunk";
+      content: string;
+    }
+  | {
+      type: "done";
+      stopReason: string | null;
+      savedMessageId: string;
+    }
+  | {
+      type: "error";
+      message: string;
+    };
 
 // CEFR levels for selection
 export const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
@@ -91,7 +76,7 @@ export const chatService = {
    */
   getAll: async (
     classroomId: string,
-    params?: PaginationParams
+    params?: PaginationParams,
   ): Promise<PageResponseDto<Chat>> => {
     const response = await apiClient.get<
       never,
@@ -103,9 +88,12 @@ export const chatService = {
   /**
    * Get a chat by ID with messages
    */
-  getById: async (classroomId: string, id: string): Promise<ChatWithMessages> => {
+  getById: async (
+    classroomId: string,
+    id: string,
+  ): Promise<ChatWithMessages> => {
     const response = await apiClient.get<never, ApiResponse<ChatWithMessages>>(
-      `/classrooms/${classroomId}/chats/${id}`
+      `/classrooms/${classroomId}/chats/${id}`,
     );
     return response.data;
   },
@@ -116,7 +104,7 @@ export const chatService = {
   create: async (classroomId: string, data: CreateChatDto): Promise<Chat> => {
     const response = await apiClient.post<never, ApiResponse<Chat>>(
       `/classrooms/${classroomId}/chats`,
-      data
+      data,
     );
     return response.data;
   },
@@ -127,11 +115,11 @@ export const chatService = {
   update: async (
     classroomId: string,
     id: string,
-    data: UpdateChatDto
+    data: UpdateChatDto,
   ): Promise<Chat> => {
     const response = await apiClient.patch<never, ApiResponse<Chat>>(
       `/classrooms/${classroomId}/chats/${id}`,
-      data
+      data,
     );
     return response.data;
   },
@@ -151,11 +139,16 @@ export const chatService = {
     chatId: string,
     message: string,
     onChunk: (chunk: string) => void,
-    onComplete: (fullMessage: string, stopReason: string | null) => void,
-    onError: (error: Error) => void
+    onComplete: (
+      fullMessage: string,
+      stopReason: string | null,
+      savedMessageId: string,
+    ) => void,
+    onError: (error: Error) => void,
   ): AbortController => {
     const abortController = new AbortController();
-    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1";
+    const baseUrl =
+      import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1";
     const token = localStorage.getItem("access_token");
 
     const eventSource = new EventSource(
@@ -166,14 +159,14 @@ export const chatService = {
 
     eventSource.onmessage = (event) => {
       try {
-        const data = JSON.parse(event.data);
+        const data = JSON.parse(event.data) as StreamEvent;
 
         if (data.type === "chunk") {
           fullMessage += data.content;
           onChunk(data.content);
         } else if (data.type === "done") {
           eventSource.close();
-          onComplete(fullMessage, data.stopReason || null);
+          onComplete(fullMessage, data.stopReason || null, data.savedMessageId);
         } else if (data.type === "error") {
           eventSource.close();
           onError(new Error(data.message));
@@ -203,11 +196,11 @@ export const chatService = {
   sendMessage: async (
     classroomId: string,
     chatId: string,
-    data: SendMessageDto
-  ): Promise<ChatMessage> => {
-    const response = await apiClient.post<never, ApiResponse<ChatMessage>>(
+    data: SendMessageDto,
+  ): Promise<Message> => {
+    const response = await apiClient.post<never, ApiResponse<Message>>(
       `/classrooms/${classroomId}/chats/${chatId}/messages`,
-      data
+      data,
     );
     return response.data;
   },
@@ -218,12 +211,13 @@ export const chatService = {
   getMessages: async (
     classroomId: string,
     chatId: string,
-    params?: PaginationParams
-  ): Promise<PageResponseDto<ChatMessage>> => {
+    params?: PaginationParams,
+  ): Promise<PageResponseDto<Message>> => {
     const response = await apiClient.get<
       never,
-      ApiResponse<PageResponseDto<ChatMessage>>
+      ApiResponse<PageResponseDto<Message>>
     >(`/classrooms/${classroomId}/chats/${chatId}/messages`, { params });
+
     return response.data;
   },
 
@@ -234,26 +228,31 @@ export const chatService = {
     classroomId: string,
     chatId: string,
     messageId: string,
-    lessonId?: string
+    lessonId?: string,
   ): Promise<{ lessonId: string; lessonTitle: string; messageId: string }> => {
     const response = await apiClient.post<
       never,
       ApiResponse<{ lessonId: string; lessonTitle: string; messageId: string }>
-    >(`/classrooms/${classroomId}/chats/${chatId}/messages/${messageId}/save-to-lesson`, {
-      lessonId,
-    });
+    >(
+      `/classrooms/${classroomId}/chats/${chatId}/messages/${messageId}/save-to-lesson`,
+      {
+        lessonId,
+      },
+    );
     return response.data;
   },
 
   removeSavedLesson: async (
     classroomId: string,
     chatId: string,
-    messageId: string
+    messageId: string,
   ): Promise<{ removedLessonId?: string }> => {
     const response = await apiClient.delete<
       never,
       ApiResponse<{ removedLessonId?: string }>
-    >(`/classrooms/${classroomId}/chats/${chatId}/messages/${messageId}/save-to-lesson`);
+    >(
+      `/classrooms/${classroomId}/chats/${chatId}/messages/${messageId}/save-to-lesson`,
+    );
     return response.data;
   },
 };

@@ -1,22 +1,8 @@
-import { useId, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useForm } from "@tanstack/react-form";
-import * as z from "zod";
+import { useCallback, useId } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Check,
-  ChevronsUpDown,
-  Loader2,
-  Camera,
-  Dices,
-  Heart,
-  Languages,
-  Save,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 import {
   Command,
   CommandEmpty,
@@ -25,41 +11,32 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-const SPECIAL_NEEDS_OPTIONS = [
-  "ADHD",
-  "ODD",
-  "ASD",
-  "Depression",
-  "ACEs",
-  "Dysgraphia",
-  "Dyslexia",
-  "Anxiety Disorders",
-];
-
-const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
-
-const studentSchema = z.object({
-  fullName: z.string().min(2, "Name is required"),
-  grade: z.string(),
-  hobby: z.string(),
-  notes: z.string(),
-  avatarUrl: z.string().optional(),
-  specialNeeds: z.array(z.string()),
-  cefrLevels: z.object({
-    reading: z.string(),
-    writing: z.string(),
-    speaking: z.string(),
-    listening: z.string(),
-  }),
-});
-
-type StudentFormData = z.infer<typeof studentSchema>;
+import { Textarea } from "@/components/ui/textarea";
+import {
+  studentSchema,
+  type StudentFormData,
+} from "@/features/my-class/components/student-schema";
+import { useAvatarUpload } from "@/hooks/@ella/use-avatar-upload";
+import { cn } from "@/lib/utils";
+import { CEFR_LEVEL_VALUES, SPECIAL_NEED_VALUES } from "@/types/classroom";
+import {
+  Camera,
+  Check,
+  ChevronsUpDown,
+  Dices,
+  Heart,
+  Languages,
+  Save,
+} from "lucide-react";
+import { Spinner } from "../ui/spinner";
+import { ProficiencyPill } from "./proficiency-pill";
 
 interface StudentFormProps {
   initialData?: StudentFormData;
@@ -70,34 +47,34 @@ interface StudentFormProps {
 // Generate random dicebear avatar URL
 function generateRandomAvatar(): string {
   const seed = Math.random().toString(36).substring(2, 10);
-  const colors = ["a855f7", "e9d5ff", "fbcfe8", "c4b5fd", "bae6fd", "ddd6fe", "6366f1", "ec4899"];
+  const colors = [
+    "a855f7",
+    "e9d5ff",
+    "fbcfe8",
+    "c4b5fd",
+    "bae6fd",
+    "ddd6fe",
+    "6366f1",
+    "ec4899",
+  ];
   const color = colors[Math.floor(Math.random() * colors.length)];
   return `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}&backgroundColor=${color}`;
 }
 
-// Proficiency Pill Component (mockup style)
-interface ProficiencyPillProps {
-  level: string;
-  isSelected: boolean;
-  onClick: () => void;
-}
-
-function ProficiencyPill({ level, isSelected, onClick }: ProficiencyPillProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "flex size-9 items-center justify-center rounded-full border text-xs font-medium transition-all",
-        isSelected
-          ? "border-primary bg-primary text-primary-foreground shadow-md"
-          : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"
-      )}
-    >
-      {level}
-    </button>
-  );
-}
+const defaultFormValues: StudentFormData = {
+  fullName: "",
+  grade: "",
+  hobby: "",
+  notes: "",
+  avatarUrl: "",
+  specialNeeds: [],
+  cefrLevels: {
+    reading: "A1",
+    writing: "A1",
+    speaking: "A1",
+    listening: "A1",
+  },
+};
 
 export function StudentForm({
   initialData,
@@ -106,23 +83,9 @@ export function StudentForm({
 }: StudentFormProps) {
   const uniqueId = useId();
   const isEditMode = !!initialData;
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm({
-    defaultValues: initialData || {
-      fullName: "",
-      grade: "",
-      hobby: "",
-      notes: "",
-      avatarUrl: "",
-      specialNeeds: [],
-      cefrLevels: {
-        reading: "A1",
-        writing: "A1",
-        speaking: "A1",
-        listening: "A1",
-      },
-    },
+    defaultValues: initialData || defaultFormValues,
     validators: {
       onSubmit: studentSchema,
     },
@@ -131,42 +94,15 @@ export function StudentForm({
     },
   });
 
-  // Handle file upload and convert to base64/data URL
-  const handleFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          form.setFieldValue("avatarUrl", reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    [form]
-  );
-
-  // Handle drag and drop
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const file = e.dataTransfer.files?.[0];
-      if (file && file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          form.setFieldValue("avatarUrl", reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    [form]
-  );
-
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }, []);
+  const {
+    fileInputRef,
+    handleFileChange,
+    handleDrop,
+    handleDragOver,
+    triggerFileInput,
+  } = useAvatarUpload({
+    onUpload: (dataUrl) => form.setFieldValue("avatarUrl", dataUrl),
+  });
 
   const handleRandomize = useCallback(
     (e: React.MouseEvent) => {
@@ -174,8 +110,10 @@ export function StudentForm({
       e.stopPropagation();
       form.setFieldValue("avatarUrl", generateRandomAvatar());
     },
-    [form]
+    [form],
   );
+
+  const { t } = useTranslation();
 
   return (
     <form
@@ -197,15 +135,24 @@ export function StudentForm({
               {/* Avatar Container with Upload/Randomize */}
               <div className="group relative">
                 <div
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={triggerFileInput}
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
                   className="size-20 cursor-pointer overflow-hidden rounded-full border-2 border-dashed border-border bg-secondary p-1 transition-colors group-hover:border-primary"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Upload avatar image"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      triggerFileInput();
+                    }
+                  }}
                 >
                   {field.state.value ? (
                     <img
                       src={field.state.value}
-                      alt="Avatar"
+                      alt="Student avatar"
                       className="size-full rounded-full object-cover"
                       onError={() => {
                         field.handleChange("");
@@ -213,14 +160,20 @@ export function StudentForm({
                     />
                   ) : (
                     <div className="flex size-full items-center justify-center rounded-full bg-muted">
-                      <Camera className="size-6 text-muted-foreground" />
+                      <Camera
+                        className="size-6 text-muted-foreground"
+                        aria-hidden="true"
+                      />
                     </div>
                   )}
                   {/* Hover Overlay */}
-                  <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                  <div
+                    className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                    aria-hidden="true"
+                  >
                     <Camera className="size-5" />
                     <span className="mt-0.5 text-[8px] font-bold uppercase">
-                      Upload
+                      {t("studentForm.upload")}
                     </span>
                   </div>
                 </div>
@@ -239,9 +192,9 @@ export function StudentForm({
                   type="button"
                   onClick={handleRandomize}
                   className="absolute -bottom-1 -right-1 z-10 flex size-7 items-center justify-center rounded-full bg-primary text-white shadow-md transition-transform hover:scale-110"
-                  title="Randomize Avatar"
+                  title={t("studentForm.randomizeAvatar")}
                 >
-                  <Dices className="size-4" />
+                  <Dices className="size-4" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -252,49 +205,79 @@ export function StudentForm({
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <form.Field
             name="fullName"
-            children={(nameField) => (
-              <Field>
-                <FieldLabel
-                  htmlFor={`${uniqueId}-name`}
-                  className="text-xs font-bold uppercase tracking-wide"
-                >
-                  Full Name <span className="text-destructive">*</span>
-                </FieldLabel>
-                <Input
-                  id={`${uniqueId}-name`}
-                  name={nameField.name}
-                  value={nameField.state.value}
-                  onBlur={nameField.handleBlur}
-                  onChange={(e) => nameField.handleChange(e.target.value)}
-                  placeholder="Enter student name"
-                  className="h-11 rounded-xl"
-                />
-                <FieldError errors={nameField.state.meta.errors} />
-              </Field>
-            )}
+            children={(nameField) => {
+              const isInvalid =
+                nameField.state.meta.isTouched && !nameField.state.meta.isValid;
+              return (
+                <Field>
+                  <FieldLabel
+                    htmlFor={`${uniqueId}-name`}
+                    className="text-xs font-bold uppercase tracking-wide"
+                  >
+                    {t("studentForm.labels.fullName")}{" "}
+                    <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    id={`${uniqueId}-name`}
+                    name={nameField.name}
+                    value={nameField.state.value}
+                    onBlur={nameField.handleBlur}
+                    onChange={(e) => nameField.handleChange(e.target.value)}
+                    placeholder={t("studentForm.placeholders.name")}
+                    className="h-11 rounded-xl"
+                    aria-invalid={isInvalid}
+                    aria-describedby={
+                      isInvalid ? `${uniqueId}-name-error` : undefined
+                    }
+                  />
+                  {isInvalid && (
+                    <FieldError
+                      id={`${uniqueId}-name-error`}
+                      errors={nameField.state.meta.errors}
+                    />
+                  )}
+                </Field>
+              );
+            }}
           />
 
           <form.Field
             name="grade"
-            children={(gradeField) => (
-              <Field>
-                <FieldLabel
-                  htmlFor={`${uniqueId}-grade`}
-                  className="text-xs font-bold uppercase tracking-wide"
-                >
-                  Grade <span className="text-destructive">*</span>
-                </FieldLabel>
-                <Input
-                  id={`${uniqueId}-grade`}
-                  name={gradeField.name}
-                  value={gradeField.state.value}
-                  onBlur={gradeField.handleBlur}
-                  onChange={(e) => gradeField.handleChange(e.target.value)}
-                  placeholder="e.g. 7A"
-                  className="h-11 rounded-xl"
-                />
-              </Field>
-            )}
+            children={(gradeField) => {
+              const isInvalid =
+                gradeField.state.meta.isTouched &&
+                !gradeField.state.meta.isValid;
+              return (
+                <Field>
+                  <FieldLabel
+                    htmlFor={`${uniqueId}-grade`}
+                    className="text-xs font-bold uppercase tracking-wide"
+                  >
+                    {t("studentForm.labels.grade")}{" "}
+                    <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    id={`${uniqueId}-grade`}
+                    name={gradeField.name}
+                    value={gradeField.state.value}
+                    onBlur={gradeField.handleBlur}
+                    onChange={(e) => gradeField.handleChange(e.target.value)}
+                    placeholder={t("studentForm.placeholders.grade")}
+                    className="h-11 rounded-xl"
+                    aria-invalid={isInvalid}
+                    aria-describedby={
+                      isInvalid ? `${uniqueId}-grade-error` : undefined
+                    }
+                  />
+                  {isInvalid && (
+                    <FieldError
+                      id={`${uniqueId}-grade-error`}
+                      errors={gradeField.state.meta.errors}
+                    />
+                  )}
+                </Field>
+              );
+            }}
           />
         </div>
       </div>
@@ -302,8 +285,8 @@ export function StudentForm({
       {/* ===== SECTION 2: Proficiency Levels ===== */}
       <div className="space-y-5 rounded-2xl border bg-secondary/30 p-5">
         <h4 className="flex items-center gap-2 text-sm font-bold text-primary">
-          <Languages className="size-4" />
-          Proficiency Levels
+          <Languages className="size-4" aria-hidden="true" />
+          {t("studentForm.proficiencyTitle")}
         </h4>
 
         <div className="space-y-4">
@@ -315,10 +298,10 @@ export function StudentForm({
                 children={(field) => (
                   <div>
                     <label className="mb-2 block text-[10px] font-bold uppercase text-muted-foreground">
-                      {skill}
+                      {t(`studentForm.labels.${skill}`)}
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {CEFR_LEVELS.map((level) => (
+                      {CEFR_LEVEL_VALUES.map((level) => (
                         <ProficiencyPill
                           key={level}
                           level={level}
@@ -330,7 +313,7 @@ export function StudentForm({
                   </div>
                 )}
               />
-            )
+            ),
           )}
         </div>
       </div>
@@ -345,16 +328,19 @@ export function StudentForm({
                 htmlFor={`${uniqueId}-hobby`}
                 className="text-xs font-bold uppercase tracking-wide"
               >
-                Interests
+                {t("studentForm.labels.interests")}
               </FieldLabel>
               <div className="relative">
-                <Heart className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Heart
+                  className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden="true"
+                />
                 <Input
                   id={`${uniqueId}-hobby`}
                   name={field.name}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Robotics, Chess..."
+                  placeholder={t("studentForm.placeholders.hobby")}
                   className="h-11 rounded-xl pl-10"
                 />
               </div>
@@ -370,14 +356,14 @@ export function StudentForm({
                 htmlFor={`${uniqueId}-notes`}
                 className="text-xs font-bold uppercase tracking-wide"
               >
-                Notes
+                {t("studentForm.labels.notes")}
               </FieldLabel>
               <Textarea
                 id={`${uniqueId}-notes`}
                 name={field.name}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="Add private notes..."
+                placeholder={t("studentForm.placeholders.notes")}
                 className="min-h-24 resize-none rounded-xl"
               />
             </Field>
@@ -391,7 +377,7 @@ export function StudentForm({
         children={(field) => (
           <Field>
             <FieldLabel className="text-xs font-bold uppercase tracking-wide">
-              Accommodations
+              {t("studentForm.accommodations.title")}
             </FieldLabel>
             <Popover>
               <PopoverTrigger asChild>
@@ -399,9 +385,11 @@ export function StudentForm({
                   variant="outline"
                   role="combobox"
                   type="button"
+                  aria-expanded={false}
+                  aria-label="Select special needs accommodations"
                   className={cn(
                     "h-auto min-h-11 w-full justify-between rounded-xl text-left font-normal",
-                    !field.state.value.length && "text-muted-foreground"
+                    !field.state.value.length && "text-muted-foreground",
                   )}
                 >
                   {field.state.value.length > 0 ? (
@@ -416,9 +404,12 @@ export function StudentForm({
                       ))}
                     </div>
                   ) : (
-                    "Select accommodations..."
+                    t("studentForm.placeholders.accommodations")
                   )}
-                  <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                  <ChevronsUpDown
+                    className="ml-2 size-4 shrink-0 opacity-50"
+                    aria-hidden="true"
+                  />
                 </Button>
               </PopoverTrigger>
               <PopoverContent
@@ -426,11 +417,15 @@ export function StudentForm({
                 align="start"
               >
                 <Command>
-                  <CommandInput placeholder="Search conditions..." />
+                  <CommandInput
+                    placeholder={t("studentForm.placeholders.searchConditions")}
+                  />
                   <CommandList>
-                    <CommandEmpty>No condition found.</CommandEmpty>
+                    <CommandEmpty>
+                      {t("studentForm.noConditionFound")}
+                    </CommandEmpty>
                     <CommandGroup>
-                      {SPECIAL_NEEDS_OPTIONS.map((option) => (
+                      {SPECIAL_NEED_VALUES.map((option) => (
                         <CommandItem
                           key={option}
                           value={option}
@@ -438,7 +433,7 @@ export function StudentForm({
                             const current = field.state.value;
                             if (current.includes(option)) {
                               field.handleChange(
-                                current.filter((v) => v !== option)
+                                current.filter((v) => v !== option),
                               );
                             } else {
                               field.handleChange([...current, option]);
@@ -450,8 +445,9 @@ export function StudentForm({
                               "mr-2 size-4",
                               field.state.value.includes(option)
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
+                            aria-hidden="true"
                           />
                           {option}
                         </CommandItem>
@@ -465,8 +461,7 @@ export function StudentForm({
         )}
       />
 
-      {/* ===== Footer Buttons ===== */}
-      <div className="flex gap-3 pt-2">
+      <div className="flex gap-2">
         <Button
           type="button"
           variant="outline"
@@ -474,19 +469,22 @@ export function StudentForm({
           onClick={() => form.reset()}
           disabled={isSubmitting}
         >
-          Reset
+          {t("studentForm.buttons.reset")}
         </Button>
         <Button
           type="submit"
           className="h-12 flex-2 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] active:scale-95"
           disabled={isSubmitting}
+          aria-busy={isSubmitting}
         >
           {isSubmitting ? (
-            <Loader2 className="mr-2 size-4 animate-spin" />
+            <Spinner aria-hidden="true" />
           ) : (
-            <Save className="mr-2 size-4" />
+            <Save aria-hidden="true" />
           )}
-          {isEditMode ? "Save Changes" : "Create Student"}
+          {isEditMode
+            ? t("studentForm.buttons.saveChanges")
+            : t("studentForm.buttons.create")}
         </Button>
       </div>
     </form>
