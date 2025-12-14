@@ -11,7 +11,7 @@ export interface LoginFormData {
   password: string;
 }
 
-export function useLogin() {
+export function useLogin(redirectTo: string = "/") {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -22,7 +22,7 @@ export function useLogin() {
     },
     onSuccess: (response: LoginResponseDto) => {
       authActions.login(response);
-      navigate({ to: "/" });
+      navigate({ to: redirectTo });
     },
   });
 
@@ -32,7 +32,7 @@ export function useLogin() {
     },
     onSuccess: (response: LoginResponseDto) => {
       authActions.login(response);
-      navigate({ to: "/" });
+      navigate({ to: redirectTo });
     },
   });
 

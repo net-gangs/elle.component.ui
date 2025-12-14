@@ -37,8 +37,8 @@ import Autoplay from "embla-carousel-autoplay";
 import Fade from "embla-carousel-fade";
 import { useTranslation } from "react-i18next";
 import { Separator } from "@/components/ui/separator";
-import { LanguageSwitcher } from "./components/language-switcher";
-import { loginRoute } from "@/router";
+import { LanguageSwitcher } from "@/features/auth/components/language-switcher";
+import { loginRoute } from "@/app/router";
 
 const loginSchema = z.object({
   email: z.email("login.validation.emailInvalid"),

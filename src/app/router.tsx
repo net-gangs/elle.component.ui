@@ -86,7 +86,7 @@ export const confirmEmailRoute = createRoute({
   component: ConfirmEmailAction,
 });
 
-const loginRoute = createRoute({
+export const loginRoute = createRoute({
   validateSearch: (search) => ({
     redirect: (search.redirect as string) || "/",
   }),

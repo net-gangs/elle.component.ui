@@ -1,18 +1,9 @@
 import { useForm } from "@tanstack/react-form";
-import { useNavigate } from "@tanstack/react-router";
-import * as z from "zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import * as z from "zod";
 
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import Fade from "embla-carousel-fade";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -22,15 +13,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
-import { LanguageSwitcher } from "./components/language-switcher";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { useSignup } from "@/hooks/auth/use-signup";
 import { useCarousel } from "@/hooks/common/use-carousel";
+import Autoplay from "embla-carousel-autoplay";
+import Fade from "embla-carousel-fade";
+import { LanguageSwitcher } from "./components/language-switcher";
 
 const signupSchema = z.object({
   name: z.string().min(2, "signup.validation.nameRequired"),
@@ -39,7 +38,6 @@ const signupSchema = z.object({
 });
 
 export default function Signup() {
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const { showPassword, togglePasswordVisibility, signupMutation } = useSignup();
